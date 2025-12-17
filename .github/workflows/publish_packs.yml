@@ -24,6 +24,11 @@ jobs:
 
       - name: Install Rust (for pack tooling)
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip2
+
+      - name: Install cargo-component
+        run: cargo install cargo-component --locked
 
       - name: Install oras
         uses: oras-project/setup-oras@v1
