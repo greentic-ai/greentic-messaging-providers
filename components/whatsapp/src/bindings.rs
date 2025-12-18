@@ -3,6 +3,47 @@
 //   * runtime_path: "wit_bindgen_rt"
 #[doc(hidden)]
 #[allow(non_snake_case)]
+pub unsafe fn _export_init_runtime_config_cabi<T: Guest>(
+    arg0: *mut u8,
+    arg1: usize,
+) -> *mut u8 {
+    #[cfg(target_arch = "wasm32")] _rt::run_ctors_once();
+    let len0 = arg1;
+    let bytes0 = _rt::Vec::from_raw_parts(arg0.cast(), len0, len0);
+    let result1 = T::init_runtime_config(_rt::string_lift(bytes0));
+    let ptr2 = (&raw mut _RET_AREA.0).cast::<u8>();
+    match result1 {
+        Ok(_) => {
+            *ptr2.add(0).cast::<u8>() = (0i32) as u8;
+        }
+        Err(e) => {
+            *ptr2.add(0).cast::<u8>() = (1i32) as u8;
+            let vec3 = (e.into_bytes()).into_boxed_slice();
+            let ptr3 = vec3.as_ptr().cast::<u8>();
+            let len3 = vec3.len();
+            ::core::mem::forget(vec3);
+            *ptr2.add(2 * ::core::mem::size_of::<*const u8>()).cast::<usize>() = len3;
+            *ptr2.add(::core::mem::size_of::<*const u8>()).cast::<*mut u8>() = ptr3
+                .cast_mut();
+        }
+    };
+    ptr2
+}
+#[doc(hidden)]
+#[allow(non_snake_case)]
+pub unsafe fn __post_return_init_runtime_config<T: Guest>(arg0: *mut u8) {
+    let l0 = i32::from(*arg0.add(0).cast::<u8>());
+    match l0 {
+        0 => {}
+        _ => {
+            let l1 = *arg0.add(::core::mem::size_of::<*const u8>()).cast::<*mut u8>();
+            let l2 = *arg0.add(2 * ::core::mem::size_of::<*const u8>()).cast::<usize>();
+            _rt::cabi_dealloc(l1, l2, 1);
+        }
+    }
+}
+#[doc(hidden)]
+#[allow(non_snake_case)]
 pub unsafe fn _export_send_message_cabi<T: Guest>(
     arg0: *mut u8,
     arg1: usize,
@@ -191,6 +232,7 @@ pub unsafe fn __post_return_format_message<T: Guest>(arg0: *mut u8) {
     _rt::cabi_dealloc(l0, l1, 1);
 }
 pub trait Guest {
+    fn init_runtime_config(config_json: _rt::String) -> Result<(), _rt::String>;
     fn send_message(
         destination_json: _rt::String,
         text: _rt::String,
@@ -205,7 +247,13 @@ pub trait Guest {
 #[doc(hidden)]
 macro_rules! __export_world_whatsapp_cabi {
     ($ty:ident with_types_in $($path_to_types:tt)*) => {
-        const _ : () = { #[unsafe (export_name = "send-message")] unsafe extern "C" fn
+        const _ : () = { #[unsafe (export_name = "init-runtime-config")] unsafe extern
+        "C" fn export_init_runtime_config(arg0 : * mut u8, arg1 : usize,) -> * mut u8 {
+        unsafe { $($path_to_types)*:: _export_init_runtime_config_cabi::<$ty > (arg0,
+        arg1) } } #[unsafe (export_name = "cabi_post_init-runtime-config")] unsafe extern
+        "C" fn _post_return_init_runtime_config(arg0 : * mut u8,) { unsafe {
+        $($path_to_types)*:: __post_return_init_runtime_config::<$ty > (arg0) } }
+        #[unsafe (export_name = "send-message")] unsafe extern "C" fn
         export_send_message(arg0 : * mut u8, arg1 : usize, arg2 : * mut u8, arg3 :
         usize,) -> * mut u8 { unsafe { $($path_to_types)*::
         _export_send_message_cabi::<$ty > (arg0, arg1, arg2, arg3) } } #[unsafe
@@ -3694,9 +3742,9 @@ pub(crate) use __export_whatsapp_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 2321] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\x92\x11\x01A\x02\x01\
-A\x16\x01B6\x01s\x04\0\x06env-id\x03\0\0\x01s\x04\0\x09tenant-id\x03\0\x02\x01s\x04\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 2368] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xc1\x11\x01A\x02\x01\
+A\x19\x01B6\x01s\x04\0\x06env-id\x03\0\0\x01s\x04\0\x09tenant-id\x03\0\x02\x01s\x04\
 \0\x07team-id\x03\0\x04\x01s\x04\0\x07user-id\x03\0\x06\x01s\x04\0\x09state-key\x03\
 \0\x08\x01s\x04\0\x0bsession-key\x03\0\x0a\x01ks\x01r\x02\x08actor-id\x07\x06rea\
 son\x0c\x04\0\x0dimpersonation\x03\0\x0d\x01k\x05\x01k\x07\x01o\x02ss\x01p\x11\x01\
@@ -3740,10 +3788,11 @@ bytes\x09\x03ctx\x08\0\x0c\x04\0\x05write\x01\x0d\x01@\x02\x03key\x01\x03ctx\x08
 ssages\x04\0\x0ahost-error\x03\0\x04\x01m\x01\x02ok\x04\0\x06op-ack\x03\0\x06\x01\
 o\x02ss\x01p\x08\x01k\x01\x01j\x01\x07\x01\x05\x01@\x03\x04span\x03\x06fields\x09\
 \x03ctx\x0a\0\x0b\x04\0\x03log\x01\x0c\x03\0#greentic:telemetry/logger-api@1.0.0\
-\x05\x07\x01j\x01s\x01s\x01@\x02\x10destination-jsons\x04texts\0\x08\x04\0\x0cse\
-nd-message\x01\x09\x01@\x02\x0cheaders-jsons\x09body-jsons\0\x08\x04\0\x0ehandle\
--webhook\x01\x0a\x01@\0\0\x08\x04\0\x07refresh\x01\x0b\x01@\x02\x10destination-j\
-sons\x04texts\0s\x04\0\x0eformat-message\x01\x0c\x04\0\x20provider:whatsapp/what\
+\x05\x07\x01j\0\x01s\x01@\x01\x0bconfig-jsons\0\x08\x04\0\x13init-runtime-config\
+\x01\x09\x01j\x01s\x01s\x01@\x02\x10destination-jsons\x04texts\0\x0a\x04\0\x0cse\
+nd-message\x01\x0b\x01@\x02\x0cheaders-jsons\x09body-jsons\0\x0a\x04\0\x0ehandle\
+-webhook\x01\x0c\x01@\0\0\x0a\x04\0\x07refresh\x01\x0d\x01@\x02\x10destination-j\
+sons\x04texts\0s\x04\0\x0eformat-message\x01\x0e\x04\0\x20provider:whatsapp/what\
 sapp@0.0.1\x04\0\x0b\x0e\x01\0\x08whatsapp\x03\0\0\0G\x09producers\x01\x0cproces\
 sed-by\x02\x0dwit-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
