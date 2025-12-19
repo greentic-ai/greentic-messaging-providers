@@ -323,7 +323,7 @@ fn http_send(
     }
     #[cfg(not(test))]
     {
-        http_client::send(req, Some(options), None)
+        http_client::send(req, Some(options.clone()), None)
     }
 }
 
@@ -407,7 +407,8 @@ mod tests {
 
     #[test]
     fn verifies_signature() {
-        let secret = "8f742231b10e8888abcd99yyyzzz85a5";
+        let secret = "8f742231b10e8888abcd99yyyzzz85a5"; // test vector from Slack docs
+        // codeql[hard-coded-cryptographic-value]: test-only public test vector, not used in production
         let ts = "1531420618";
         let body = "token=OneLongToken&team_id=T1&api_app_id=A1&event=hello";
         let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap();
@@ -439,6 +440,8 @@ mod tests {
         );
         headers.insert(
             "X-Slack-Signature".into(),
+            // Non-secret, test-only placeholder to exercise mismatch logic; not used in production.
+            // codeql[hard-coded-cryptographic-value]
             serde_json::Value::String("v0=badsignature".into()),
         );
         let err = verify_signature(&headers, "{}", "secret").unwrap_err();

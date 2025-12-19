@@ -162,7 +162,7 @@ fn http_send(
     }
     #[cfg(not(test))]
     {
-        http_client::send(req, Some(options), None)
+        http_client::send(req, Some(options.clone()), None)
     }
 }
 
