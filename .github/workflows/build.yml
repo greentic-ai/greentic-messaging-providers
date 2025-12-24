@@ -36,14 +36,14 @@ jobs:
             echo "packc install failed; dry-run will fall back to zip" >&2
           fi
 
+      - name: Build components
+        run: ./tools/build_components.sh
+
       - name: Cargo fmt
         run: cargo fmt --check
 
       - name: Cargo test
         run: cargo test --workspace
-
-      - name: Build components
-        run: ./tools/build_components.sh
 
       - name: Upload component artifacts
         uses: actions/upload-artifact@v4
