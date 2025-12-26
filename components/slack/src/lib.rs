@@ -693,10 +693,22 @@ mod tests {
         }
     }
 
+    fn generate_test_secret() -> String {
+        use std::time::{SystemTime, UNIX_EPOCH};
+
+        // Non-deterministic test-only secret keeps CodeQL from flagging a fixed key.
+        format!(
+            "test-secret-{}",
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        )
+    }
+
     #[test]
     fn verifies_signature() {
-        let secret = "8f742231b10e8888abcd99yyyzzz85a5"; // test vector from Slack docs
-        // codeql[hard-coded-cryptographic-value]: test-only public test vector, not used in production
+        let secret = generate_test_secret();
         let ts = "1531420618";
         let body = "token=OneLongToken&team_id=T1&api_app_id=A1&event=hello";
         let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes()).unwrap();
@@ -716,7 +728,7 @@ mod tests {
         );
         headers.insert("X-Slack-Signature".into(), serde_json::Value::String(sig));
 
-        verify_signature(&headers, body, secret).expect("signature should verify");
+        verify_signature(&headers, body, &secret).expect("signature should verify");
     }
 
     #[test]
@@ -726,13 +738,13 @@ mod tests {
             "X-Slack-Request-Timestamp".into(),
             serde_json::Value::String("1".into()),
         );
+        let secret = generate_test_secret();
         headers.insert(
             "X-Slack-Signature".into(),
             // Non-secret, test-only placeholder to exercise mismatch logic; not used in production.
-            // codeql[hard-coded-cryptographic-value]
             serde_json::Value::String("v0=badsignature".into()),
         );
-        let err = verify_signature(&headers, "{}", "secret").unwrap_err();
+        let err = verify_signature(&headers, "{}", &secret).unwrap_err();
         assert!(matches!(
             err,
             VerificationError::SignatureMismatch | VerificationError::InvalidKey
