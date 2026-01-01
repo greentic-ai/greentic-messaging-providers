@@ -5,63 +5,63 @@
       "file": "dist/packs/messaging-dummy.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-dummy:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-email",
       "file": "dist/packs/messaging-email.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-email:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-provider-bundle",
       "file": "dist/packs/messaging-provider-bundle.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-provider-bundle:0.0.0",
-      "digest": "sha256:0d22d779231f720646ccbb11b4860317567e17cd42ecda1d7365d92fa1f31ab3",
-      "built_at": "2026-01-01T14:34:36Z"
+      "digest": "DRY_RUN",
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-slack",
       "file": "dist/packs/messaging-slack.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-slack:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-teams",
       "file": "dist/packs/messaging-teams.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-teams:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-telegram",
       "file": "dist/packs/messaging-telegram.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-telegram:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-webchat",
       "file": "dist/packs/messaging-webchat.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-webchat:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-webex",
       "file": "dist/packs/messaging-webex.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-webex:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     },
     {
       "name": "messaging-whatsapp",
       "file": "dist/packs/messaging-whatsapp.gtpack",
       "ref": "ghcr.io/greentic/greentic-packs/messaging-whatsapp:0.0.0",
       "digest": "DRY_RUN",
-      "built_at": "2026-01-01T14:34:36Z"
+      "built_at": "2026-01-01T17:20:15Z"
     }
   ]
 }

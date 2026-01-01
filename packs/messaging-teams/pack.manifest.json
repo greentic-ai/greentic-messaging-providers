@@ -1,6 +1,6 @@
 {
   "name": "messaging-teams",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Provider-core Microsoft Teams messaging pack (Graph send).",
   "kind": "application",
   "publisher": "Greentic",

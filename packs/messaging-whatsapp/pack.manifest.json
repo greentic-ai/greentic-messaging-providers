@@ -1,6 +1,6 @@
 {
   "name": "messaging-whatsapp",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Provider-core WhatsApp Cloud messaging pack.",
   "kind": "application",
   "publisher": "Greentic",

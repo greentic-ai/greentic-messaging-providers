@@ -1,6 +1,6 @@
 {
   "name": "messaging-dummy",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Deterministic provider-core messaging provider for CI and integration tests.",
   "kind": "application",
   "publisher": "Greentic",

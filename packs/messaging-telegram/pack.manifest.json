@@ -1,6 +1,6 @@
 {
   "name": "messaging-telegram",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Provider-core Telegram messaging provider pack.",
   "kind": "application",
   "publisher": "Greentic",

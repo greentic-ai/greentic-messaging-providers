@@ -143,7 +143,7 @@ for dir in "${ROOT_DIR}/${PACKS_DIR}/"*; do
   generate_pack_manifest "${dir}" "${secrets_out}"
   update_pack_yaml_version "${dir}"
 
-  IFS=$'\n' read -r -d '' -a wasm_paths < <(jq -r '.components[] | (.wasm // ("components/"+((.id // .)+".wasm")))' "${dir}/pack.manifest.json" && printf '\0')
+  IFS=$'\n' read -r -d '' -a wasm_paths < <(jq -r '.components[] | if type=="object" then (.wasm // ("components/"+((.id // "")+".wasm"))) else ("components/"+(. + ".wasm")) end' "${dir}/pack.manifest.json" && printf '\0')
   ensure_components_artifacts "${wasm_paths[@]}"
   stage_components_into_pack "${dir}" "${wasm_paths[@]}"
 

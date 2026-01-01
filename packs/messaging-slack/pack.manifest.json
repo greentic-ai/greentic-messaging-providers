@@ -1,6 +1,6 @@
 {
   "name": "messaging-slack",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Provider-core Slack messaging pack (chat.postMessage).",
   "kind": "application",
   "publisher": "Greentic",

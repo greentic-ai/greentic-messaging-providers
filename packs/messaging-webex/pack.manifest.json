@@ -1,6 +1,6 @@
 {
   "name": "messaging-webex",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Provider-core Webex messaging pack (messages API).",
   "kind": "application",
   "publisher": "Greentic",

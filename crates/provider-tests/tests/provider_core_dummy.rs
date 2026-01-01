@@ -181,7 +181,7 @@ fn pack_has_extension_and_schema() -> Result<()> {
             .get("runtime")
             .and_then(|r| r.get("world"))
             .and_then(|v| v.as_str()),
-        Some("greentic:provider-schema-core/schema-core@1.0.0")
+        Some("greentic:provider/schema-core@1.0.0")
     );
 
     let schema_ref = provider

@@ -1,6 +1,6 @@
 {
   "name": "messaging-email",
-  "version": "0.4.8",
+  "version": "0.0.0",
   "description": "Provider-core SMTP email sender pack (simulated send).",
   "kind": "application",
   "publisher": "Greentic",
