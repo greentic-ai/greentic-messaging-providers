@@ -30,8 +30,9 @@ jobs:
             echo "packc already available"
             exit 0
           fi
-          if cargo install packc --locked; then
-            echo "packc installed via cargo"
+          cargo install cargo-binstall --locked
+          if cargo binstall packc --version 0.4.29 --no-confirm --locked; then
+            echo "packc installed via cargo-binstall"
           else
             echo "packc install failed; dry-run will fall back to zip" >&2
           fi

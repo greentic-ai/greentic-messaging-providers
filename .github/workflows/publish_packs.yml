@@ -45,16 +45,10 @@ jobs:
       - name: Install packc (greentic-pack)
         env:
           CARGO_NET_GIT_FETCH_WITH_CLI: "true"
-          GIT_ASKPASS: /tmp/git-askpass.sh
         run: |
-          cat > /tmp/git-askpass.sh <<'EOF'
-          #!/usr/bin/env bash
-          echo "${GREENTIC_GITHUB_TOKEN}"
-          EOF
-          chmod +x /tmp/git-askpass.sh
-          git config --global credential.helper ""
-          git config --global url."https://github.com/".insteadOf ssh://git@github.com/
-          cargo install packc --locked --git https://github.com/greentic/greentic-pack --tag v0.4.28
+          set -euo pipefail
+          cargo install cargo-binstall --locked
+          cargo binstall packc --version 0.4.29 --no-confirm --locked
 
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
