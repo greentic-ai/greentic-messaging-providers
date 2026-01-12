@@ -1,287 +1,281 @@
 pack_id: messaging-provider-bundle
-version: 0.4.10
+version: 0.4.11
 kind: application
 publisher: Greentic
-
-# Host-injected (non-secret) runtime config blob for all provider components.
-# This file is injected by the host at instantiation/startup time (not read from WASI FS).
-# Providers must be initialized via `init-runtime-config(config-json)`.
 x-provider-runtime-config:
   schema_version: 1
   format: json
   injected_as: provider_runtime_config.json
   init_export: init-runtime-config
-
 components:
-  - id: "slack"
-    kind: messaging
-    version: 0.4.10
-    world: "provider:slack/slack"
-    supports: ["messaging"]
-    profiles:
-      default: "default"
-      supported: ["default"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/slack.wasm"
-
-  - id: "teams"
-    kind: messaging
-    version: 0.4.10
-    world: "provider:teams/teams"
-    supports: ["messaging"]
-    profiles:
-      default: "default"
-      supported: ["default"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/teams.wasm"
-
-  - id: "telegram"
-    kind: messaging
-    version: 0.4.10
-    world: "provider:telegram/telegram"
-    supports: ["messaging"]
-    profiles:
-      default: "default"
-      supported: ["default"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/telegram.wasm"
-
-  - id: "webchat"
-    kind: messaging
-    version: 0.4.10
-    world: "provider:webchat/webchat"
-    supports: ["messaging"]
-    profiles:
-      default: "default"
-      supported: ["default"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/webchat.wasm"
-
-  - id: "webex"
-    kind: messaging
-    version: 0.4.10
-    world: "provider:webex/webex"
-    supports: ["messaging"]
-    profiles:
-      default: "default"
-      supported: ["default"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/webex.wasm"
-
-  - id: "whatsapp"
-    kind: messaging
-    version: 0.4.10
-    world: "provider:whatsapp/whatsapp"
-    supports: ["messaging"]
-    profiles:
-      default: "default"
-      supported: ["default"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/whatsapp.wasm"
-
-  - id: "templates"
-    kind: utility
-    version: 0.4.10
-    world: "greentic:component/component@0.5.0"
-    supports: ["messaging"]
-    profiles:
-      default: "stateless"
-      supported: ["stateless"]
-    capabilities:
-      wasi: {}
-      host: {}
-    wasm: "components/templates.wasm"
-    manifest: "components/templates.manifest.json"
-    oci:
-      image: "ghcr.io/greentic-ai/components/templates"
-      digest: "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
-      artifact: "component_templates.wasm"
-      manifest: "component.publish.manifest.json"
-
+- id: ai.greentic.component-templates
+  version: 0.4.11
+  world: root:component/root
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/ai.greentic.component-templates.wasm
+- id: slack
+  version: 0.4.11
+  world: provider:slack/slack
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/slack.wasm
+- id: teams
+  version: 0.4.11
+  world: provider:teams/teams
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/teams.wasm
+- id: telegram
+  version: 0.4.11
+  world: provider:telegram/telegram
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/telegram.wasm
+- id: templates
+  version: 0.4.11
+  world: greentic:component/component@0.5.0
+  supports:
+  - messaging
+  profiles:
+    default: stateless
+    supported:
+    - stateless
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/templates.wasm
+- id: webchat
+  version: 0.4.11
+  world: provider:webchat/webchat
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/webchat.wasm
+- id: webex
+  version: 0.4.11
+  world: provider:webex/webex
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/webex.wasm
+- id: whatsapp
+  version: 0.4.11
+  world: provider:whatsapp/whatsapp
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/whatsapp.wasm
+dependencies: []
+flows:
+- id: diagnostics
+  file: flows/diagnostics.ygtc
+  tags:
+  - diagnostics
+  entrypoints:
+  - diagnostics
+- id: main
+  file: flows/main.ygtc
+  tags:
+  - default
+  entrypoints:
+  - default
+- id: setup_custom
+  file: flows/setup_custom.ygtc
+  tags:
+  - setup
+  entrypoints:
+  - setup
+- id: setup_default
+  file: flows/setup_default.ygtc
+  tags:
+  - setup
+  entrypoints:
+  - setup
+- id: verify_webhooks
+  file: flows/verify_webhooks.ygtc
+  tags:
+  - maintenance
+  entrypoints:
+  - diagnostics
+assets: []
 extensions:
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.10
+    version: 0.4.11
     inline:
       providers:
-        - kind: messaging
-          provider_type: "messaging.slack.api"
-          capabilities: ["messaging"]
-          ops: ["send", "reply"]
-          config_schema_ref: "schemas/messaging/slack/config.schema.json"
-          state_schema_ref: ""
-          runtime:
-            component_ref: "slack"
-            export: "schema-core-api"
-            world: "greentic:provider/schema-core@1.0.0"
-          docs_ref: ""
-        - kind: messaging
-          provider_type: "messaging.teams.graph"
-          capabilities: ["messaging"]
-          ops: ["send", "reply"]
-          config_schema_ref: "schemas/messaging/teams/config.schema.json"
-          state_schema_ref: ""
-          runtime:
-            component_ref: "teams"
-            export: "schema-core-api"
-            world: "greentic:provider/schema-core@1.0.0"
-          docs_ref: ""
-        - kind: messaging
-          provider_type: "messaging.telegram.bot"
-          capabilities: ["messaging"]
-          ops: ["send", "reply"]
-          config_schema_ref: "schemas/messaging/telegram/config.schema.json"
-          state_schema_ref: ""
-          runtime:
-            component_ref: "telegram"
-            export: "schema-core-api"
-            world: "greentic:provider/schema-core@1.0.0"
-          docs_ref: ""
-        - kind: messaging
-          provider_type: "messaging.webchat"
-          capabilities: ["messaging"]
-          ops: ["send", "reply"]
-          config_schema_ref: "schemas/messaging/webchat/config.schema.json"
-          state_schema_ref: ""
-          runtime:
-            component_ref: "webchat"
-            export: "schema-core-api"
-            world: "greentic:provider/schema-core@1.0.0"
-          docs_ref: ""
-        - kind: messaging
-          provider_type: "messaging.webex.bot"
-          capabilities: ["messaging"]
-          ops: ["send", "reply"]
-          config_schema_ref: "schemas/messaging/webex/config.schema.json"
-          state_schema_ref: ""
-          runtime:
-            component_ref: "webex"
-            export: "schema-core-api"
-            world: "greentic:provider/schema-core@1.0.0"
-          docs_ref: ""
-        - kind: messaging
-          provider_type: "messaging.whatsapp.cloud"
-          capabilities: ["messaging"]
-          ops: ["send", "reply"]
-          config_schema_ref: "schemas/messaging/whatsapp/config.schema.json"
-          state_schema_ref: ""
-          runtime:
-            component_ref: "whatsapp"
-            export: "schema-core-api"
-            world: "greentic:provider/schema-core@1.0.0"
-          docs_ref: ""
+      - provider_type: messaging.slack.api
+        capabilities:
+        - messaging
+        ops:
+        - send
+        - reply
+        config_schema_ref: schemas/messaging/slack/config.schema.json
+        state_schema_ref: ''
+        runtime:
+          component_ref: slack
+          export: schema-core-api
+          world: greentic:provider/schema-core@1.0.0
+        docs_ref: ''
+      - provider_type: messaging.teams.graph
+        capabilities:
+        - messaging
+        ops:
+        - send
+        - reply
+        config_schema_ref: schemas/messaging/teams/config.schema.json
+        state_schema_ref: ''
+        runtime:
+          component_ref: teams
+          export: schema-core-api
+          world: greentic:provider/schema-core@1.0.0
+        docs_ref: ''
+      - provider_type: messaging.telegram.bot
+        capabilities:
+        - messaging
+        ops:
+        - send
+        - reply
+        config_schema_ref: schemas/messaging/telegram/config.schema.json
+        state_schema_ref: ''
+        runtime:
+          component_ref: telegram
+          export: schema-core-api
+          world: greentic:provider/schema-core@1.0.0
+        docs_ref: ''
+      - provider_type: messaging.webchat
+        capabilities:
+        - messaging
+        ops:
+        - send
+        - reply
+        config_schema_ref: schemas/messaging/webchat/config.schema.json
+        state_schema_ref: ''
+        runtime:
+          component_ref: webchat
+          export: schema-core-api
+          world: greentic:provider/schema-core@1.0.0
+        docs_ref: ''
+      - provider_type: messaging.webex.bot
+        capabilities:
+        - messaging
+        ops:
+        - send
+        - reply
+        config_schema_ref: schemas/messaging/webex/config.schema.json
+        state_schema_ref: ''
+        runtime:
+          component_ref: webex
+          export: schema-core-api
+          world: greentic:provider/schema-core@1.0.0
+        docs_ref: ''
+      - provider_type: messaging.whatsapp.cloud
+        capabilities:
+        - messaging
+        ops:
+        - send
+        - reply
+        config_schema_ref: schemas/messaging/whatsapp/config.schema.json
+        state_schema_ref: ''
+        runtime:
+          component_ref: whatsapp
+          export: schema-core-api
+          world: greentic:provider/schema-core@1.0.0
+        docs_ref: ''
   messaging.provider_flow_hints:
     kind: messaging.provider_flow_hints
-    version: 0.4.10
+    version: 0.4.11
     inline:
       messaging.slack.api:
-        setup_default: setup_default
-        setup_custom: setup_custom
         diagnostics: diagnostics
+        setup_custom: setup_custom
+        setup_default: setup_default
         verify_webhooks: verify_webhooks
       messaging.teams.graph:
-        setup_default: setup_default
-        setup_custom: setup_custom
         diagnostics: diagnostics
+        setup_custom: setup_custom
+        setup_default: setup_default
         verify_webhooks: verify_webhooks
       messaging.telegram.bot:
-        setup_default: setup_default
-        setup_custom: setup_custom
         diagnostics: diagnostics
+        setup_custom: setup_custom
+        setup_default: setup_default
         verify_webhooks: verify_webhooks
       messaging.webchat:
-        setup_default: setup_default
-        setup_custom: setup_custom
         diagnostics: diagnostics
+        setup_custom: setup_custom
+        setup_default: setup_default
         verify_webhooks: verify_webhooks
       messaging.webex.bot:
-        setup_default: setup_default
-        setup_custom: setup_custom
         diagnostics: diagnostics
+        setup_custom: setup_custom
+        setup_default: setup_default
         verify_webhooks: verify_webhooks
       messaging.whatsapp.cloud:
-        setup_default: setup_default
-        setup_custom: setup_custom
         diagnostics: diagnostics
+        setup_custom: setup_custom
+        setup_default: setup_default
         verify_webhooks: verify_webhooks
-
-flows:
-  - id: main
-    kind: job
-    version: 0.4.10
-    file: flows/main.ygtc
-    tags: [default]
-    entrypoints: [default]
-  - id: setup_default
-    kind: job
-    version: 0.4.10
-    file: flows/setup_default.ygtc
-    tags: [setup]
-    entrypoints: [setup]
-  - id: setup_custom
-    kind: job
-    version: 0.4.10
-    file: flows/setup_custom.ygtc
-    tags: [setup]
-    entrypoints: [setup]
-  - id: diagnostics
-    kind: job
-    version: 0.4.10
-    file: flows/diagnostics.ygtc
-    tags: [diagnostics]
-    entrypoints: [diagnostics]
-  - id: verify_webhooks
-    kind: job
-    version: 0.4.10
-    file: flows/verify_webhooks.ygtc
-    tags: [maintenance]
-    entrypoints: [diagnostics]
-
-messaging:
-  adapters:
-    - name: Slack
-      kind: slack
-      component: slack
-      default_flow: main
-      custom_flow: null
-    - name: Teams
-      kind: teams
-      component: teams
-      default_flow: main
-      custom_flow: null
-    - name: Telegram
-      kind: telegram
-      component: telegram
-      default_flow: main
-      custom_flow: null
-    - name: WebChat
-      kind: webchat
-      component: webchat
-      default_flow: main
-      custom_flow: null
-    - name: Webex
-      kind: webex
-      component: webex
-      default_flow: main
-      custom_flow: null
-    - name: WhatsApp
-      kind: whatsapp
-      component: whatsapp
-      default_flow: main
-      custom_flow: null
-
-dependencies: []
-
-assets: []

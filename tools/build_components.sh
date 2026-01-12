@@ -8,6 +8,9 @@ TARGET_DIR_OVERRIDE="${ROOT_DIR}/target/${BUILD_TARGET}"
 PACKAGES=("secrets-probe" "slack" "teams" "telegram" "webchat" "webex" "whatsapp" "messaging-provider-dummy" "messaging-provider-telegram" "messaging-provider-teams" "messaging-provider-email" "messaging-provider-slack" "messaging-provider-webex" "messaging-provider-whatsapp" "messaging-provider-webchat")
 WASM_TOOLS_BIN="${WASM_TOOLS_BIN:-wasm-tools}"
 HAS_WASM_TOOLS=0
+# Keep tool caches inside the workspace to avoid sandbox write issues.
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${ROOT_DIR}/.cache}"
+mkdir -p "${XDG_CACHE_HOME}"
 
 if ! rustup target list --installed | grep -q "${BUILD_TARGET}"; then
   echo "Installing Rust target ${BUILD_TARGET}..."

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "components": [
+    {
+      "name": "diagnostics::check_secret",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "diagnostics::optional_loopback",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "diagnostics::summary",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_custom::apply",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_custom::collect",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_custom::summary",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_custom::validate",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_default::apply",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_default::collect",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_default::summary",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "setup_default::validate",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    },
+    {
+      "name": "verify_webhooks::steps",
+      "ref": "oci://ghcr.io/greentic-ai/components/templates@sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
+      "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340"
+    }
+  ]
+}

@@ -135,8 +135,17 @@ for dir in "${PACKS_DIR}"/*; do
     fi
     mkdir -p "$(dirname "${dest}")"
     if [ ! -f "${src}" ] || { [ -n "${manifest_rel}" ] && [ ! -f "${manifest_src}" ]; }; then
+      # Prefer OCI fetch when metadata is available.
       if [ -n "${oci_image}" ] && [ -n "${oci_artifact}" ]; then
         fetch_oci_component "${oci_image}" "${oci_digest}" "${oci_artifact}" "${src}" "${oci_manifest}" "${manifest_src}"
+      # Fallback: reuse component artifacts already bundled under the pack directory.
+      elif [ -f "${dir}/${wasm_rel}" ]; then
+        mkdir -p "$(dirname "${src}")"
+        cp "${dir}/${wasm_rel}" "${src}"
+        if [ -n "${manifest_rel}" ] && [ -f "${dir}/${manifest_rel}" ]; then
+          mkdir -p "$(dirname "${manifest_src}")"
+          cp "${dir}/${manifest_rel}" "${manifest_src}"
+        fi
       else
         echo "Missing component artifact: ${src}" >&2
         exit 1

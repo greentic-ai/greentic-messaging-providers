@@ -169,13 +169,19 @@ fn component_path(provider: ProviderId) -> PathBuf {
     let name = provider.as_str();
     let candidates = [
         workspace_root().join(format!("target/components/{name}.wasm")),
-        workspace_root().join(format!("target/wasm32-wasip1/release/{name}.wasm")),
-        workspace_root().join(format!("target/wasm32-wasip1/debug/{name}.wasm")),
+        workspace_root().join(format!("target/wasm32-wasip2/release/{name}.wasm")),
+        workspace_root().join(format!("target/wasm32-wasip2/debug/{name}.wasm")),
         workspace_root().join(format!(
-            "components/{name}/target/wasm32-wasip1/release/{name}.wasm"
+            "target/wasm32-wasip2/wasm32-wasip2/release/{name}.wasm"
         )),
         workspace_root().join(format!(
-            "components/{name}/target/wasm32-wasip1/debug/{name}.wasm"
+            "target/wasm32-wasip2/wasm32-wasip2/debug/{name}.wasm"
+        )),
+        workspace_root().join(format!(
+            "components/{name}/target/wasm32-wasip2/release/{name}.wasm"
+        )),
+        workspace_root().join(format!(
+            "components/{name}/target/wasm32-wasip2/debug/{name}.wasm"
         )),
         packs_root().join(format!("{name}.wasm")),
     ];

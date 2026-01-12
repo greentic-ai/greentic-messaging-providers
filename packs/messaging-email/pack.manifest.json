@@ -1,6 +1,6 @@
 {
   "name": "messaging-email",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "description": "Provider-core SMTP email sender pack (simulated send).",
   "kind": "application",
   "publisher": "Greentic",
@@ -11,16 +11,17 @@
     }
   },
   "components": [
-    "messaging-provider-email"
+    "ai.greentic.component-templates",
+    "messaging-provider-email",
+    "templates"
   ],
   "extensions": {
     "greentic.provider-extension.v1": {
       "kind": "greentic.provider-extension.v1",
-      "version": "0.4.10",
+      "version": "0.4.11",
       "inline": {
         "providers": [
           {
-            "kind": "messaging",
             "provider_type": "messaging.email.smtp",
             "capabilities": [
               "messaging"
@@ -43,12 +44,12 @@
     },
     "messaging.provider_flow_hints": {
       "kind": "messaging.provider_flow_hints",
-      "version": "0.4.10",
+      "version": "0.4.11",
       "inline": {
         "messaging.email.smtp": {
-          "setup_default": "setup_default",
+          "diagnostics": "diagnostics",
           "setup_custom": "setup_custom",
-          "diagnostics": "diagnostics"
+          "setup_default": "setup_default"
         }
       }
     }
@@ -62,21 +63,17 @@
   ],
   "flows": [
     {
-      "id": "setup_default",
-      "kind": "job",
-      "version": "0.4.10",
-      "file": "flows/setup_default.ygtc",
+      "id": "diagnostics",
+      "file": "flows/diagnostics.ygtc",
       "tags": [
         "default"
       ],
       "entrypoints": [
-        "setup"
+        "diagnostics"
       ]
     },
     {
       "id": "setup_custom",
-      "kind": "job",
-      "version": "0.4.10",
       "file": "flows/setup_custom.ygtc",
       "tags": [
         "default"
@@ -86,23 +83,42 @@
       ]
     },
     {
-      "id": "diagnostics",
-      "kind": "job",
-      "version": "0.4.10",
-      "file": "flows/diagnostics.ygtc",
+      "id": "setup_default",
+      "file": "flows/setup_default.ygtc",
       "tags": [
         "default"
       ],
       "entrypoints": [
-        "diagnostics"
+        "setup"
       ]
     }
   ],
   "component_sources": [
     {
+      "id": "ai.greentic.component-templates",
+      "version": "0.4.11",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/ai.greentic.component-templates.wasm"
+    },
+    {
       "id": "messaging-provider-email",
-      "kind": "messaging",
-      "version": "0.4.10",
+      "version": "0.4.11",
       "world": "greentic:provider/schema-core@1.0.0",
       "supports": [
         "messaging"
@@ -114,15 +130,17 @@
         ]
       },
       "capabilities": {
-        "wasi": {},
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
         "host": {}
       },
       "wasm": "components/messaging-provider-email.wasm"
     },
     {
       "id": "templates",
-      "kind": "utility",
-      "version": "0.4.10",
+      "version": "0.4.11",
       "world": "greentic:component/component@0.5.0",
       "supports": [
         "messaging"
@@ -134,17 +152,25 @@
         ]
       },
       "capabilities": {
-        "wasi": {},
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
         "host": {}
       },
-      "wasm": "components/templates.wasm",
-      "manifest": "components/templates.manifest.json",
-      "oci": {
-        "image": "ghcr.io/greentic-ai/components/templates",
-        "digest": "sha256:0904bee6ecd737506265e3f38f3e4fe6b185c20fd1b0e7c06ce03cdeedc00340",
-        "artifact": "component_templates.wasm",
-        "manifest": "component.publish.manifest.json"
-      }
+      "wasm": "components/templates.wasm"
+    }
+  ],
+  "capabilities_cache": [
+    {
+      "component": "ai.greentic.component-templates",
+      "version": "v1",
+      "path": "components/ai.greentic.component-templates-capabilities_v1.json"
+    },
+    {
+      "component": "templates",
+      "version": "v1",
+      "path": "components/templates-capabilities_v1.json"
     }
   ]
 }

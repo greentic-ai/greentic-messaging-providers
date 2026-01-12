@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "metadata": {
+    "provider_id": "templates",
+    "display_name": "Templates",
+    "version": "0.0.0",
+    "rate_limit_hint": null
+  },
+  "capabilities": {},
+  "limits": {}
+}

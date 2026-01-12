@@ -12,7 +12,7 @@ PACK_VERSION="${PACK_VERSION#v}"
 PACKS_DIR="${PACKS_DIR:-packs}"
 OUT_DIR="${OUT_DIR:-dist/packs}"
 DRY_RUN="${DRY_RUN:-0}"
-PACKC_BIN="${PACKC_BIN:-packc}"
+PACKC_BIN="${PACKC_BIN:-greentic-pack}"
 PACKC_BUILD_FLAGS="${PACKC_BUILD_FLAGS:-}"
 MEDIA_TYPE="${MEDIA_TYPE:-application/vnd.greentic.gtpack.v1+zip}"
 
@@ -27,13 +27,13 @@ command -v zip >/dev/null 2>&1 || { echo "zip is required"; exit 1; }
 command -v oras >/dev/null 2>&1 || { echo "oras is required"; exit 1; }
 command -v python3 >/dev/null 2>&1 || { echo "python3 is required"; exit 1; }
 if ! command -v "${PACKC_BIN}" >/dev/null 2>&1; then
-  echo "packc (from greentic-pack) is required for building gtpack artifacts" >&2
+  echo "greentic-pack is required for building gtpack artifacts" >&2
   exit 1
 fi
 packc_version="$("${PACKC_BIN}" --version 2>/dev/null || true)"
 required_packc="0.4.28"
 if [ -z "${packc_version}" ]; then
-  echo "packc is required (expected >= ${required_packc})" >&2
+  echo "greentic-pack is required (expected >= ${required_packc})" >&2
   exit 1
 fi
 echo "Using ${PACKC_BIN}: ${packc_version}" >&2
@@ -48,7 +48,7 @@ def parse(ver: str):
 current = parse(sys.argv[1])
 required = parse(sys.argv[2])
 if current < required:
-    sys.stderr.write(f"packc {sys.argv[2]} or newer is required; found {sys.argv[1]}\n")
+    sys.stderr.write(f"greentic-pack {sys.argv[2]} or newer is required; found {sys.argv[1]}\n")
     sys.exit(1)
 PY
 
@@ -203,7 +203,7 @@ for dir in "${ROOT_DIR}/${PACKS_DIR}/"*; do
   done
 
   if [ ! -f "${dir}/pack.yaml" ]; then
-    echo "Missing pack.yaml in ${dir}; packc requires pack.yaml inputs" >&2
+    echo "Missing pack.yaml in ${dir}; greentic-pack requires pack.yaml inputs" >&2
     exit 1
   fi
 
@@ -213,24 +213,19 @@ for dir in "${ROOT_DIR}/${PACKS_DIR}/"*; do
   if [ -n "${PACKC_BUILD_FLAGS:-}" ]; then
     IFS=' ' read -r -a packc_flags <<< "${PACKC_BUILD_FLAGS}"
   fi
-  if [ "${#packc_flags[@]}" -gt 0 ]; then
-    (cd "${dir}" && "${PACKC_BIN}" build "${packc_flags[@]}" \
-      --in "." \
-      --gtpack-out "build/${pack_name}.gtpack" \
-      --secrets-req ".secret_requirements.json")
-  else
-    (cd "${dir}" && "${PACKC_BIN}" build \
-      --in "." \
-      --gtpack-out "build/${pack_name}.gtpack" \
-      --secrets-req ".secret_requirements.json")
-  fi
+  # Avoid greentic-pack mutating pack.yaml during CI runs.
+  packc_flags+=("--no-update")
+  (cd "${dir}" && "${PACKC_BIN}" build "${packc_flags[@]}" \
+    --in "." \
+    --gtpack-out "build/${pack_name}.gtpack" \
+    --secrets-req ".secret_requirements.json")
   mv "${local_out_dir}/${pack_name}.gtpack" "${pack_out}"
 
   python3 "${ROOT_DIR}/tools/validate_pack_extensions.py" "${pack_out}"
 
-  pack_version="$("${PACKC_BIN}" inspect --json --pack "${pack_out}" | jq -r '.meta.packVersion // ""')"
+  pack_version="$("${PACKC_BIN}" doctor --json --pack "${pack_out}" | jq -r '.meta.packVersion // ""')"
   if [ "${pack_version}" = "1" ] || [ -z "${pack_version}" ]; then
-    echo "warning: packc produced pack-v1 manifest for ${pack_name}; proceed anyway (upgrade packc for newer schema) " >&2
+    echo "warning: greentic-pack produced pack-v1 manifest for ${pack_name}; proceed anyway (upgrade greentic-pack for newer schema) " >&2
   fi
 
   oci_ref="${OCI_REGISTRY}/${OCI_ORG}/${OCI_REPO}/${pack_name}:${PACK_VERSION}"
