@@ -19,9 +19,6 @@ jobs:
   e2e-live:
     runs-on: ubuntu-latest
     environment: e2e-live
-    env:
-      SECRETS_ROOT: ${{ runner.temp }}/greentic-secrets
-      GREENTIC_SECRETS_DIR: ${{ runner.temp }}/greentic-secrets
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,6 +50,11 @@ jobs:
         run: |
           cargo binstall greentic-messaging-test --no-confirm --locked
           cargo binstall greentic-secrets --no-confirm --locked
+
+      - name: Set secrets cache dir
+        run: |
+          echo "SECRETS_ROOT=${RUNNER_TEMP}/greentic-secrets" >> "${GITHUB_ENV}"
+          echo "GREENTIC_SECRETS_DIR=${RUNNER_TEMP}/greentic-secrets" >> "${GITHUB_ENV}"
 
       - name: "Guard: deny prod environment"
         run: |
