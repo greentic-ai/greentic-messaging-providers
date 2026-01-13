@@ -86,6 +86,86 @@ generate_pack_manifest() {
     --secrets-out "${secrets_out}"
 }
 
+ensure_pack_readme() {
+  local pack_dir="$1"
+  local manifest_path="${pack_dir}/pack.manifest.json"
+  local readme_path="${pack_dir}/README.md"
+  [ -f "${readme_path}" ] && return 0
+  [ -f "${manifest_path}" ] || return 0
+  python3 - "${manifest_path}" "${readme_path}" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+def titleize(name: str) -> str:
+    return " ".join([part.capitalize() for part in name.replace("_", "-").split("-") if part])
+
+manifest = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+out_path = Path(sys.argv[2])
+
+name = manifest.get("name", out_path.parent.name)
+desc = (manifest.get("description") or "").strip()
+title = f"{titleize(name)} Pack"
+
+lines = [f"# {title}", ""]
+if desc:
+    lines.append(desc)
+    lines.append("")
+
+providers = (
+    (manifest.get("extensions") or {})
+    .get("greentic.provider-extension.v1", {})
+    .get("inline", {})
+    .get("providers", [])
+)
+if providers:
+    lines.append("## Providers")
+    for provider in providers:
+        ptype = provider.get("provider_type", "")
+        caps = provider.get("capabilities") or []
+        ops = provider.get("ops") or []
+        details = []
+        if caps:
+            details.append(f"capabilities: {', '.join(caps)}")
+        if ops:
+            details.append(f"ops: {', '.join(ops)}")
+        suffix = f" ({'; '.join(details)})" if details else ""
+        lines.append(f"- `{ptype}`{suffix}")
+    lines.append("")
+
+components = manifest.get("components") or []
+if components:
+    lines.append("## Components")
+    for comp in components:
+        lines.append(f"- `{comp}`")
+    lines.append("")
+
+secrets = manifest.get("secret_requirements") or []
+lines.append("## Secrets")
+if secrets:
+    for item in secrets:
+        name = (item.get("name") or "").strip()
+        scope = (item.get("scope") or "").strip()
+        desc = (item.get("description") or "").strip()
+        scope_part = f" ({scope})" if scope else ""
+        desc_part = f": {desc}" if desc else ""
+        lines.append(f"- `{name}`{scope_part}{desc_part}")
+else:
+    lines.append("- None.")
+lines.append("")
+
+flows = manifest.get("flows") or []
+if flows:
+    lines.append("## Flows")
+    for flow in flows:
+        fid = flow.get("id", "")
+        lines.append(f"- `{fid}`")
+    lines.append("")
+
+out_path.write_text("\n".join(lines), encoding="utf-8")
+PY
+}
+
 update_pack_yaml_version() {
   local pack_dir="$1"
   local yaml_path="${pack_dir}/pack.yaml"
@@ -160,6 +240,7 @@ for dir in "${ROOT_DIR}/${PACKS_DIR}/"*; do
   secrets_out="${dir}/.secret_requirements.json"
 
   generate_pack_manifest "${dir}" "${secrets_out}"
+  ensure_pack_readme "${dir}"
   update_pack_yaml_version "${dir}"
 
   components=()
@@ -270,6 +351,13 @@ PY
 )"
 
   if [ "${DRY_RUN}" -eq 0 ]; then
+    readme_path="${dir}/README.md"
+    pack_desc="$(jq -r '.description // empty' "${dir}/pack.manifest.json")"
+    pack_title="$(jq -r '.name // empty' "${dir}/pack.manifest.json")"
+    oras_files=("${pack_out}:${MEDIA_TYPE}")
+    if [ -f "${readme_path}" ]; then
+      oras_files+=("${readme_path}:text/markdown")
+    fi
     digest="$(
       oras push \
         --artifact-type "${MEDIA_TYPE}" \
@@ -277,8 +365,10 @@ PY
         --annotation "org.opencontainers.image.source=${GITHUB_SERVER_URL:-https://github.com}/${GITHUB_REPOSITORY:-unknown}" \
         --annotation "org.opencontainers.image.revision=${git_sha}" \
         --annotation "org.opencontainers.image.version=${PACK_VERSION}" \
+        --annotation "org.opencontainers.image.title=${pack_title}" \
+        --annotation "org.opencontainers.image.description=${pack_desc}" \
         "${oci_ref}" \
-        "${pack_out}:${MEDIA_TYPE}" \
+        "${oras_files[@]}" \
         | awk '/Digest:/{print $2}' | tail -n1
     )"
   else

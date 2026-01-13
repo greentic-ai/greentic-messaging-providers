@@ -12,8 +12,6 @@ permissions:
   packages: write
 
 env:
-  PACK_VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('0.0.0-{0}', github.sha) }}
-  COMPONENT_VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('0.0.0-{0}', github.sha) }}
   OCI_REGISTRY: ghcr.io
   OCI_NAMESPACE: ${{ github.repository_owner }}/greentic-messaging-providers
 
@@ -100,6 +98,21 @@ jobs:
           path: packs.lock.json
           if-no-files-found: error
 
+      - name: Set publish version
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
+        run: |
+          python3 - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          data = tomllib.loads(Path("Cargo.toml").read_text())
+          version = data["workspace"]["package"]["version"]
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
+            handle.write(f"PUBLISH_VERSION={version}\n")
+          print(f"Using Cargo workspace version: {version}")
+          PY
+
       - name: Login to GHCR
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
         run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
@@ -107,7 +120,7 @@ jobs:
       - name: Publish components
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
         env:
-          VERSION: ${{ env.COMPONENT_VERSION }}
+          VERSION: ${{ env.PUBLISH_VERSION }}
         run: bash ./tools/publish_oci.sh
 
       - name: Upload components lockfile
@@ -121,7 +134,7 @@ jobs:
       - name: Publish packs
         if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/'))
         env:
-          PACK_VERSION: ${{ env.PACK_VERSION }}
+          PACK_VERSION: ${{ env.PUBLISH_VERSION }}
         run: ./tools/publish_packs_oci.sh
 
       - name: Upload built packs
