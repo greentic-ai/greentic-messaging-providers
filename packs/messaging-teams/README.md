@@ -2,6 +2,9 @@
 
 Provider-core Microsoft Teams messaging pack (Graph send).
 
+## Pack ID
+- `messaging-teams`
+
 ## Providers
 - `messaging.teams.graph` (capabilities: messaging; ops: send, reply)
 

@@ -2,6 +2,9 @@
 
 Provider-core WebChat messaging pack (send + ingest).
 
+## Pack ID
+- `messaging-webchat`
+
 ## Providers
 - `messaging.webchat` (capabilities: messaging; ops: send, ingest)
 

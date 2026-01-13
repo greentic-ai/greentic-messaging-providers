@@ -112,6 +112,8 @@ if desc:
     lines.append(desc)
     lines.append("")
 
+lines.extend(["## Pack ID", f"- `{name}`", ""])
+
 providers = (
     (manifest.get("extensions") or {})
     .get("greentic.provider-extension.v1", {})

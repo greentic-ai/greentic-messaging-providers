@@ -2,6 +2,9 @@
 
 Provider-core SMTP email sender pack (simulated send).
 
+## Pack ID
+- `messaging-email`
+
 ## Providers
 - `messaging.email.smtp` (capabilities: messaging; ops: send, reply)
 

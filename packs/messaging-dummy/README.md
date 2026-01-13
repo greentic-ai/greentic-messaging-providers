@@ -2,6 +2,9 @@
 
 Deterministic provider-core messaging provider for CI and integration tests.
 
+## Pack ID
+- `messaging-dummy`
+
 ## Providers
 - `messaging.dummy` (capabilities: messaging; ops: send)
 

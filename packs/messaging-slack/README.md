@@ -2,6 +2,9 @@
 
 Provider-core Slack messaging pack (chat.postMessage).
 
+## Pack ID
+- `messaging-slack`
+
 ## Providers
 - `messaging.slack.api` (capabilities: messaging; ops: send, reply)
 

@@ -2,6 +2,9 @@
 
 Provider-core Telegram messaging provider pack.
 
+## Pack ID
+- `messaging-telegram`
+
 ## Providers
 - `messaging.telegram.bot` (capabilities: messaging; ops: send, reply)
 

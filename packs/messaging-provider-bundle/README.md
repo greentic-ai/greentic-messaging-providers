@@ -2,6 +2,9 @@
 
 Bundle of messaging provider components.
 
+## Pack ID
+- `messaging-provider-bundle`
+
 ## Providers
 - `messaging.slack.api` (capabilities: messaging; ops: send, reply)
 - `messaging.teams.graph` (capabilities: messaging; ops: send, reply)

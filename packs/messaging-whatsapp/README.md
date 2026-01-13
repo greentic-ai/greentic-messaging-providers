@@ -2,6 +2,9 @@
 
 Provider-core WhatsApp Cloud messaging pack.
 
+## Pack ID
+- `messaging-whatsapp`
+
 ## Providers
 - `messaging.whatsapp.cloud` (capabilities: messaging; ops: send, reply)
 

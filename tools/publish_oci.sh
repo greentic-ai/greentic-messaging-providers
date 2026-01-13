@@ -33,7 +33,7 @@ for wasm in "${ARTIFACT_DIR}"/*.wasm; do
   ref="${OCI_REGISTRY}/${OCI_NAMESPACE}/${name}:${VERSION}"
   manifest_path="${ROOT_DIR}/components/${name}/component.manifest.json"
   readme_src="${ROOT_DIR}/components/${name}/README.md"
-  readme_name="README-${name}.md"
+  readme_name="README.md"
   readme_path="${ARTIFACT_DIR}/${readme_name}"
   title="${name}"
   description=""
@@ -43,6 +43,8 @@ for wasm in "${ARTIFACT_DIR}"/*.wasm; do
   fi
   if [ -f "${readme_src}" ]; then
     cp "${readme_src}" "${readme_path}"
+  else
+    rm -f "${readme_path}"
   fi
 
   echo "Pushing ${wasm} to ${ref}"
@@ -64,6 +66,7 @@ for wasm in "${ARTIFACT_DIR}"/*.wasm; do
         "${oras_files[@]}"
     ) | awk '/Digest:/{print $2}' | tail -n1
   )"
+  rm -f "${readme_path}"
 
   if [[ -z "${digest}" ]]; then
     echo "Failed to capture digest for ${ref}" >&2

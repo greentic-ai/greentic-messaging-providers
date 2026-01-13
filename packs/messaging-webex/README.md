@@ -2,6 +2,9 @@
 
 Provider-core Webex messaging pack (messages API).
 
+## Pack ID
+- `messaging-webex`
+
 ## Providers
 - `messaging.webex.bot` (capabilities: messaging; ops: send, reply)
 
