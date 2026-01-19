@@ -58,6 +58,34 @@ fn build_gtpack(src_dir: &Path, output: &Path) -> Result<()> {
     Ok(())
 }
 
+fn strip_entry_from_gtpack(src: &Path, dest: &Path, excluded: &str) -> Result<()> {
+    let archive = fs::File::open(src)?;
+    let mut zip = zip::ZipArchive::new(archive)?;
+    let file = fs::File::create(dest)?;
+    let mut writer = zip::ZipWriter::new(file);
+    let options =
+        zip::write::SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored);
+
+    for i in 0..zip.len() {
+        let mut entry = zip.by_index(i)?;
+        let name = entry.name().to_string();
+        if name == excluded {
+            continue;
+        }
+        if entry.is_dir() {
+            writer.add_directory(name, options)?;
+            continue;
+        }
+        let mut contents = Vec::new();
+        entry.read_to_end(&mut contents)?;
+        writer.start_file(name, options)?;
+        writer.write_all(&contents)?;
+    }
+
+    writer.finish()?;
+    Ok(())
+}
+
 fn read_from_gtpack(gtpack: &Path, file: &str) -> Result<Vec<u8>> {
     let archive = fs::File::open(gtpack)?;
     let mut zip = zip::ZipArchive::new(archive)?;
@@ -312,5 +340,49 @@ fn packs_lock_has_digest() -> Result<()> {
     hasher.update(&bytes);
     let hex = format!("{:x}", hasher.finalize());
     assert_eq!(digest, format!("sha256:{hex}"));
+    Ok(())
+}
+
+#[test]
+fn greentic_pack_doctor_requires_config_schema() -> Result<()> {
+    let root = workspace_root();
+    let src = root
+        .join("dist")
+        .join("packs")
+        .join("messaging-dummy.gtpack");
+    assert!(
+        src.exists(),
+        "expected messaging-dummy.gtpack at {}",
+        src.display()
+    );
+
+    let temp = tempdir()?;
+    let broken = temp.path().join("messaging-dummy-missing-schema.gtpack");
+    strip_entry_from_gtpack(
+        &src,
+        &broken,
+        "assets/schemas/messaging/dummy/config.schema.json",
+    )?;
+
+    let output = Command::new("greentic-pack")
+        .arg("doctor")
+        .arg("--json")
+        .arg("--pack")
+        .arg(&broken)
+        .output()
+        .expect("failed to run greentic-pack doctor");
+    assert!(
+        !output.status.success(),
+        "greentic-pack doctor should fail when config schema is missing"
+    );
+
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let combined = format!("{stderr}{stdout}");
+    assert!(
+        combined.contains("config schema") || combined.contains("config.schema.json"),
+        "expected missing schema error, got: {combined}"
+    );
+
     Ok(())
 }

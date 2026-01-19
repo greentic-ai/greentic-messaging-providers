@@ -23,8 +23,8 @@
 - Ingress contract uses `handle-webhook` returning `normalized-payload-json` (`components/messaging-ingress-slack/wit/messaging-ingress-slack/deps/provider-common/world.wit:67`).
 
 ## Config requirements (greentic-config)
-- Required config keys: `bot_token` (`packs/messaging-slack/schemas/messaging/slack/config.schema.json:26`).
-- Config schema reference: `schemas/messaging/slack/config.schema.json` (`packs/messaging-slack/pack.manifest.json:33`).
+- Required config keys: `bot_token`, `public_base_url` (`packs/messaging-slack/schemas/messaging/slack/config.schema.json:31`).
+- Config schema reference: `assets/schemas/messaging/slack/config.schema.json` (`packs/messaging-slack/pack.manifest.json:33`).
 
 ## Secret requirements (greentic-secrets)
 - Required secrets: `SLACK_SIGNING_SECRET`, `SLACK_BOT_TOKEN` (`packs/messaging-slack/pack.manifest.json:93`).
@@ -58,7 +58,7 @@ Provider/ingress wasm paths (no digest in pack manifest or lock):
 - `components/messaging-provider-slack.wasm` (`packs/messaging-slack/pack.manifest.json:342`).
 
 ## PUBLIC_BASE_URL
-- Not found in repo search (`docs/audit/packs/_evidence/rg/public_base_url.txt:1`).
+- Required config key in `packs/messaging-slack/schemas/messaging/slack/config.schema.json:31`.
 
 ## Subscriptions lifecycle
 - No subscriptions extension declared; only ingress `handle-webhook` and provider ops are listed (`packs/messaging-slack/pack.manifest.json:19`).

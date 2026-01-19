@@ -11,8 +11,20 @@ nodes:
     handlebars:
       text: |
         Provider: messaging.teams.graph
-        Config schema: schemas/messaging/teams/config.schema.json
+        Config schema: assets/schemas/messaging/teams/config.schema.json
+
+        Config requirements:
+        - public_base_url: Public base URL for inbound webhook callbacks.
+        - tenant_id: Azure AD tenant ID.
+        - client_id: App registration client ID.
+        - client_secret_key: Secret key name for client_credentials (optional if refresh_token_key is used).
+        - refresh_token_key: Secret key name for refresh_token grant (optional if client_secret_key is used).
+
+        Subscriptions contract (pattern=sync):
+        - state.webhook_url: Full notification URL derived from public_base_url.
+        - state.desired_subscriptions: Array of {resource, change_type, expiration_datetime}.
+        - sync-subscriptions is idempotent and renews subscriptions before expiry.
 
         Secrets:
         - MS_GRAPH_CLIENT_SECRET (tenant): Client secret used for client_credentials or refresh flows.
-        - MS_GRAPH_REFRESH_TOKEN (tenant): Refresh token used when auth_mode selects refresh_token grant.
+        - MS_GRAPH_REFRESH_TOKEN (tenant): Refresh token used when auth_mode selects refresh_token grant (optional).

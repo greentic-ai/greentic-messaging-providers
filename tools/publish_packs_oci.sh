@@ -354,9 +354,24 @@ for dir in "${ROOT_DIR}/${PACKS_DIR}/"*; do
 
   python3 "${ROOT_DIR}/tools/validate_pack_extensions.py" "${pack_out}"
 
-  pack_version="$("${PACKC_BIN}" doctor --json --pack "${pack_out}" | jq -r '.meta.packVersion // ""')"
+  doctor_json="$("${PACKC_BIN}" doctor --json --pack "${pack_out}")"
+  pack_version="$(jq -r '.meta.packVersion // ""' <<<"${doctor_json}")"
   if [ "${pack_version}" = "1" ] || [ -z "${pack_version}" ]; then
     echo "warning: greentic-pack produced pack-v1 manifest for ${pack_name}; proceed anyway (upgrade greentic-pack for newer schema) " >&2
+  fi
+  doctor_version="$(jq -r '.manifest.meta.version // ""' <<<"${doctor_json}")"
+  manifest_version="$(jq -r '.version // ""' "${dir}/pack.manifest.json")"
+  if [ -z "${doctor_version}" ] || [ -z "${manifest_version}" ]; then
+    echo "Missing pack version metadata for ${pack_name} (doctor=${doctor_version:-empty}, manifest=${manifest_version:-empty})" >&2
+    exit 1
+  fi
+  if [ "${doctor_version}" != "${manifest_version}" ]; then
+    echo "Pack version drift for ${pack_name}: gtpack=${doctor_version} manifest=${manifest_version}" >&2
+    exit 1
+  fi
+  if [ -n "${PACK_VERSION}" ] && [ "${doctor_version}" != "${PACK_VERSION}" ]; then
+    echo "Pack version mismatch for ${pack_name}: gtpack=${doctor_version} expected=${PACK_VERSION}" >&2
+    exit 1
   fi
 
   oci_ref="${OCI_REGISTRY}/${OCI_ORG}/${OCI_REPO}/${pack_name}:${PACK_VERSION}"

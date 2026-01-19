@@ -1,5 +1,6 @@
 #![allow(unsafe_op_in_unsafe_fn)]
 
+#[allow(clippy::too_many_arguments)]
 mod bindings {
     wit_bindgen::generate!({ path: "wit/webchat", world: "webchat", generate_all });
 }
@@ -229,7 +230,7 @@ fn send_with_retries(req: &http_client::Request) -> Result<http_client::Response
 fn secrets_get(key: &str) -> Result<Option<Vec<u8>>, secrets_store::SecretsError> {
     #[cfg(test)]
     {
-        return secrets_get_test(key);
+        secrets_get_test(key)
     }
     #[cfg(not(test))]
     {
@@ -243,11 +244,11 @@ fn http_send(
 ) -> Result<http_client::Response, http_client::HostError> {
     #[cfg(test)]
     {
-        return http_send_test(req, options);
+        http_send_test(req, options)
     }
     #[cfg(not(test))]
     {
-        http_client::send(req, Some(options.clone()), None)
+        http_client::send(req, Some(*options), None)
     }
 }
 
@@ -289,10 +290,19 @@ fn log_if_enabled(event: &str) {
 }
 
 #[cfg(test)]
+type SecretsGetMock = dyn Fn(&str) -> Result<Option<Vec<u8>>, secrets_store::SecretsError>;
+
+#[cfg(test)]
+type HttpSendMock = dyn Fn(
+    &http_client::Request,
+    &http_client::RequestOptions,
+) -> Result<http_client::Response, http_client::HostError>;
+
+#[cfg(test)]
 thread_local! {
-    static SECRETS_GET_MOCK: std::cell::RefCell<Option<Box<dyn Fn(&str) -> Result<Option<Vec<u8>>, secrets_store::SecretsError>>>> =
+    static SECRETS_GET_MOCK: std::cell::RefCell<Option<Box<SecretsGetMock>>> =
         std::cell::RefCell::new(None);
-    static HTTP_SEND_MOCK: std::cell::RefCell<Option<Box<dyn Fn(&http_client::Request, &http_client::RequestOptions) -> Result<http_client::Response, http_client::HostError>>>> =
+    static HTTP_SEND_MOCK: std::cell::RefCell<Option<Box<HttpSendMock>>> =
         std::cell::RefCell::new(None);
 }
 

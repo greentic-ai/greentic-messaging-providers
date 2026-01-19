@@ -13,6 +13,7 @@ nodes:
       text: |
         Collect:
         - signing_secret
+        - public_base_url (required for webhook callbacks)
         - token_ttl_seconds
         - allowed_origins
         - rate_limits (messages/sec)
@@ -24,12 +25,14 @@ nodes:
       text: |
         - Validate signing_secret by generating/validating a sample JWT.
         - Ensure token_ttl_seconds within safe bounds (>= 60).
+        - Confirm public_base_url is reachable for webhook verification.
   apply:
     routing:
     - to: summary
     handlebars:
       text: |
         - Store signing_secret; persist TTL/origins/rate limits.
+        - Persist public_base_url and derived webhook URL.
         - Record last_applied for idempotent reruns.
   summary:
     routing: out

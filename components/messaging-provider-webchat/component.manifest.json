@@ -4,7 +4,7 @@
   "config_schema": {
     "provider_config": {
       "format": "json",
-      "path": "schemas/messaging/webchat/config.schema.json"
+      "path": "assets/schemas/messaging/webchat/config.schema.json"
     }
   },
   "secret_requirements": []

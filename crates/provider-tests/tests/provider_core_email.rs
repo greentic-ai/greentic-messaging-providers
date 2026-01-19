@@ -160,14 +160,17 @@ fn pack_has_extension_and_schema() -> Result<()> {
         .get("config_schema_ref")
         .and_then(|v| v.as_str())
         .unwrap_or_default();
-    assert_eq!(schema_ref, "schemas/messaging/email/config.schema.json");
+    assert_eq!(
+        schema_ref,
+        "assets/schemas/messaging/email/config.schema.json"
+    );
     assert!(
         pack_dir.join(schema_ref).exists(),
         "pack schema should exist"
     );
     assert!(
         workspace_root()
-            .join("schemas/messaging/email/config.schema.json")
+            .join("assets/schemas/messaging/email/config.schema.json")
             .exists(),
         "workspace schema should exist"
     );
@@ -199,7 +202,7 @@ fn invoke_send_smoke_test() -> Result<()> {
         .get_export_index(&mut describe_store, Some(&api_index), "describe")
         .context("get describe export index")?;
     let describe: TypedFunc<(), (Vec<u8>,)> = instance
-        .get_typed_func(&mut describe_store, &describe_index)
+        .get_typed_func(&mut describe_store, describe_index)
         .context("get describe func")?;
     let (described,) = describe
         .call(&mut describe_store, ())
@@ -226,7 +229,7 @@ fn invoke_send_smoke_test() -> Result<()> {
         .get_export_index(&mut store, Some(&api_index), "invoke")
         .context("get invoke export index")?;
     let invoke: TypedFunc<(String, Vec<u8>), (Vec<u8>,)> = instance
-        .get_typed_func(&mut store, &invoke_index)
+        .get_typed_func(&mut store, invoke_index)
         .context("get invoke func")?;
 
     let input = json!({
@@ -280,7 +283,7 @@ fn invoke_reply_smoke_test() -> Result<()> {
         .get_export_index(&mut store, Some(&api_index), "invoke")
         .context("get invoke export index")?;
     let invoke: TypedFunc<(String, Vec<u8>), (Vec<u8>,)> = instance
-        .get_typed_func(&mut store, &invoke_index)
+        .get_typed_func(&mut store, invoke_index)
         .context("get invoke func")?;
 
     let input = json!({
@@ -342,7 +345,7 @@ fn reply_requires_to() -> Result<()> {
         .get_export_index(&mut store, Some(&api_index), "invoke")
         .context("get invoke export index")?;
     let invoke: TypedFunc<(String, Vec<u8>), (Vec<u8>,)> = instance
-        .get_typed_func(&mut store, &invoke_index)
+        .get_typed_func(&mut store, invoke_index)
         .context("get invoke func")?;
 
     let input = json!({

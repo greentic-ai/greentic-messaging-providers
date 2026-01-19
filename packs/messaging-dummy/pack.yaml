@@ -1,8 +1,23 @@
 pack_id: messaging-dummy
-version: 0.4.16
+version: 0.4.17
 kind: application
 publisher: Greentic
 components:
+- id: diagnostics___summary
+  version: 0.1.0
+  world: root:component/root
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/diagnostics___summary.wasm
 - id: messaging-provider-dummy
   version: 0.4.16
   world: greentic:provider/schema-core@1.0.0
@@ -18,6 +33,51 @@ components:
       clocks: false
     host: {}
   wasm: components/messaging-provider-dummy.wasm
+- id: requirements___summary
+  version: 0.1.0
+  world: root:component/root
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/requirements___summary.wasm
+- id: setup_custom___summarize
+  version: 0.1.0
+  world: root:component/root
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/setup_custom___summarize.wasm
+- id: setup_default___summarize
+  version: 0.1.0
+  world: root:component/root
+  supports:
+  - messaging
+  profiles:
+    default: default
+    supported:
+    - default
+  capabilities:
+    wasi:
+      random: false
+      clocks: false
+    host: {}
+  wasm: components/setup_default___summarize.wasm
 dependencies: []
 flows:
 - id: diagnostics
@@ -44,7 +104,8 @@ flows:
   - default
   entrypoints:
   - setup
-assets: []
+assets:
+- path: schemas/messaging/dummy/config.schema.json
 extensions:
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
@@ -56,7 +117,7 @@ extensions:
         - messaging
         ops:
         - send
-        config_schema_ref: schemas/messaging/dummy/config.schema.json
+        config_schema_ref: assets/schemas/messaging/dummy/config.schema.json
         state_schema_ref: ''
         runtime:
           component_ref: messaging-provider-dummy

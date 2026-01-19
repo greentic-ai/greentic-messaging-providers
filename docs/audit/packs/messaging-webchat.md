@@ -17,8 +17,8 @@
 - Provider contract uses `schema-core-api` with JSON byte payloads for `invoke` (`components/messaging-provider-webchat/wit/messaging-provider-webchat/deps/provider-schema-core/package.wit:6`).
 
 ## Config requirements (greentic-config)
-- Required config keys: `mode` (`packs/messaging-webchat/schemas/messaging/webchat/config.schema.json:25`).
-- Config schema reference: `schemas/messaging/webchat/config.schema.json` (`packs/messaging-webchat/pack.manifest.json:32`).
+- Required config keys: `mode`, `public_base_url` (`packs/messaging-webchat/schemas/messaging/webchat/config.schema.json:30`).
+- Config schema reference: `assets/schemas/messaging/webchat/config.schema.json` (`packs/messaging-webchat/pack.manifest.json:32`).
 
 ## Secret requirements (greentic-secrets)
 - No declared secrets (`packs/messaging-webchat/pack.manifest.json:57`).
@@ -46,7 +46,7 @@ Provider wasm path (no digest in pack manifest or lock):
 - `components/messaging-provider-webchat.wasm` (`packs/messaging-webchat/pack.manifest.json:241`).
 
 ## PUBLIC_BASE_URL
-- Not found in repo search (`docs/audit/packs/_evidence/rg/public_base_url.txt:1`).
+- Required config key in `packs/messaging-webchat/schemas/messaging/webchat/config.schema.json:30`.
 
 ## Subscriptions lifecycle
 - No subscriptions extension declared; only provider ops are listed (`packs/messaging-webchat/pack.manifest.json:18`).

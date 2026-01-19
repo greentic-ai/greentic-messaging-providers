@@ -15,7 +15,7 @@ use bindings::greentic::secrets_store::secrets_store;
 use greentic_types::ProviderManifest;
 
 const PROVIDER_TYPE: &str = "messaging.slack.api";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/slack/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/slack/config.schema.json";
 const DEFAULT_API_BASE: &str = "https://slack.com/api";
 const DEFAULT_BOT_TOKEN_KEY: &str = "SLACK_BOT_TOKEN";
 
@@ -146,13 +146,13 @@ fn handle_send(input_json: &[u8], is_reply: bool) -> Vec<u8> {
             .expect("payload object")
             .insert("thread_ts".into(), Value::String(ts));
     }
-    if format == Some("slack_blocks".to_string()) {
-        if let Some(b) = blocks {
-            payload
-                .as_object_mut()
-                .expect("payload object")
-                .insert("blocks".into(), b);
-        }
+    if format.as_deref() == Some("slack_blocks")
+        && let Some(b) = blocks
+    {
+        payload
+            .as_object_mut()
+            .expect("payload object")
+            .insert("blocks".into(), b);
     }
 
     let request = http_client::Request {
@@ -201,10 +201,10 @@ fn handle_send(input_json: &[u8], is_reply: bool) -> Vec<u8> {
 }
 
 fn destination_channel(parsed: &Value, cfg: &ProviderConfig) -> Option<String> {
-    if let Some(to) = parsed.get("to").and_then(|v| v.as_object()) {
-        if let Some(id) = to.get("id").and_then(|v| v.as_str()) {
-            return Some(id.to_string());
-        }
+    if let Some(to) = parsed.get("to").and_then(|v| v.as_object())
+        && let Some(id) = to.get("id").and_then(|v| v.as_str())
+    {
+        return Some(id.to_string());
     }
     cfg.default_channel.clone()
 }

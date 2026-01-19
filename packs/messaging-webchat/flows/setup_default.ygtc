@@ -13,6 +13,7 @@ nodes:
       text: |
         Collect:
         - signing_secret (required)
+        - public_base_url (required for webhook callbacks)
         - channel_token/public_config (optional)
         - default_audience or room (optional)
   validate:
@@ -22,13 +23,14 @@ nodes:
       text: |
         - Perform local HMAC/signing with signing_secret to ensure format.
         - If channel_token provided, verify shape/expiration.
+        - Confirm public_base_url is reachable for webhook verification.
   apply:
     routing:
     - to: summary
     handlebars:
       text: |
         - Store signing_secret via greentic-secrets.
-        - Persist config: default_audience, channel options.
+        - Persist config: public_base_url, default_audience, channel options.
         - Idempotent: overwrite secrets/config.
   summary:
     routing: out

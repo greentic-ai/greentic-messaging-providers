@@ -15,7 +15,7 @@ use bindings::greentic::secrets_store::secrets_store;
 use greentic_types::ProviderManifest;
 
 const PROVIDER_TYPE: &str = "messaging.webex.bot";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/webex/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/webex/config.schema.json";
 const DEFAULT_API_BASE: &str = "https://webexapis.com/v1";
 const DEFAULT_TOKEN_KEY: &str = "WEBEX_BOT_TOKEN";
 

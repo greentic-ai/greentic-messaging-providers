@@ -266,7 +266,7 @@ mod slack {
             .get_export_index(&mut store, Some(&ingress_index), "handle-webhook")
             .context("get handle-webhook export index")?;
         let handle: TypedFunc<(String, String), (Result<String, String>,)> = instance
-            .get_typed_func(&mut store, &handle_index)
+            .get_typed_func(&mut store, handle_index)
             .context("get handle-webhook func")?;
         let headers = json!({});
         let body = json!({"event": {"type": "message"}});
@@ -334,7 +334,7 @@ mod slack {
             .get_export_index(&mut store, Some(&ingress_index), "handle-webhook")
             .context("get handle-webhook export index")?;
         let handle: TypedFunc<(String, String), (Result<String, String>,)> = instance
-            .get_typed_func(&mut store, &handle_index)
+            .get_typed_func(&mut store, handle_index)
             .context("get handle-webhook func")?;
         let (res,) = handle
             .call(&mut store, (headers.to_string(), body.to_string()))
@@ -504,7 +504,7 @@ mod telegram {
             .get_export_index(&mut store, Some(&ingress_index), "handle-webhook")
             .context("get handle-webhook export index")?;
         let handle: TypedFunc<(String, String), (Result<String, String>,)> = instance
-            .get_typed_func(&mut store, &handle_index)
+            .get_typed_func(&mut store, handle_index)
             .context("get handle-webhook func")?;
         let headers = json!({});
         let body = json!({"update_id": 1});
@@ -676,7 +676,7 @@ mod whatsapp {
             .get_export_index(&mut store, Some(&ingress_index), "handle-webhook")
             .context("get handle-webhook export index")?;
         let handle: TypedFunc<(String, String), (Result<String, String>,)> = instance
-            .get_typed_func(&mut store, &handle_index)
+            .get_typed_func(&mut store, handle_index)
             .context("get handle-webhook func")?;
         let headers = json!({});
         let body = json!({"entry": []});
@@ -735,7 +735,7 @@ mod whatsapp {
             .get_export_index(&mut store, Some(&ingress_index), "handle-webhook")
             .context("get handle-webhook export index")?;
         let handle: TypedFunc<(String, String), (Result<String, String>,)> = instance
-            .get_typed_func(&mut store, &handle_index)
+            .get_typed_func(&mut store, handle_index)
             .context("get handle-webhook func")?;
         let headers = json!({});
         let body = json!({"hub.verify_token": "bad"});
@@ -962,7 +962,7 @@ mod teams {
             .get_export_index(&mut store, Some(&subs_index), "sync-subscriptions")
             .context("get sync-subscriptions export index")?;
         let sync: TypedFunc<(String, String), (Result<String, String>,)> = instance
-            .get_typed_func(&mut store, &sync_index)
+            .get_typed_func(&mut store, sync_index)
             .context("get sync-subscriptions func")?;
         let (res,) = sync
             .call(&mut store, (config_json, state_json))

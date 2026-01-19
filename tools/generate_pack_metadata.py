@@ -71,8 +71,16 @@ def aggregate_requirements(pack_dir: Path, components_dir: Path) -> List[dict]:
         else:
             comp_id = component
         comp_manifest = components_dir / comp_id / "component.manifest.json"
+        if comp_id == "handlebars":
+            alt_manifest = components_dir / "templates" / "component.manifest.json"
+            if alt_manifest.exists():
+                comp_manifest = alt_manifest
         if not comp_manifest.exists():
-            sys.stderr.write(f"warning: component manifest not found for {comp_id} at {comp_manifest}\n")
+            if "__" in comp_id:
+                continue
+            sys.stderr.write(
+                f"warning: component manifest not found for {comp_id} at {comp_manifest}\n"
+            )
             continue
         data = load_json(comp_manifest)
         component_reqs = data.get("secret_requirements") or []

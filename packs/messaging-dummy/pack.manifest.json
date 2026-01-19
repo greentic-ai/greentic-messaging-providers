@@ -1,13 +1,13 @@
 {
   "name": "messaging-dummy",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "description": "Deterministic provider-core messaging provider for CI and integration tests.",
   "kind": "application",
   "publisher": "Greentic",
   "config_schema": {
     "provider_config": {
       "format": "json",
-      "path": "schemas/messaging/dummy/config.schema.json"
+      "path": "assets/schemas/messaging/dummy/config.schema.json"
     }
   },
   "components": [
@@ -27,7 +27,7 @@
             "ops": [
               "send"
             ],
-            "config_schema_ref": "schemas/messaging/dummy/config.schema.json",
+            "config_schema_ref": "assets/schemas/messaging/dummy/config.schema.json",
             "state_schema_ref": "",
             "runtime": {
               "component_ref": "messaging-provider-dummy",
@@ -96,6 +96,28 @@
   ],
   "component_sources": [
     {
+      "id": "diagnostics___summary",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/diagnostics___summary.wasm"
+    },
+    {
       "id": "messaging-provider-dummy",
       "version": "0.4.16",
       "world": "greentic:provider/schema-core@1.0.0",
@@ -116,6 +138,72 @@
         "host": {}
       },
       "wasm": "components/messaging-provider-dummy.wasm"
+    },
+    {
+      "id": "requirements___summary",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/requirements___summary.wasm"
+    },
+    {
+      "id": "setup_custom___summarize",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_custom___summarize.wasm"
+    },
+    {
+      "id": "setup_default___summarize",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_default___summarize.wasm"
     }
   ],
   "capabilities_cache": [

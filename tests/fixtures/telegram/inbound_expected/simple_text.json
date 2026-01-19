@@ -1,0 +1,16 @@
+{
+  "validation": "ok",
+  "normalized_event": {
+    "ok": true,
+    "event": {
+      "type": "message",
+      "channel": "telegram-channel",
+      "provider": "telegram",
+      "id": "telegram-simple_text-id",
+      "timestamp": "2024-03-01T12:00:00Z",
+      "text": "simple text message from telegram"
+    }
+  },
+  "warnings": [],
+  "suggested_http_status": null
+}

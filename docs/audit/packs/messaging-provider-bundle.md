@@ -28,12 +28,12 @@ Provider runtime export: `schema-core-api` (`packs/messaging-provider-bundle/pac
 - Bundle runtime config injection: `provider_runtime_config` (schema_version 1, injected as `provider_runtime_config.json`) (`packs/messaging-provider-bundle/pack.manifest.json:8`).
 | provider | config_schema_ref | evidence |
 | --- | --- | --- |
-| Slack | schemas/messaging/slack/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:175` |
-| Teams | schemas/messaging/teams/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:193` |
-| Telegram | schemas/messaging/telegram/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:211` |
-| WebChat | schemas/messaging/webchat/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:229` |
-| Webex | schemas/messaging/webex/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:247` |
-| WhatsApp | schemas/messaging/whatsapp/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:265` |
+| Slack | assets/schemas/messaging/slack/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:175` |
+| Teams | assets/schemas/messaging/teams/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:193` |
+| Telegram | assets/schemas/messaging/telegram/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:211` |
+| WebChat | assets/schemas/messaging/webchat/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:229` |
+| Webex | assets/schemas/messaging/webex/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:247` |
+| WhatsApp | assets/schemas/messaging/whatsapp/config.schema.json | `packs/messaging-provider-bundle/pack.manifest.json:265` |
 
 ## Secret requirements (greentic-secrets)
 - Required secrets: `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `MS_GRAPH_TENANT_ID`, `MS_GRAPH_CLIENT_ID`, `MS_GRAPH_CLIENT_SECRET`, `TELEGRAM_BOT_TOKEN`, `WEBEX_BOT_TOKEN`, `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN` (`packs/messaging-provider-bundle/pack.manifest.json:71`).
@@ -65,7 +65,7 @@ Provider wasm paths (no digest in pack manifest or lock):
 - `components/whatsapp.wasm` (`packs/messaging-provider-bundle/pack.manifest.json:799`).
 
 ## PUBLIC_BASE_URL
-- Not found in repo search (`docs/audit/packs/_evidence/rg/public_base_url.txt:1`).
+- Required in config schemas for Slack, Teams, Telegram, WebChat, and WhatsApp.
 
 ## Subscriptions lifecycle
 - No subscriptions extension declared; only provider ops are listed (`packs/messaging-provider-bundle/pack.manifest.json:161`).

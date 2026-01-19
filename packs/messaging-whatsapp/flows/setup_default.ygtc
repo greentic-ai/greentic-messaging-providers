@@ -16,20 +16,21 @@ nodes:
         - phone_number_id
         - business_account_id
         - verify_token (for webhook)
+        - public_base_url (required for webhook callbacks)
   validate:
     routing:
     - to: apply
     handlebars:
       text: |
         - Call Graph API /{phone_number_id}?fields=id to verify token and phone binding.
-        - If webhook URL provided by host, ensure verify_token matches.
+        - Use public_base_url to register webhook and ensure verify_token matches.
   apply:
     routing:
     - to: summary
     handlebars:
       text: |
         - Store secrets: WHATSAPP_TOKEN, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_VERIFY_TOKEN, WHATSAPP_BUSINESS_ACCOUNT_ID.
-        - Persist config: webhook_url (if available), default recipients.
+        - Persist config: public_base_url, webhook_url, default recipients.
         - Idempotent overwrite.
   summary:
     routing: out

@@ -11,22 +11,25 @@ nodes:
     handlebars:
       text: |
         Provider: messaging.slack.api
-        Config schema: schemas/messaging/slack/config.schema.json
+        Config schema: assets/schemas/messaging/slack/config.schema.json
 
         Provider: messaging.teams.graph
-        Config schema: schemas/messaging/teams/config.schema.json
+        Config schema: assets/schemas/messaging/teams/config.schema.json
 
         Provider: messaging.telegram.bot
-        Config schema: schemas/messaging/telegram/config.schema.json
+        Config schema: assets/schemas/messaging/telegram/config.schema.json
 
         Provider: messaging.webchat
-        Config schema: schemas/messaging/webchat/config.schema.json
+        Config schema: assets/schemas/messaging/webchat/config.schema.json
 
         Provider: messaging.webex.bot
-        Config schema: schemas/messaging/webex/config.schema.json
+        Config schema: assets/schemas/messaging/webex/config.schema.json
 
         Provider: messaging.whatsapp.cloud
-        Config schema: schemas/messaging/whatsapp/config.schema.json
+        Config schema: assets/schemas/messaging/whatsapp/config.schema.json
+
+        Config requirements (webhook providers):
+        - public_base_url: Required for Slack, Teams, Telegram, Webchat, WhatsApp webhook callbacks.
 
         Secrets:
         - SLACK_BOT_TOKEN (tenant): Slack bot token used for chat.postMessage.

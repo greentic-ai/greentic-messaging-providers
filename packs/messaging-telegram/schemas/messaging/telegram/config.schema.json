@@ -12,12 +12,17 @@
       "type": "string",
       "description": "Default chat id used when an invocation does not supply one."
     },
+    "public_base_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public base URL for inbound webhook callbacks."
+    },
     "api_base_url": {
       "type": "string",
       "description": "Override for the Telegram API base URL.",
       "default": "https://api.telegram.org"
     }
   },
-  "required": ["bot_token"],
+  "required": ["bot_token", "public_base_url"],
   "additionalProperties": false
 }

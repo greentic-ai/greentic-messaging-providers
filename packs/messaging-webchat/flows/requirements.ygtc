@@ -11,6 +11,9 @@ nodes:
     handlebars:
       text: |
         Provider: messaging.webchat
-        Config schema: schemas/messaging/webchat/config.schema.json
+        Config schema: assets/schemas/messaging/webchat/config.schema.json
+
+        Config requirements:
+        - public_base_url: Public base URL for inbound webhook callbacks.
 
         Secrets: none

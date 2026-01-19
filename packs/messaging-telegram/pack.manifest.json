@@ -1,13 +1,13 @@
 {
   "name": "messaging-telegram",
-  "version": "0.4.16",
+  "version": "0.4.17",
   "description": "Provider-core Telegram messaging provider pack.",
   "kind": "application",
   "publisher": "Greentic",
   "config_schema": {
     "provider_config": {
       "format": "json",
-      "path": "schemas/messaging/telegram/config.schema.json"
+      "path": "assets/schemas/messaging/telegram/config.schema.json"
     }
   },
   "components": [
@@ -18,7 +18,7 @@
   "extensions": {
     "greentic.provider-extension.v1": {
       "kind": "greentic.provider-extension.v1",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "inline": {
         "providers": [
           {
@@ -30,7 +30,7 @@
               "send",
               "reply"
             ],
-            "config_schema_ref": "schemas/messaging/telegram/config.schema.json",
+            "config_schema_ref": "assets/schemas/messaging/telegram/config.schema.json",
             "state_schema_ref": "",
             "runtime": {
               "component_ref": "messaging-provider-telegram",
@@ -44,7 +44,7 @@
     },
     "messaging.provider_flow_hints": {
       "kind": "messaging.provider_flow_hints",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "inline": {
         "messaging.telegram.bot": {
           "diagnostics": "diagnostics",
@@ -56,7 +56,7 @@
     },
     "messaging.provider_ingress.v1": {
       "kind": "messaging.provider_ingress.v1",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "inline": {
         "capabilities": {
           "content_types": [
@@ -132,7 +132,7 @@
   "component_sources": [
     {
       "id": "ai.greentic.component-templates",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -153,8 +153,96 @@
       "wasm": "components/ai.greentic.component-templates.wasm"
     },
     {
+      "id": "diagnostics___optional_send",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/diagnostics___optional_send.wasm"
+    },
+    {
+      "id": "diagnostics___preflight",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/diagnostics___preflight.wasm"
+    },
+    {
+      "id": "diagnostics___summary",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/diagnostics___summary.wasm"
+    },
+    {
+      "id": "diagnostics___verify_token",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/diagnostics___verify_token.wasm"
+    },
+    {
       "id": "diagnostics__optional_send",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -176,7 +264,7 @@
     },
     {
       "id": "diagnostics__preflight",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -198,7 +286,7 @@
     },
     {
       "id": "diagnostics__summary",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -220,7 +308,7 @@
     },
     {
       "id": "diagnostics__verify_token",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -242,7 +330,7 @@
     },
     {
       "id": "handlebars",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "greentic:component/component@0.5.0",
       "supports": [
         "messaging"
@@ -264,7 +352,7 @@
     },
     {
       "id": "messaging-ingress-telegram",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "greentic:messaging-ingress-telegram/messaging-ingress-telegram@0.0.1",
       "supports": [
         "messaging"
@@ -286,7 +374,7 @@
     },
     {
       "id": "messaging-provider-telegram",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "greentic:provider/schema-core@1.0.0",
       "supports": [
         "messaging"
@@ -307,8 +395,118 @@
       "wasm": "components/messaging-provider-telegram.wasm"
     },
     {
+      "id": "requirements___summary",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/requirements___summary.wasm"
+    },
+    {
+      "id": "setup_custom___apply",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_custom___apply.wasm"
+    },
+    {
+      "id": "setup_custom___collect",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_custom___collect.wasm"
+    },
+    {
+      "id": "setup_custom___summary",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_custom___summary.wasm"
+    },
+    {
+      "id": "setup_custom___validate",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_custom___validate.wasm"
+    },
+    {
       "id": "setup_custom__apply",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -330,7 +528,7 @@
     },
     {
       "id": "setup_custom__collect",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -352,7 +550,7 @@
     },
     {
       "id": "setup_custom__summary",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -374,7 +572,7 @@
     },
     {
       "id": "setup_custom__validate",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -395,8 +593,96 @@
       "wasm": "components/setup_custom__validate.wasm"
     },
     {
+      "id": "setup_default___apply",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_default___apply.wasm"
+    },
+    {
+      "id": "setup_default___collect",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_default___collect.wasm"
+    },
+    {
+      "id": "setup_default___summary",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_default___summary.wasm"
+    },
+    {
+      "id": "setup_default___validate",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/setup_default___validate.wasm"
+    },
+    {
       "id": "setup_default__apply",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -418,7 +704,7 @@
     },
     {
       "id": "setup_default__collect",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -440,7 +726,7 @@
     },
     {
       "id": "setup_default__summary",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -462,7 +748,7 @@
     },
     {
       "id": "setup_default__validate",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -483,8 +769,30 @@
       "wasm": "components/setup_default__validate.wasm"
     },
     {
+      "id": "verify_webhooks___steps",
+      "version": "0.1.0",
+      "world": "root:component/root",
+      "supports": [
+        "messaging"
+      ],
+      "profiles": {
+        "default": "default",
+        "supported": [
+          "default"
+        ]
+      },
+      "capabilities": {
+        "wasi": {
+          "random": false,
+          "clocks": false
+        },
+        "host": {}
+      },
+      "wasm": "components/verify_webhooks___steps.wasm"
+    },
+    {
       "id": "verify_webhooks__steps",
-      "version": "0.4.15",
+      "version": "0.4.16",
       "world": "root:component/root",
       "supports": [
         "messaging"

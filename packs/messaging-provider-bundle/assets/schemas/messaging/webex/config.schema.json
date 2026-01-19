@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Webex Provider-Core Config",
+  "type": "object",
+  "properties": {
+    "access_token": {
+      "type": "string",
+      "description": "Secret store key for the Webex bot access token.",
+      "x-secret": true,
+      "default": "WEBEX_BOT_TOKEN"
+    },
+    "default_room_id": {
+      "type": "string",
+      "description": "Default room ID used when invocation omits destination."
+    },
+    "api_base_url": {
+      "type": "string",
+      "description": "Webex API base URL.",
+      "default": "https://webexapis.com/v1"
+    }
+  },
+  "required": ["access_token"],
+  "additionalProperties": false
+}

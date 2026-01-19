@@ -11,7 +11,10 @@ nodes:
     handlebars:
       text: |
         Provider: messaging.whatsapp.cloud
-        Config schema: schemas/messaging/whatsapp/config.schema.json
+        Config schema: assets/schemas/messaging/whatsapp/config.schema.json
+
+        Config requirements:
+        - public_base_url: Public base URL for inbound webhook callbacks.
 
         Secrets:
         - WHATSAPP_TOKEN (tenant): WhatsApp Cloud API access token.

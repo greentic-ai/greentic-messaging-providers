@@ -15,7 +15,7 @@ use bindings::greentic::state::state_store;
 use greentic_types::ProviderManifest;
 
 const PROVIDER_TYPE: &str = "messaging.webchat";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/webchat/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/webchat/config.schema.json";
 const DEFAULT_MODE: &str = "local_queue";
 
 #[derive(Debug, Deserialize)]

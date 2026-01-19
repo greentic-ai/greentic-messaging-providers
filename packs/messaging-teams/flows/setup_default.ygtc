@@ -17,6 +17,7 @@ nodes:
         - client_secret (or certificate reference)
         - bot_id/service_principal_id
         - default_team_id / channel_id (optional)
+        - public_base_url (required for webhook subscriptions)
   validate:
     routing:
     - to: apply
@@ -31,7 +32,7 @@ nodes:
     handlebars:
       text: |
         - Store secrets: MS_GRAPH_TENANT_ID, MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET.
-        - Persist config: bot/service principal identifiers, default channel, notification scope.
+        - Persist config: bot/service principal identifiers, default channel, public_base_url, notification scope.
         - Idempotent: overwrites existing secrets/config and records last_applied.
   summary:
     routing: out

@@ -134,7 +134,7 @@ fn invoke_send(
         .get_export_index(&mut store, Some(&api_index), "invoke")
         .context("get invoke export index")?;
     let invoke: TypedFunc<(String, Vec<u8>), (Vec<u8>,)> = instance
-        .get_typed_func(&mut store, &invoke_index)
+        .get_typed_func(&mut store, invoke_index)
         .context("get invoke func")?;
     let (bytes,) = invoke
         .call(&mut store, ("send".to_string(), input_bytes))
@@ -198,14 +198,17 @@ fn pack_has_extension_and_schema() -> Result<()> {
         .get("config_schema_ref")
         .and_then(|v| v.as_str())
         .unwrap_or_default();
-    assert_eq!(schema_ref, "schemas/messaging/dummy/config.schema.json");
+    assert_eq!(
+        schema_ref,
+        "assets/schemas/messaging/dummy/config.schema.json"
+    );
     assert!(
         pack_dir.join(schema_ref).exists(),
         "pack schema should exist"
     );
     assert!(
         workspace_root()
-            .join("schemas/messaging/dummy/config.schema.json")
+            .join("assets/schemas/messaging/dummy/config.schema.json")
             .exists(),
         "workspace schema should exist"
     );
@@ -236,7 +239,7 @@ fn invoke_send_smoke_test() -> Result<()> {
         .get_export_index(&mut store, Some(&api_index), "describe")
         .context("get describe export index")?;
     let describe: TypedFunc<(), (Vec<u8>,)> = instance
-        .get_typed_func(&mut store, &describe_index)
+        .get_typed_func(&mut store, describe_index)
         .context("get describe func")?;
     let (described,) = describe.call(&mut store, ()).context("call describe")?;
     let manifest: ProviderManifest =
@@ -262,7 +265,7 @@ fn invoke_send_smoke_test() -> Result<()> {
         .get_export_index(&mut store, Some(&api_index), "invoke")
         .context("get invoke export index")?;
     let invoke: TypedFunc<(String, Vec<u8>), (Vec<u8>,)> = instance
-        .get_typed_func(&mut store, &invoke_index)
+        .get_typed_func(&mut store, invoke_index)
         .context("get invoke func")?;
     let input = json!({"text":"hello"});
     let input_bytes = serde_json::to_vec(&input)?;

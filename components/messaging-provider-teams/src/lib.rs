@@ -16,7 +16,7 @@ use bindings::greentic::secrets_store::secrets_store;
 use greentic_types::ProviderManifest;
 
 const PROVIDER_TYPE: &str = "messaging.teams.graph";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/teams/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/teams/config.schema.json";
 const DEFAULT_CLIENT_SECRET_KEY: &str = "MS_GRAPH_CLIENT_SECRET";
 const DEFAULT_TOKEN_SCOPE: &str = "https://graph.microsoft.com/.default";
 const DEFAULT_GRAPH_BASE: &str = "https://graph.microsoft.com/v1.0";
@@ -333,10 +333,10 @@ fn acquire_token(cfg: &ProviderConfig) -> Result<String, String> {
             encode(&refresh_token),
             encode(&scope)
         );
-        if let Some(secret_key) = cfg.client_secret_key.as_ref() {
-            if let Ok(secret) = get_secret(secret_key) {
-                form.push_str(&format!("&client_secret={}", encode(&secret)));
-            }
+        if let Some(secret_key) = cfg.client_secret_key.as_ref()
+            && let Ok(secret) = get_secret(secret_key)
+        {
+            form.push_str(&format!("&client_secret={}", encode(&secret)));
         }
         return send_token_request(&token_url, &form);
     }

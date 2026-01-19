@@ -17,11 +17,16 @@
       "default": "local_queue",
       "description": "Delivery mode used by the runner."
     },
+    "public_base_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public base URL for inbound webhook callbacks."
+    },
     "base_url": {
       "type": "string",
       "description": "Optional host base URL for push/websocket endpoints."
     }
   },
-  "required": ["mode"],
+  "required": ["mode", "public_base_url"],
   "additionalProperties": false
 }

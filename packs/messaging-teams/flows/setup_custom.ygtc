@@ -16,6 +16,7 @@ nodes:
         - bot/service principal ids
         - channels: list of team_id/channel_id targets
         - subscription_types (message, reactions) for webhook callbacks
+        - public_base_url (required for webhook subscriptions)
         - retry/timeouts, test_message flag
   validate:
     routing:
@@ -24,14 +25,14 @@ nodes:
       text: |
         - Acquire token and validate Graph scopes.
         - For each channel, confirm postMessage permission.
-        - For subscriptions, ensure webhook endpoint available; create/update subscriptions as needed.
+        - For subscriptions, require public_base_url and create/update subscriptions as needed.
   apply:
     routing:
     - to: summary
     handlebars:
       text: |
         - Save credentials and channel list.
-        - Persist subscriptions metadata (resource, expiration, webhook URL) for idempotent reconciliation.
+        - Persist public_base_url and subscriptions metadata (resource, expiration, webhook URL) for idempotent reconciliation.
         - Optionally send test message if requested.
   summary:
     routing: out

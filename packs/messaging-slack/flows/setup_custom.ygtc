@@ -16,6 +16,7 @@ nodes:
         - inbound_mode: events_api | socket_mode (default events_api)
         - events: minimal set (message.channels, app_mention, reaction_added) unless overridden
         - default_channel / fallback DM target
+        - public_base_url (required for events_api webhooks)
         - formatting defaults (link_names, unfurl settings)
         - test_message (bool)
 
@@ -26,6 +27,7 @@ nodes:
           "inbound_mode": "events_api",
           "events": ["message.channels", "app_mention"],
           "default_channel": "#alerts",
+          "public_base_url": "https://example.greentic.dev",
           "test_message": true
         }
   validate:
@@ -35,7 +37,7 @@ nodes:
       text: |
         - Run auth.test to confirm token and workspace.
         - Verify conversations.join/postability for default_channel if provided.
-        - For events_api: ensure request URL is known; if host provided, register event subscriptions.
+        - For events_api: require public_base_url and register event subscriptions using it.
         - For socket_mode: confirm app-level token present if needed.
   apply:
     routing:
@@ -43,7 +45,7 @@ nodes:
     handlebars:
       text: |
         - Write secrets (SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET, SOCKET_APP_TOKEN if applicable) via greentic-secrets.
-        - Persist config: inbound_mode, events list, default_channel, team_id, formatting prefs, webhook URL if used.
+        - Persist config: inbound_mode, events list, default_channel, team_id, public_base_url, formatting prefs, derived webhook URL if used.
         - Mark config version/last_applied for idempotent re-runs.
   summary:
     routing: out

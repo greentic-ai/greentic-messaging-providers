@@ -238,10 +238,10 @@ fn acquire_token(cfg: &ProviderConfig) -> Result<String, String> {
             encode(&refresh_token),
             encode(&scope)
         );
-        if let Some(secret_key) = cfg.client_secret_key.as_ref() {
-            if let Ok(secret) = get_secret(secret_key) {
-                form.push_str(&format!("&client_secret={}", encode(&secret)));
-            }
+        if let Some(secret_key) = cfg.client_secret_key.as_ref()
+            && let Ok(secret) = get_secret(secret_key)
+        {
+            form.push_str(&format!("&client_secret={}", encode(&secret)));
         }
         return send_token_request(&token_url, &form);
     }

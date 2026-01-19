@@ -13,12 +13,14 @@ nodes:
       text: |
         Interactive prompts:
         - bot_token (required)
+        - public_base_url (required for webhook mode)
         - default_chat_id (optional)
         - allowed_chat_ids (optional list)
 
         Non-interactive payload:
         {
           "bot_token": "1234:ABCD",
+          "public_base_url": "https://example.greentic.dev",
           "default_chat_id": "12345",
           "allowed_chat_ids": ["12345", "67890"],
           "test_message": false
@@ -37,7 +39,7 @@ nodes:
     handlebars:
       text: |
         - Store bot_token via greentic-secrets.
-        - Persist config: default_chat_id, allowed_chat_ids, mode (webhook|polling, default webhook if host provides URL).
+        - Persist config: default_chat_id, allowed_chat_ids, mode (webhook|polling), public_base_url, derived webhook_url.
         - Idempotent: overwrite existing secrets/config; record last_applied.
   summary:
     routing: out

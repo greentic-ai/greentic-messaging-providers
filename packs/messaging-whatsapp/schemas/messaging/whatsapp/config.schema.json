@@ -17,6 +17,11 @@
       "type": "string",
       "description": "Optional business account ID."
     },
+    "public_base_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public base URL for inbound webhook callbacks."
+    },
     "api_base_url": {
       "type": "string",
       "description": "Graph API base URL.",
@@ -28,6 +33,6 @@
       "default": "v19.0"
     }
   },
-  "required": ["access_token", "phone_number_id"],
+  "required": ["access_token", "phone_number_id", "public_base_url"],
   "additionalProperties": false
 }

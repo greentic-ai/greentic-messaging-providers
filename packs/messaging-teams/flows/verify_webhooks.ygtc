@@ -12,4 +12,5 @@ nodes:
       text: |
         - List Graph subscriptions for the app.
         - Ensure resource filters match configured channels and notification URL matches host ingress.
-        - Renew or recreate subscriptions if missing/expired; write back expiration timestamps for idempotency.
+        - Run sync-subscriptions idempotently; renew or recreate subscriptions before expiry (respect renewal_window_hours).
+        - Write back expiration timestamps for idempotency.

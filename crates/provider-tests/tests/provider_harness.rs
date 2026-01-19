@@ -203,8 +203,37 @@ fn load_render_plan(name: &str) -> RenderPlan {
     serde_json::from_str(&raw).expect("render plan json")
 }
 
+fn load_render_plan_fixture(name: &str) -> RenderPlan {
+    let path = fixtures_root()
+        .join("render_plans")
+        .join(format!("{name}.json"));
+    let raw = fs::read_to_string(&path).unwrap_or_else(|_| panic!("missing fixture {path:?}"));
+    serde_json::from_str(&raw).expect("render plan json")
+}
+
 fn inbound_fixture_names(provider: ProviderId) -> Vec<String> {
     let dir = fixtures_root().join(provider.as_str()).join("inbound");
+    if !dir.exists() {
+        return vec![];
+    }
+    let mut names: Vec<String> = fs::read_dir(&dir)
+        .expect("fixture dir")
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
+        .filter_map(|e| {
+            e.path()
+                .file_stem()
+                .map(|s| s.to_string_lossy().to_string())
+        })
+        .collect();
+    names.sort();
+    names
+}
+
+fn inbound_expected_fixture_names(provider: ProviderId) -> Vec<String> {
+    let dir = fixtures_root()
+        .join(provider.as_str())
+        .join("inbound_expected");
     if !dir.exists() {
         return vec![];
     }
@@ -231,6 +260,45 @@ fn load_inbound_fixture(provider: ProviderId, name: &str) -> WebhookFixture {
     serde_json::from_str(&raw).expect("fixture json")
 }
 
+fn load_inbound_expected_fixture(provider: ProviderId, name: &str) -> Value {
+    let path = fixtures_root()
+        .join(provider.as_str())
+        .join("inbound_expected")
+        .join(format!("{name}.json"));
+    let raw = fs::read_to_string(&path).unwrap_or_else(|_| panic!("missing fixture {path:?}"));
+    serde_json::from_str(&raw).expect("expected fixture json")
+}
+
+fn outbound_fixture_names(provider: ProviderId) -> Vec<String> {
+    let dir = fixtures_root()
+        .join("expected_payloads")
+        .join(provider.as_str());
+    if !dir.exists() {
+        return vec![];
+    }
+    let mut names: Vec<String> = fs::read_dir(&dir)
+        .expect("fixture dir")
+        .filter_map(|e| e.ok())
+        .filter(|e| e.file_type().map(|ft| ft.is_file()).unwrap_or(false))
+        .filter_map(|e| {
+            e.path()
+                .file_stem()
+                .map(|s| s.to_string_lossy().to_string())
+        })
+        .collect();
+    names.sort();
+    names
+}
+
+fn load_outbound_expected_fixture(provider: ProviderId, name: &str) -> Value {
+    let path = fixtures_root()
+        .join("expected_payloads")
+        .join(provider.as_str())
+        .join(format!("{name}.json"));
+    let raw = fs::read_to_string(&path).unwrap_or_else(|_| panic!("missing fixture {path:?}"));
+    serde_json::from_str(&raw).expect("expected fixture json")
+}
+
 fn make_engine() -> Engine {
     let mut config = Config::new();
     config.wasm_component_model(true);
@@ -253,10 +321,9 @@ fn normalize(value: Value) -> Value {
                         | "ts"
                         | "update_id"
                         | "event_ts"
-                ) {
-                    if v.is_string() || v.is_number() {
-                        v = Value::String("<FIXED>".into());
-                    }
+                ) && (v.is_string() || v.is_number())
+                {
+                    v = Value::String("<FIXED>".into());
                 }
                 normalized.insert(k, v);
             }
@@ -285,6 +352,45 @@ fn parse_metadata(metadata_json: &Option<String>) -> Value {
     } else {
         Value::Null
     }
+}
+
+fn normalize_outbound_expected(value: Value) -> Value {
+    let mut out = value;
+    if let Some(body) = out.get_mut("body_json") {
+        let normalized = normalize(body.take());
+        *body = normalized;
+    }
+    out
+}
+
+fn encode_to_expected_shape(encoded: Value) -> Value {
+    let content_type = encoded
+        .get("content_type")
+        .and_then(Value::as_str)
+        .unwrap_or("")
+        .to_string();
+    let warnings = encoded
+        .get("warnings")
+        .and_then(Value::as_array)
+        .map(|items| {
+            items
+                .iter()
+                .filter_map(|w| w.get("code").and_then(Value::as_str))
+                .map(|code| Value::String(code.to_string()))
+                .collect()
+        })
+        .unwrap_or_default();
+    let mut out = serde_json::Map::new();
+    out.insert("content_type".into(), Value::String(content_type));
+    out.insert("warnings".into(), Value::Array(warnings));
+    if let Some(body) = encoded.get("body") {
+        if body.is_string() {
+            out.insert("body_text".into(), body.clone());
+        } else {
+            out.insert("body_json".into(), normalize(body.clone()));
+        }
+    }
+    Value::Object(out)
 }
 
 struct HostState {
@@ -350,7 +456,7 @@ mod slack {
             let bindings =
                 bindings::Slack::instantiate(&mut store, &component, &linker).expect("instance");
             bindings
-                .call_init_runtime_config(&mut store, "{}".into())
+                .call_init_runtime_config(&mut store, "{}")
                 .expect("call")
                 .expect("init");
             Self { store, bindings }
@@ -426,7 +532,7 @@ mod teams {
             let bindings =
                 bindings::Teams::instantiate(&mut store, &component, &linker).expect("instance");
             bindings
-                .call_init_runtime_config(&mut store, "{}".into())
+                .call_init_runtime_config(&mut store, "{}")
                 .expect("call")
                 .expect("init");
             Self { store, bindings }
@@ -503,7 +609,7 @@ mod telegram {
             let bindings =
                 bindings::Telegram::instantiate(&mut store, &component, &linker).expect("instance");
             bindings
-                .call_init_runtime_config(&mut store, "{}".into())
+                .call_init_runtime_config(&mut store, "{}")
                 .expect("call")
                 .expect("init");
             Self { store, bindings }
@@ -594,7 +700,7 @@ mod webchat {
             let bindings =
                 bindings::Webchat::instantiate(&mut store, &component, &linker).expect("instance");
             bindings
-                .call_init_runtime_config(&mut store, "{}".into())
+                .call_init_runtime_config(&mut store, "{}")
                 .expect("call")
                 .expect("init");
             Self { store, bindings }
@@ -670,7 +776,7 @@ mod webex {
             let bindings =
                 bindings::Webex::instantiate(&mut store, &component, &linker).expect("instance");
             bindings
-                .call_init_runtime_config(&mut store, "{}".into())
+                .call_init_runtime_config(&mut store, "{}")
                 .expect("call")
                 .expect("init");
             Self { store, bindings }
@@ -746,7 +852,7 @@ mod whatsapp {
             let bindings =
                 bindings::Whatsapp::instantiate(&mut store, &component, &linker).expect("instance");
             bindings
-                .call_init_runtime_config(&mut store, "{}".into())
+                .call_init_runtime_config(&mut store, "{}")
                 .expect("call")
                 .expect("init");
             Self { store, bindings }
@@ -886,6 +992,41 @@ fn run_inbound_snapshots(provider: ProviderId) {
         insta::assert_json_snapshot!(
             format!("inbound_snapshot_{}__{}", provider.as_str(), fixture),
             value
+        );
+    }
+}
+
+fn run_inbound_fixture_expectations(provider: ProviderId) {
+    let engine = make_engine();
+    let mut harness = ProviderHarness::new(provider, &engine);
+    for fixture in inbound_expected_fixture_names(provider) {
+        let fixture_data = load_inbound_fixture(provider, &fixture);
+        let expected = normalize(load_inbound_expected_fixture(provider, &fixture));
+        let actual = normalize(harness.handle_webhook(&fixture_data.headers, &fixture_data.body));
+        assert_eq!(
+            actual,
+            expected,
+            "inbound fixture mismatch for {} {}",
+            provider.as_str(),
+            fixture
+        );
+    }
+}
+
+fn run_outbound_fixture_expectations(provider: ProviderId) {
+    let engine = make_engine();
+    let mut harness = ProviderHarness::new(provider, &engine);
+    for fixture in outbound_fixture_names(provider) {
+        let plan = load_render_plan_fixture(&fixture);
+        let expected =
+            normalize_outbound_expected(load_outbound_expected_fixture(provider, &fixture));
+        let actual = encode_to_expected_shape(harness.encode(&plan));
+        assert_eq!(
+            actual,
+            expected,
+            "outbound fixture mismatch for {} {}",
+            provider.as_str(),
+            fixture
         );
     }
 }
@@ -1038,4 +1179,64 @@ fn inbound_snapshots_webex() {
 #[test]
 fn inbound_snapshots_whatsapp() {
     run_inbound_snapshots(ProviderId::Whatsapp);
+}
+
+#[test]
+fn inbound_fixture_expectations_slack() {
+    run_inbound_fixture_expectations(ProviderId::Slack);
+}
+
+#[test]
+fn inbound_fixture_expectations_teams() {
+    run_inbound_fixture_expectations(ProviderId::Teams);
+}
+
+#[test]
+fn inbound_fixture_expectations_telegram() {
+    run_inbound_fixture_expectations(ProviderId::Telegram);
+}
+
+#[test]
+fn inbound_fixture_expectations_webchat() {
+    run_inbound_fixture_expectations(ProviderId::Webchat);
+}
+
+#[test]
+fn inbound_fixture_expectations_webex() {
+    run_inbound_fixture_expectations(ProviderId::Webex);
+}
+
+#[test]
+fn inbound_fixture_expectations_whatsapp() {
+    run_inbound_fixture_expectations(ProviderId::Whatsapp);
+}
+
+#[test]
+fn outbound_fixture_expectations_slack() {
+    run_outbound_fixture_expectations(ProviderId::Slack);
+}
+
+#[test]
+fn outbound_fixture_expectations_teams() {
+    run_outbound_fixture_expectations(ProviderId::Teams);
+}
+
+#[test]
+fn outbound_fixture_expectations_telegram() {
+    run_outbound_fixture_expectations(ProviderId::Telegram);
+}
+
+#[test]
+fn outbound_fixture_expectations_webchat() {
+    run_outbound_fixture_expectations(ProviderId::Webchat);
+}
+
+#[test]
+fn outbound_fixture_expectations_webex() {
+    run_outbound_fixture_expectations(ProviderId::Webex);
+}
+
+#[test]
+fn outbound_fixture_expectations_whatsapp() {
+    run_outbound_fixture_expectations(ProviderId::Whatsapp);
 }

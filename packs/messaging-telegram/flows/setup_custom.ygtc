@@ -14,7 +14,8 @@ nodes:
         Collect:
         - bot_token (required)
         - mode: webhook | polling (default webhook)
-        - webhook_url (if webhook) or polling_interval_ms (if polling)
+        - public_base_url (required for webhook mode)
+        - polling_interval_ms (if polling)
         - default_chat_id / allowed_chat_ids
         - commands (optional command list/menu)
         - test_message (bool)
@@ -24,7 +25,7 @@ nodes:
     handlebars:
       text: |
         - getMe to confirm token.
-        - If webhook mode, setWebhook to provided URL with a secret token if supplied.
+        - If webhook mode, setWebhook using public_base_url (and secret token if supplied).
         - If polling, ensure interval >= 1000ms.
         - Optionally send test message to default_chat_id.
   apply:
@@ -33,7 +34,7 @@ nodes:
     handlebars:
       text: |
         - Write secrets: TELEGRAM_BOT_TOKEN.
-        - Persist config: mode, webhook_url/polling_interval_ms, chats, commands.
+        - Persist config: mode, public_base_url, derived webhook_url/polling_interval_ms, chats, commands.
         - Idempotent update; re-run to change mode or webhook target.
   summary:
     routing: out

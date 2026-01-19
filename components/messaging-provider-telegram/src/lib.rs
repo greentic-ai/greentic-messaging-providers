@@ -15,7 +15,7 @@ use bindings::greentic::secrets_store::secrets_store;
 use greentic_types::ProviderManifest;
 
 const PROVIDER_TYPE: &str = "messaging.telegram.bot";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/telegram/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/telegram/config.schema.json";
 const DEFAULT_API_BASE: &str = "https://api.telegram.org";
 const TOKEN_SECRET: &str = "TELEGRAM_BOT_TOKEN";
 

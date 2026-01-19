@@ -13,7 +13,7 @@ use greentic_types::ProviderManifest;
 use serde_json::{Value, json};
 
 const PROVIDER_TYPE: &str = "messaging.dummy";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/dummy/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/dummy/config.schema.json";
 
 struct Component;
 

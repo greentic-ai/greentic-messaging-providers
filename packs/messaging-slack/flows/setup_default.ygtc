@@ -15,6 +15,7 @@ nodes:
         - bot_token (required)
         - signing_secret (optional, recommended for inbound)
         - default_channel (optional)
+        - public_base_url (required for events_api webhooks)
         - team_id/workspace_hint (optional)
 
         Non-interactive payload example:
@@ -22,6 +23,7 @@ nodes:
           "bot_token": "xoxb-...",
           "signing_secret": "...",
           "default_channel": "#general",
+          "public_base_url": "https://example.greentic.dev",
           "team_id": "T123",
           "test_message": false
         }
@@ -43,7 +45,7 @@ nodes:
       text: |
         Apply configuration using greentic-secrets/greentic-config:
         - secrets: SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET (optional)
-        - config: default_channel, team_id, inbound_mode (defaults to events), webhook request URL if host supplies one
+        - config: default_channel, team_id, inbound_mode (defaults to events), public_base_url, derived webhook request URL
         Ensure secrets are written idempotently (overwrite existing keys) and mark config version/last_applied.
   summary:
     routing: out

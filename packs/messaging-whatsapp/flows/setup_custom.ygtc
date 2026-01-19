@@ -13,7 +13,7 @@ nodes:
       text: |
         Collect:
         - access_token, phone_number_id, business_account_id
-        - webhook_url + verify_token
+        - public_base_url + verify_token
         - allowed_numbers (optional)
         - template_defaults (optional)
         - test_message flag
@@ -23,7 +23,7 @@ nodes:
     handlebars:
       text: |
         - Call Graph API me/product_catalog or phone_number lookup to ensure permissions.
-        - If webhook configured, call GET {webhook_url}?hub.verify_token flow.
+        - If webhook configured, call GET {public_base_url}/... with hub.verify_token flow.
         - Optional test message to an allowed number if requested.
   apply:
     routing:
@@ -31,7 +31,7 @@ nodes:
     handlebars:
       text: |
         - Write secrets and verify_token.
-        - Persist allowed_numbers, template_defaults, webhook target and status.
+        - Persist public_base_url, allowed_numbers, template_defaults, webhook target and status.
         - Idempotent reconciliation.
   summary:
     routing: out

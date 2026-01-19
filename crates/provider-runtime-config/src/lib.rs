@@ -42,22 +42,13 @@ impl ProviderRuntimeConfig {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct TelemetryConfig {
     #[serde(default)]
     pub emit_enabled: bool,
     #[serde(default)]
     pub service_name: Option<String>,
-}
-
-impl Default for TelemetryConfig {
-    fn default() -> Self {
-        Self {
-            emit_enabled: false,
-            service_name: None,
-        }
-    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -107,19 +98,11 @@ impl Default for TlsMode {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct RuntimeConfig {
     #[serde(default)]
     pub max_concurrency: Option<u32>,
-}
-
-impl Default for RuntimeConfig {
-    fn default() -> Self {
-        Self {
-            max_concurrency: None,
-        }
-    }
 }
 
 #[derive(Debug, PartialEq, Eq)]

@@ -31,6 +31,11 @@
       "type": "string",
       "description": "Default channel ID if not provided in invocation."
     },
+    "public_base_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public base URL for inbound webhook callbacks."
+    },
     "graph_base_url": {
       "type": "string",
       "description": "Graph API base URL.",
@@ -47,6 +52,6 @@
       "default": "https://graph.microsoft.com/.default"
     }
   },
-  "required": ["tenant_id", "client_id"],
+  "required": ["tenant_id", "client_id", "public_base_url"],
   "additionalProperties": false
 }

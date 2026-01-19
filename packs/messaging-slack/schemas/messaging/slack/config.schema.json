@@ -17,12 +17,17 @@
       "type": "string",
       "description": "Default channel ID used when an invocation omits destination."
     },
+    "public_base_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public base URL for inbound webhook callbacks."
+    },
     "api_base_url": {
       "type": "string",
       "description": "Slack API base URL.",
       "default": "https://slack.com/api"
     }
   },
-  "required": ["bot_token"],
+  "required": ["bot_token", "public_base_url"],
   "additionalProperties": false
 }

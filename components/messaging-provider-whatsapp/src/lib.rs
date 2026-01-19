@@ -15,7 +15,7 @@ use bindings::greentic::secrets_store::secrets_store;
 use greentic_types::ProviderManifest;
 
 const PROVIDER_TYPE: &str = "messaging.whatsapp.cloud";
-const CONFIG_SCHEMA_REF: &str = "schemas/messaging/whatsapp/config.schema.json";
+const CONFIG_SCHEMA_REF: &str = "assets/schemas/messaging/whatsapp/config.schema.json";
 const DEFAULT_API_BASE: &str = "https://graph.facebook.com";
 const DEFAULT_API_VERSION: &str = "v19.0";
 const DEFAULT_TOKEN_KEY: &str = "WHATSAPP_TOKEN";
@@ -93,12 +93,10 @@ fn handle_send(input_json: &[u8]) -> Vec<u8> {
         }
     };
 
-    if let Some(rich) = parsed.get("rich") {
-        if rich.get("format") == Some(&Value::String("whatsapp_template".into())) {
-            return json_bytes(
-                &json!({"ok": false, "error": "template messages not supported yet"}),
-            );
-        }
+    if let Some(rich) = parsed.get("rich")
+        && rich.get("format").and_then(Value::as_str) == Some("whatsapp_template")
+    {
+        return json_bytes(&json!({"ok": false, "error": "template messages not supported yet"}));
     }
 
     let cfg = match load_config(&parsed) {
