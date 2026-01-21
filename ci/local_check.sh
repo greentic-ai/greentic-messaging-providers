@@ -58,7 +58,8 @@ if [ "${run_publish_packs}" -eq 1 ]; then
     done
   fi
 else
-  echo "==> tools/publish_packs_oci.sh (skipped; set RUN_PUBLISH_PACKS=1 to enable)"
+  echo "==> tools/publish_packs_oci.sh (dry-run; rebuild dist/packs)"
+  DRY_RUN=1 PACKC_BUILD_FLAGS="--offline" ./tools/publish_packs_oci.sh
 fi
 
 echo "==> cargo test --workspace"

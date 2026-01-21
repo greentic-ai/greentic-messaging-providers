@@ -16,7 +16,7 @@
   "extensions": {
     "greentic.messaging.validators.v1": {
       "kind": "greentic.messaging.validators.v1",
-      "version": "1.0.0",
+      "version": "0.4.19",
       "inline": {
         "validators": [
           {
@@ -29,7 +29,7 @@
     },
     "greentic.provider-extension.v1": {
       "kind": "greentic.provider-extension.v1",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "inline": {
         "providers": [
           {
@@ -54,7 +54,7 @@
     },
     "messaging.provider_flow_hints": {
       "kind": "messaging.provider_flow_hints",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "inline": {
         "messaging.dummy": {
           "diagnostics": "diagnostics",
@@ -110,7 +110,7 @@
   "component_sources": [
     {
       "id": "diagnostics___summary",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -132,7 +132,7 @@
     },
     {
       "id": "messaging-provider-dummy",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "world": "greentic:provider/schema-core@1.0.0",
       "supports": [
         "messaging"
@@ -154,7 +154,7 @@
     },
     {
       "id": "requirements___summary",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -176,7 +176,7 @@
     },
     {
       "id": "setup_custom___summarize",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -198,7 +198,7 @@
     },
     {
       "id": "setup_default___summarize",
-      "version": "0.4.18",
+      "version": "0.4.19",
       "world": "root:component/root",
       "supports": [
         "messaging"

@@ -4,7 +4,7 @@ kind: application
 publisher: Greentic
 components:
 - id: ai.greentic.component-templates
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -19,7 +19,7 @@ components:
     host: {}
   wasm: components/ai.greentic.component-templates.wasm
 - id: diagnostics___check_secret
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -34,7 +34,7 @@ components:
     host: {}
   wasm: components/diagnostics___check_secret.wasm
 - id: diagnostics___optional_loopback
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -49,7 +49,7 @@ components:
     host: {}
   wasm: components/diagnostics___optional_loopback.wasm
 - id: diagnostics___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -64,7 +64,7 @@ components:
     host: {}
   wasm: components/diagnostics___summary.wasm
 - id: diagnostics__check_secret
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -79,7 +79,7 @@ components:
     host: {}
   wasm: components/diagnostics__check_secret.wasm
 - id: diagnostics__optional_loopback
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -94,7 +94,7 @@ components:
     host: {}
   wasm: components/diagnostics__optional_loopback.wasm
 - id: diagnostics__summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -109,7 +109,7 @@ components:
     host: {}
   wasm: components/diagnostics__summary.wasm
 - id: handlebars
-  version: 0.4.18
+  version: 0.4.19
   world: greentic:component/component@0.5.0
   supports:
   - messaging
@@ -124,7 +124,7 @@ components:
     host: {}
   wasm: components/templates.wasm
 - id: messaging-provider-webchat
-  version: 0.4.18
+  version: 0.4.19
   world: greentic:provider/schema-core@1.0.0
   supports:
   - messaging
@@ -139,7 +139,7 @@ components:
     host: {}
   wasm: components/messaging-provider-webchat.wasm
 - id: requirements___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -154,7 +154,7 @@ components:
     host: {}
   wasm: components/requirements___summary.wasm
 - id: setup_custom___apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -169,7 +169,7 @@ components:
     host: {}
   wasm: components/setup_custom___apply.wasm
 - id: setup_custom___collect
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -184,7 +184,7 @@ components:
     host: {}
   wasm: components/setup_custom___collect.wasm
 - id: setup_custom___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -199,7 +199,7 @@ components:
     host: {}
   wasm: components/setup_custom___summary.wasm
 - id: setup_custom___validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -214,7 +214,7 @@ components:
     host: {}
   wasm: components/setup_custom___validate.wasm
 - id: setup_custom__apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -229,7 +229,7 @@ components:
     host: {}
   wasm: components/setup_custom__apply.wasm
 - id: setup_custom__collect
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -244,7 +244,7 @@ components:
     host: {}
   wasm: components/setup_custom__collect.wasm
 - id: setup_custom__summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -259,7 +259,7 @@ components:
     host: {}
   wasm: components/setup_custom__summary.wasm
 - id: setup_custom__validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -274,7 +274,7 @@ components:
     host: {}
   wasm: components/setup_custom__validate.wasm
 - id: setup_default___apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -289,7 +289,7 @@ components:
     host: {}
   wasm: components/setup_default___apply.wasm
 - id: setup_default___collect
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -304,7 +304,7 @@ components:
     host: {}
   wasm: components/setup_default___collect.wasm
 - id: setup_default___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -319,7 +319,7 @@ components:
     host: {}
   wasm: components/setup_default___summary.wasm
 - id: setup_default___validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -334,7 +334,7 @@ components:
     host: {}
   wasm: components/setup_default___validate.wasm
 - id: setup_default__apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -349,7 +349,7 @@ components:
     host: {}
   wasm: components/setup_default__apply.wasm
 - id: setup_default__collect
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -364,7 +364,7 @@ components:
     host: {}
   wasm: components/setup_default__collect.wasm
 - id: setup_default__summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -379,7 +379,7 @@ components:
     host: {}
   wasm: components/setup_default__summary.wasm
 - id: setup_default__validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -394,7 +394,7 @@ components:
     host: {}
   wasm: components/setup_default__validate.wasm
 - id: verify_webhooks___steps
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -409,7 +409,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___steps.wasm
 - id: verify_webhooks__steps
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -471,7 +471,7 @@ assets:
 extensions:
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: "1.0.0"
+    version: 0.4.19
     inline:
       validators:
       - id: greentic.validators.messaging
@@ -479,7 +479,7 @@ extensions:
         component_ref: oci://ghcr.io/greentic-ai/validators/messaging:0.4.19
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.18
+    version: 0.4.19
     inline:
       providers:
       - provider_type: messaging.webchat
@@ -497,7 +497,7 @@ extensions:
         docs_ref: ''
   messaging.provider_flow_hints:
     kind: messaging.provider_flow_hints
-    version: 0.4.18
+    version: 0.4.19
     inline:
       messaging.webchat:
         diagnostics: diagnostics

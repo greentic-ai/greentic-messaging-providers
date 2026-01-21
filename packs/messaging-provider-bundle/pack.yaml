@@ -8,7 +8,7 @@ x-provider-runtime-config:
   injected_as: provider_runtime_config.json
 components:
 - id: ai.greentic.component-templates
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -23,7 +23,7 @@ components:
     host: {}
   wasm: components/ai.greentic.component-templates.wasm
 - id: diagnostics___checks
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -38,7 +38,7 @@ components:
     host: {}
   wasm: components/diagnostics___checks.wasm
 - id: diagnostics__checks
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -53,7 +53,7 @@ components:
     host: {}
   wasm: components/diagnostics__checks.wasm
 - id: handlebars
-  version: 0.4.18
+  version: 0.4.19
   world: greentic:component/component@0.5.0
   supports:
   - messaging
@@ -68,7 +68,7 @@ components:
     host: {}
   wasm: components/templates.wasm
 - id: main___start
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -83,7 +83,7 @@ components:
     host: {}
   wasm: components/main___start.wasm
 - id: main__start
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -98,7 +98,7 @@ components:
     host: {}
   wasm: components/main__start.wasm
 - id: requirements___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -113,7 +113,7 @@ components:
     host: {}
   wasm: components/requirements___summary.wasm
 - id: setup_custom___apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -128,7 +128,7 @@ components:
     host: {}
   wasm: components/setup_custom___apply.wasm
 - id: setup_custom___overview
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -143,7 +143,7 @@ components:
     host: {}
   wasm: components/setup_custom___overview.wasm
 - id: setup_custom___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -158,7 +158,7 @@ components:
     host: {}
   wasm: components/setup_custom___summary.wasm
 - id: setup_custom___validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -173,7 +173,7 @@ components:
     host: {}
   wasm: components/setup_custom___validate.wasm
 - id: setup_custom__apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -188,7 +188,7 @@ components:
     host: {}
   wasm: components/setup_custom__apply.wasm
 - id: setup_custom__overview
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -203,7 +203,7 @@ components:
     host: {}
   wasm: components/setup_custom__overview.wasm
 - id: setup_custom__summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -218,7 +218,7 @@ components:
     host: {}
   wasm: components/setup_custom__summary.wasm
 - id: setup_custom__validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -233,7 +233,7 @@ components:
     host: {}
   wasm: components/setup_custom__validate.wasm
 - id: setup_default___apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -248,7 +248,7 @@ components:
     host: {}
   wasm: components/setup_default___apply.wasm
 - id: setup_default___overview
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -263,7 +263,7 @@ components:
     host: {}
   wasm: components/setup_default___overview.wasm
 - id: setup_default___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -278,7 +278,7 @@ components:
     host: {}
   wasm: components/setup_default___summary.wasm
 - id: setup_default___validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -293,7 +293,7 @@ components:
     host: {}
   wasm: components/setup_default___validate.wasm
 - id: setup_default__apply
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -308,7 +308,7 @@ components:
     host: {}
   wasm: components/setup_default__apply.wasm
 - id: setup_default__overview
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -323,7 +323,7 @@ components:
     host: {}
   wasm: components/setup_default__overview.wasm
 - id: setup_default__summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -338,7 +338,7 @@ components:
     host: {}
   wasm: components/setup_default__summary.wasm
 - id: setup_default__validate
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -353,7 +353,7 @@ components:
     host: {}
   wasm: components/setup_default__validate.wasm
 - id: slack
-  version: 0.4.18
+  version: 0.4.19
   world: provider:slack/slack
   supports:
   - messaging
@@ -368,7 +368,7 @@ components:
     host: {}
   wasm: components/slack.wasm
 - id: teams
-  version: 0.4.18
+  version: 0.4.19
   world: provider:teams/teams
   supports:
   - messaging
@@ -383,7 +383,7 @@ components:
     host: {}
   wasm: components/teams.wasm
 - id: telegram
-  version: 0.4.18
+  version: 0.4.19
   world: provider:telegram/telegram
   supports:
   - messaging
@@ -398,7 +398,7 @@ components:
     host: {}
   wasm: components/telegram.wasm
 - id: verify_webhooks___steps
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -413,7 +413,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___steps.wasm
 - id: verify_webhooks__steps
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -428,7 +428,7 @@ components:
     host: {}
   wasm: components/verify_webhooks__steps.wasm
 - id: webchat
-  version: 0.4.18
+  version: 0.4.19
   world: provider:webchat/webchat
   supports:
   - messaging
@@ -443,7 +443,7 @@ components:
     host: {}
   wasm: components/webchat.wasm
 - id: webex
-  version: 0.4.18
+  version: 0.4.19
   world: provider:webex/webex
   supports:
   - messaging
@@ -458,7 +458,7 @@ components:
     host: {}
   wasm: components/webex.wasm
 - id: whatsapp
-  version: 0.4.18
+  version: 0.4.19
   world: provider:whatsapp/whatsapp
   supports:
   - messaging
@@ -541,7 +541,7 @@ assets:
 extensions:
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: "1.0.0"
+    version: 0.4.19
     inline:
       validators:
       - id: greentic.validators.messaging
@@ -549,7 +549,7 @@ extensions:
         component_ref: oci://ghcr.io/greentic-ai/validators/messaging:0.4.19
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.18
+    version: 0.4.19
     inline:
       providers:
       - provider_type: messaging.slack.api
@@ -632,7 +632,7 @@ extensions:
         docs_ref: ''
   messaging.provider_flow_hints:
     kind: messaging.provider_flow_hints
-    version: 0.4.18
+    version: 0.4.19
     inline:
       messaging.slack.api:
         diagnostics: diagnostics
