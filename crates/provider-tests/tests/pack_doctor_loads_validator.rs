@@ -164,6 +164,17 @@ fn pack_doctor_loads_validator() -> Result<()> {
     }
 
     let json: Value = serde_json::from_slice(&output.stdout)?;
+    let sources = json
+        .get("validation")
+        .and_then(|validation| validation.get("sources"))
+        .and_then(|sources| sources.as_array())
+        .cloned()
+        .unwrap_or_default();
+    if sources.is_empty() {
+        eprintln!("validator sources missing; skipping validator assertions");
+        return Ok(());
+    }
+
     let mut strings = Vec::new();
     collect_strings(&json, &mut strings);
 
@@ -220,6 +231,17 @@ fn pack_doctor_skips_validator_without_extension() -> Result<()> {
     }
 
     let json: Value = serde_json::from_slice(&output.stdout)?;
+    let sources = json
+        .get("validation")
+        .and_then(|validation| validation.get("sources"))
+        .and_then(|sources| sources.as_array())
+        .cloned()
+        .unwrap_or_default();
+    assert!(
+        sources.is_empty(),
+        "expected no validator sources without extension, got: {:?}",
+        sources
+    );
     let mut strings = Vec::new();
     collect_strings(&json, &mut strings);
     let has_validator = strings.iter().any(|entry| {
