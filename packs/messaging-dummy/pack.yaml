@@ -4,7 +4,7 @@ kind: application
 publisher: Greentic
 components:
 - id: diagnostics___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -19,7 +19,7 @@ components:
     host: {}
   wasm: components/diagnostics___summary.wasm
 - id: messaging-provider-dummy
-  version: 0.4.18
+  version: 0.4.19
   world: greentic:provider/schema-core@1.0.0
   supports:
   - messaging
@@ -34,7 +34,7 @@ components:
     host: {}
   wasm: components/messaging-provider-dummy.wasm
 - id: requirements___summary
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -49,7 +49,7 @@ components:
     host: {}
   wasm: components/requirements___summary.wasm
 - id: setup_custom___summarize
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -64,7 +64,7 @@ components:
     host: {}
   wasm: components/setup_custom___summarize.wasm
 - id: setup_default___summarize
-  version: 0.4.18
+  version: 0.4.19
   world: root:component/root
   supports:
   - messaging
@@ -118,7 +118,7 @@ assets:
 extensions:
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: "1.0.0"
+    version: 0.4.19
     inline:
       validators:
       - id: greentic.validators.messaging
@@ -126,7 +126,7 @@ extensions:
         component_ref: oci://ghcr.io/greentic-ai/validators/messaging:0.4.19
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.18
+    version: 0.4.19
     inline:
       providers:
       - provider_type: messaging.dummy
@@ -143,7 +143,7 @@ extensions:
         docs_ref: ''
   messaging.provider_flow_hints:
     kind: messaging.provider_flow_hints
-    version: 0.4.18
+    version: 0.4.19
     inline:
       messaging.dummy:
         diagnostics: diagnostics

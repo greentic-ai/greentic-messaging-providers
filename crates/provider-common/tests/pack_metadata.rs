@@ -110,6 +110,16 @@ fn run_metadata_generator(workspace_root: &Path, pack_dir: &Path) {
     assert!(status.success(), "metadata generator did not exit cleanly");
 }
 
+fn use_online_pack_build() -> bool {
+    matches!(
+        std::env::var("GREENTIC_PACK_TEST_ONLINE")
+            .unwrap_or_default()
+            .to_ascii_lowercase()
+            .as_str(),
+        "1" | "true" | "yes"
+    )
+}
+
 fn build_dummy_pack() -> Result<(tempfile::TempDir, PathBuf)> {
     let root = workspace_root();
     let temp = tempdir()?;
@@ -135,17 +145,19 @@ fn build_dummy_pack() -> Result<(tempfile::TempDir, PathBuf)> {
     }
 
     let gtpack_path = pack_dir.join("build").join("messaging-dummy.gtpack");
-    let status = Command::new("greentic-pack")
+    let mut command = Command::new("greentic-pack");
+    command
         .arg("build")
-        .arg("--offline")
         .arg("--no-update")
         .arg("--in")
         .arg(".")
         .arg("--gtpack-out")
         .arg(&gtpack_path)
-        .current_dir(&pack_dir)
-        .status()
-        .expect("failed to run greentic-pack build");
+        .current_dir(&pack_dir);
+    if !use_online_pack_build() {
+        command.arg("--offline");
+    }
+    let status = command.status().expect("failed to run greentic-pack build");
     assert!(
         status.success(),
         "greentic-pack build failed for dummy pack"

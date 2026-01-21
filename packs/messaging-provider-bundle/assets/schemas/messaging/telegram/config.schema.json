@@ -17,6 +17,11 @@
       "format": "uri",
       "description": "Public base URL for inbound webhook callbacks."
     },
+    "public_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public webhook URL (deprecated alias for public_base_url)."
+    },
     "api_base_url": {
       "type": "string",
       "description": "Override for the Telegram API base URL.",
