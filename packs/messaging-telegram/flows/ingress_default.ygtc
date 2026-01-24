@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.telegram ingress ok
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: ingress_default__summary
+          text: messaging.telegram ingress ok

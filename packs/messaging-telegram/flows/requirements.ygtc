@@ -12,19 +12,23 @@ nodes:
       config:
         default_chat_id: '{{ default_chat_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Provider: messaging.telegram.bot
-        Config schema: schemas/messaging/telegram/public.config.schema.json
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: summary
+          text: |
+            Provider: messaging.telegram.bot
+            Config schema: schemas/messaging/telegram/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.telegram.bot",
-          "config_required": ["public_base_url"],
-          "config_optional": ["default_chat_id"],
-          "secret_required": ["TELEGRAM_BOT_TOKEN"],
-          "secret_optional": [],
-          "oauth_required": false,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.telegram.bot",
+              "config_required": ["public_base_url"],
+              "config_optional": ["default_chat_id"],
+              "secret_required": ["TELEGRAM_BOT_TOKEN"],
+              "secret_optional": [],
+              "oauth_required": false,
+              "subscriptions_required": false
+            }
 
-        Notes: Telegram inbound uses webhooks (setWebhook).
+            Notes: Telegram inbound uses webhooks (setWebhook).

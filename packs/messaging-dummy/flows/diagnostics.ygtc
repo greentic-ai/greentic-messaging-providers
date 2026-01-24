@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: Dummy diagnostics completed; no external checks required.
+      msg:
+        provider: messaging.dummy
+        message:
+          id: summary
+          text: Dummy diagnostics completed; no external checks required.

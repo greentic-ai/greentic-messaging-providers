@@ -14,9 +14,13 @@ nodes:
         business_account_id: '{{ business_account_id }}'
         phone_number_id: '{{ phone_number_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - Ensure access token/IDs/verify_token exist.
-        - Confirm webhook URL (if configured).
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: preflight
+          text: |
+            - Ensure access token/IDs/verify_token exist.
+            - Confirm webhook URL (if configured).
   token_check:
     routing:
     - to: optional_send
@@ -25,9 +29,13 @@ nodes:
         business_account_id: '{{ business_account_id }}'
         phone_number_id: '{{ phone_number_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - Call Graph API against phone_number_id to validate token.
-        - If webhook configured, verify subscription and respond to challenge.
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: token_check
+          text: |
+            - Call Graph API against phone_number_id to validate token.
+            - If webhook configured, verify subscription and respond to challenge.
   optional_send:
     routing:
     - to: summary
@@ -36,8 +44,12 @@ nodes:
         business_account_id: '{{ business_account_id }}'
         phone_number_id: '{{ phone_number_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        If payload.send_test_message true, send a test text message to payload.recipient using messages endpoint.
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: optional_send
+          text: |
+            If payload.send_test_message true, send a test text message to payload.recipient using messages endpoint.
   summary:
     routing: out
     text:
@@ -45,4 +57,8 @@ nodes:
         business_account_id: '{{ business_account_id }}'
         phone_number_id: '{{ phone_number_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: Diagnostics complete for WhatsApp.
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: summary
+          text: Diagnostics complete for WhatsApp.

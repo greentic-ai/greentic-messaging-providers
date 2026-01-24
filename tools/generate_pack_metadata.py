@@ -61,6 +61,10 @@ def aggregate_requirements(pack_dir: Path, components_dir: Path) -> List[dict]:
         or manifest.get("components")
         or []
     )
+    manifest_fallbacks = {
+        "ai.greentic.component-provision": "provision",
+        "ai.greentic.component-questions": "questions",
+    }
     reqs: List[dict] = []
     for component in components:
         if isinstance(component, dict):
@@ -75,6 +79,12 @@ def aggregate_requirements(pack_dir: Path, components_dir: Path) -> List[dict]:
             alt_manifest = components_dir / "templates" / "component.manifest.json"
             if alt_manifest.exists():
                 comp_manifest = alt_manifest
+        if not comp_manifest.exists():
+            fallback = manifest_fallbacks.get(comp_id)
+            if fallback:
+                alt_manifest = components_dir / fallback / "component.manifest.json"
+                if alt_manifest.exists():
+                    comp_manifest = alt_manifest
         if not comp_manifest.exists():
             if "__" in comp_id:
                 continue

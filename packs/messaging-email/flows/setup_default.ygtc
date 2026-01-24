@@ -17,7 +17,11 @@ nodes:
     - to: setup_default__validate
     text:
       config: {}
-      text: Collect inputs for setup_default.
+      msg:
+        provider: messaging.email.smtp
+        message:
+          id: setup_default__collect
+          text: Collect inputs for setup_default.
   setup_default__validate:
     routing:
     - to: setup_default__apply
@@ -35,4 +39,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.email setup_default complete.
+      msg:
+        provider: messaging.email.smtp
+        message:
+          id: setup_default__summary
+          text: messaging.email setup_default complete.

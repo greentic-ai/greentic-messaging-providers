@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.whatsapp subscriptions synced.
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: sync_subscriptions__summary
+          text: messaging.whatsapp subscriptions synced.

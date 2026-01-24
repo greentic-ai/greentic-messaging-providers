@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.webchat subscriptions synced.
+      msg:
+        provider: messaging.webchat
+        message:
+          id: sync_subscriptions__summary
+          text: messaging.webchat subscriptions synced.

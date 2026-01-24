@@ -16,10 +16,14 @@ nodes:
         public_base_url: '{{ public_base_url }}'
         team_id: '{{ team_id }}'
         tenant_id: '{{ tenant_id }}'
-      text: |
-        - Ensure credentials present.
-        - Acquire access token from Azure AD.
-        - Call GET /v1.0/organization to confirm validity.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: token_check
+          text: |
+            - Ensure credentials present.
+            - Acquire access token from Azure AD.
+            - Call GET /v1.0/organization to confirm validity.
   channel_check:
     routing:
     - to: subscription_check
@@ -30,8 +34,12 @@ nodes:
         public_base_url: '{{ public_base_url }}'
         team_id: '{{ team_id }}'
         tenant_id: '{{ tenant_id }}'
-      text: |
-        - For default channel (or payload.target), attempt dry-run post or channel info lookup.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: channel_check
+          text: |
+            - For default channel (or payload.target), attempt dry-run post or channel info lookup.
   subscription_check:
     routing:
     - to: summary
@@ -42,8 +50,12 @@ nodes:
         public_base_url: '{{ public_base_url }}'
         team_id: '{{ team_id }}'
         tenant_id: '{{ tenant_id }}'
-      text: |
-        - If subscriptions configured, list existing subscriptions and ensure they target the desired webhook URL; renew if expiring soon.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: subscription_check
+          text: |
+            - If subscriptions configured, list existing subscriptions and ensure they target the desired webhook URL; renew if expiring soon.
   summary:
     routing: out
     text:
@@ -53,4 +65,8 @@ nodes:
         public_base_url: '{{ public_base_url }}'
         team_id: '{{ team_id }}'
         tenant_id: '{{ tenant_id }}'
-      text: Diagnostics complete; token valid, channel reachable, subscriptions reconciled.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: summary
+          text: Diagnostics complete; token valid, channel reachable, subscriptions reconciled.

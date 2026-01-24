@@ -15,19 +15,23 @@ nodes:
         public_base_url: '{{ public_base_url }}'
         team_id: '{{ team_id }}'
         tenant_id: '{{ tenant_id }}'
-      text: |
-        Provider: messaging.teams.graph
-        Config schema: schemas/messaging/teams/public.config.schema.json
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: summary
+          text: |
+            Provider: messaging.teams.graph
+            Config schema: schemas/messaging/teams/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.teams.graph",
-          "config_required": ["tenant_id", "client_id", "public_base_url"],
-          "config_optional": ["default_channel"],
-          "secret_required": ["MS_GRAPH_CLIENT_SECRET", "MS_GRAPH_REFRESH_TOKEN"],
-          "secret_optional": [],
-          "oauth_required": true,
-          "subscriptions_required": true
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.teams.graph",
+              "config_required": ["tenant_id", "client_id", "public_base_url"],
+              "config_optional": ["default_channel"],
+              "secret_required": ["MS_GRAPH_CLIENT_SECRET", "MS_GRAPH_REFRESH_TOKEN"],
+              "secret_optional": [],
+              "oauth_required": true,
+              "subscriptions_required": true
+            }
 
-        Notes: Requires Microsoft Graph subscriptions for inbound.
+            Notes: Requires Microsoft Graph subscriptions for inbound.

@@ -12,7 +12,11 @@ nodes:
       config:
         default_chat_id: '{{ default_chat_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - Read configured webhook_url from config and compare with Telegram getWebhookInfo.
-        - If mismatched, setWebhook to desired URL with allowed_updates.
-        - Trigger a test update (e.g., send a message to the bot) and confirm delivery.
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: steps
+          text: |
+            - Read configured webhook_url from config and compare with Telegram getWebhookInfo.
+            - If mismatched, setWebhook to desired URL with allowed_updates.
+            - Trigger a test update (e.g., send a message to the bot) and confirm delivery.

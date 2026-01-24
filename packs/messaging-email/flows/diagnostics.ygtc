@@ -16,10 +16,14 @@ nodes:
         port: '{{ port }}'
         tls_mode: '{{ tls_mode }}'
         username: '{{ username }}'
-      text: |
-        - Confirm SMTP credentials present.
-        - Attempt connection/auth with configured TLS/timeout.
-        - If payload.send_test_email true, send to payload.recipient (or from_address) with diagnostics marker.
+      msg:
+        provider: messaging.email.smtp
+        message:
+          id: checks
+          text: |
+            - Confirm SMTP credentials present.
+            - Attempt connection/auth with configured TLS/timeout.
+            - If payload.send_test_email true, send to payload.recipient (or from_address) with diagnostics marker.
   summary:
     routing: out
     text:
@@ -29,4 +33,8 @@ nodes:
         port: '{{ port }}'
         tls_mode: '{{ tls_mode }}'
         username: '{{ username }}'
-      text: Diagnostics completed; connection/auth {{#if payload.send_test_email}}and send test{{/if}} executed.
+      msg:
+        provider: messaging.email.smtp
+        message:
+          id: summary
+          text: Diagnostics completed; connection/auth {{#if payload.send_test_email}}and send test{{/if}} executed.

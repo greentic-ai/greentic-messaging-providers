@@ -13,7 +13,11 @@ nodes:
         ingress_path: '{{ ingress_path }}'
         mode: '{{ mode }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - Generate a signed token with signing_secret.
-        - Send it through the inbound webhook/ingress and expect acceptance.
-        - Confirm expiry/claims enforcement.
+      msg:
+        provider: messaging.webchat
+        message:
+          id: steps
+          text: |
+            - Generate a signed token with signing_secret.
+            - Send it through the inbound webhook/ingress and expect acceptance.
+            - Confirm expiry/claims enforcement.

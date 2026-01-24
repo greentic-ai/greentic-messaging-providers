@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.telegram subscriptions synced.
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: sync_subscriptions__summary
+          text: messaging.telegram subscriptions synced.

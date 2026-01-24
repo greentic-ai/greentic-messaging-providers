@@ -12,9 +12,13 @@ nodes:
       config:
         default_channel: '{{ default_channel }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Steps:
-        - Fetch current event subscriptions from Slack API.
-        - Ensure request_url matches the host-provided ingress endpoint.
-        - Send a challenge (or expect Slack's challenge) and verify signature using signing secret.
-        - Mark verification timestamp in config for idempotent runs.
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: describe
+          text: |
+            Steps:
+            - Fetch current event subscriptions from Slack API.
+            - Ensure request_url matches the host-provided ingress endpoint.
+            - Send a challenge (or expect Slack's challenge) and verify signature using signing secret.
+            - Mark verification timestamp in config for idempotent runs.

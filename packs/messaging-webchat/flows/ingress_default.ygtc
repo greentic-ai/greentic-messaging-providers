@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.webchat ingress ok
+      msg:
+        provider: messaging.webchat
+        message:
+          id: ingress_default__summary
+          text: messaging.webchat ingress ok

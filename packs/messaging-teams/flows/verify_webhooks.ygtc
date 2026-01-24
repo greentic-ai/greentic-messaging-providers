@@ -15,8 +15,12 @@ nodes:
         public_base_url: '{{ public_base_url }}'
         team_id: '{{ team_id }}'
         tenant_id: '{{ tenant_id }}'
-      text: |
-        - List Graph subscriptions for the app.
-        - Ensure resource filters match configured channels and notification URL matches host ingress.
-        - Run sync-subscriptions idempotently; renew or recreate subscriptions before expiry (respect renewal_window_hours).
-        - Write back expiration timestamps for idempotency.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: verify
+          text: |
+            - List Graph subscriptions for the app.
+            - Ensure resource filters match configured channels and notification URL matches host ingress.
+            - Run sync-subscriptions idempotently; renew or recreate subscriptions before expiry (respect renewal_window_hours).
+            - Write back expiration timestamps for idempotency.

@@ -13,7 +13,11 @@ nodes:
         business_account_id: '{{ business_account_id }}'
         phone_number_id: '{{ phone_number_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - Ensure webhook URL registered in Meta app dashboard for phone_number_id.
-        - Perform verification by responding with hub.challenge using verify_token.
-        - Record verification timestamp for idempotent reruns.
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: steps
+          text: |
+            - Ensure webhook URL registered in Meta app dashboard for phone_number_id.
+            - Perform verification by responding with hub.challenge using verify_token.
+            - Record verification timestamp for idempotent reruns.

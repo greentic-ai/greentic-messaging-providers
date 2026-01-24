@@ -15,19 +15,23 @@ nodes:
         port: '{{ port }}'
         tls_mode: '{{ tls_mode }}'
         username: '{{ username }}'
-      text: |
-        Provider: messaging.email.smtp
-        Config schema: schemas/messaging/email/public.config.schema.json
+      msg:
+        provider: messaging.email.smtp
+        message:
+          id: summary
+          text: |
+            Provider: messaging.email.smtp
+            Config schema: schemas/messaging/email/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.email.smtp",
-          "config_required": ["host", "username", "from_address"],
-          "config_optional": ["port", "use_tls"],
-          "secret_required": ["EMAIL_PASSWORD"],
-          "secret_optional": [],
-          "oauth_required": false,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.email.smtp",
+              "config_required": ["host", "username", "from_address"],
+              "config_optional": ["port", "use_tls"],
+              "secret_required": ["EMAIL_PASSWORD"],
+              "secret_optional": [],
+              "oauth_required": false,
+              "subscriptions_required": false
+            }
 
-        Notes: SMTP setup; no inbound webhooks.
+            Notes: SMTP setup; no inbound webhooks.

@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.webex subscriptions synced.
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: sync_subscriptions__summary
+          text: messaging.webex subscriptions synced.

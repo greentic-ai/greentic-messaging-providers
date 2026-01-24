@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.slack ingress ok
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: ingress_default__summary
+          text: messaging.slack ingress ok

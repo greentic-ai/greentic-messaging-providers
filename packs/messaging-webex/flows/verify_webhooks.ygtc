@@ -12,7 +12,11 @@ nodes:
       config:
         default_room_id: '{{ default_room_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - List webhooks for the bot and match on target URL.
-        - Recreate any missing or disabled webhooks.
-        - Validate signature on a sample payload using stored secret.
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: steps
+          text: |
+            - List webhooks for the bot and match on target URL.
+            - Recreate any missing or disabled webhooks.
+            - Validate signature on a sample payload using stored secret.

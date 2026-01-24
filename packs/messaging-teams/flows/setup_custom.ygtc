@@ -17,7 +17,11 @@ nodes:
     - to: setup_custom__validate
     text:
       config: {}
-      text: Collect inputs for setup_custom.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: setup_custom__collect
+          text: Collect inputs for setup_custom.
   setup_custom__validate:
     routing:
     - to: setup_custom__apply
@@ -35,4 +39,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.teams setup_custom complete.
+      msg:
+        provider: messaging.teams.graph
+        message:
+          id: setup_custom__summary
+          text: messaging.teams setup_custom complete.

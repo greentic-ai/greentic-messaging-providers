@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.dummy subscriptions synced.
+      msg:
+        provider: messaging.dummy
+        message:
+          id: sync_subscriptions__summary
+          text: messaging.dummy subscriptions synced.

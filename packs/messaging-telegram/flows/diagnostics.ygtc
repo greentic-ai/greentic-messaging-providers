@@ -13,11 +13,15 @@ nodes:
       config:
         default_chat_id: '{{ default_chat_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Checks:
-        - TELEGRAM_BOT_TOKEN exists.
-        - mode (webhook|polling) configured.
-        - default_chat_id or payload.target_chat provided for send tests.
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: preflight
+          text: |
+            Checks:
+            - TELEGRAM_BOT_TOKEN exists.
+            - mode (webhook|polling) configured.
+            - default_chat_id or payload.target_chat provided for send tests.
   verify_token:
     routing:
     - to: optional_send
@@ -25,10 +29,14 @@ nodes:
       config:
         default_chat_id: '{{ default_chat_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - getMe to confirm bot identity and status.
-        - If webhook mode, getWebhookInfo and compare URL with configured; trigger a self-ping if possible.
-        - If polling mode, ensure recent updates can be fetched (getUpdates dry-run).
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: verify_token
+          text: |
+            - getMe to confirm bot identity and status.
+            - If webhook mode, getWebhookInfo and compare URL with configured; trigger a self-ping if possible.
+            - If polling mode, ensure recent updates can be fetched (getUpdates dry-run).
   optional_send:
     routing:
     - to: summary
@@ -36,12 +44,20 @@ nodes:
       config:
         default_chat_id: '{{ default_chat_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        If payload.send_test_message true, sendMessage to target chat with diagnostics marker; otherwise skip.
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: optional_send
+          text: |
+            If payload.send_test_message true, sendMessage to target chat with diagnostics marker; otherwise skip.
   summary:
     routing: out
     text:
       config:
         default_chat_id: '{{ default_chat_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: Diagnostics complete; token valid and mode {{config.mode}} healthy.
+      msg:
+        provider: messaging.telegram.bot
+        message:
+          id: summary
+          text: Diagnostics complete; token valid and mode {{config.mode}} healthy.

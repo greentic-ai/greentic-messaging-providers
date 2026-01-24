@@ -13,11 +13,15 @@ nodes:
       config:
         default_channel: '{{ default_channel }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Checks performed:
-        - Ensure SLACK_BOT_TOKEN (and optional SLACK_SIGNING_SECRET) exist in greentic-secrets.
-        - Confirm config.default_channel/team_id available.
-        - If payload.verify_webhook true, check webhook subscription reachability (events endpoint responds 200).
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: preflight
+          text: |
+            Checks performed:
+            - Ensure SLACK_BOT_TOKEN (and optional SLACK_SIGNING_SECRET) exist in greentic-secrets.
+            - Confirm config.default_channel/team_id available.
+            - If payload.verify_webhook true, check webhook subscription reachability (events endpoint responds 200).
   auth_test:
     routing:
     - to: optional_send
@@ -25,9 +29,13 @@ nodes:
       config:
         default_channel: '{{ default_channel }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Call Slack auth.test with stored bot token to verify scopes and workspace.
-        If default_channel is set, call conversations.info and conversations.history (limit 1) to ensure access.
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: auth_test
+          text: |
+            Call Slack auth.test with stored bot token to verify scopes and workspace.
+            If default_channel is set, call conversations.info and conversations.history (limit 1) to ensure access.
   optional_send:
     routing:
     - to: summary
@@ -35,14 +43,22 @@ nodes:
       config:
         default_channel: '{{ default_channel }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        If payload.send_test_message is true, post a test message to default_channel (or payload.target) with a diagnostics marker.
-        If false, skip send but report readiness.
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: optional_send
+          text: |
+            If payload.send_test_message is true, post a test message to default_channel (or payload.target) with a diagnostics marker.
+            If false, skip send but report readiness.
   summary:
     routing: out
     text:
       config:
         default_channel: '{{ default_channel }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Diagnostics complete. Token valid, channel reachable. Webhook status {{#if payload.verify_webhook}}checked{{else}}not requested{{/if}}.
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: summary
+          text: |
+            Diagnostics complete. Token valid, channel reachable. Webhook status {{#if payload.verify_webhook}}checked{{else}}not requested{{/if}}.

@@ -10,19 +10,23 @@ nodes:
     routing: out
     text:
       config: {}
-      text: |
-        Provider: messaging.dummy
-        Config schema: schemas/messaging/dummy/public.config.schema.json
+      msg:
+        provider: messaging.dummy
+        message:
+          id: summary
+          text: |
+            Provider: messaging.dummy
+            Config schema: schemas/messaging/dummy/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.dummy",
-          "config_required": [],
-          "config_optional": [],
-          "secret_required": [],
-          "secret_optional": [],
-          "oauth_required": false,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.dummy",
+              "config_required": [],
+              "config_optional": [],
+              "secret_required": [],
+              "secret_optional": [],
+              "oauth_required": false,
+              "subscriptions_required": false
+            }
 
-        Notes: Dummy provider for local testing; no external calls.
+            Notes: Dummy provider for local testing; no external calls.

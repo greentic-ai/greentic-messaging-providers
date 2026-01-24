@@ -10,4 +10,8 @@ nodes:
     routing: out
     text:
       config: {}
-      text: messaging.slack subscriptions synced.
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: sync_subscriptions__summary
+          text: messaging.slack subscriptions synced.

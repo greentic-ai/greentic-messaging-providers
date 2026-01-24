@@ -12,19 +12,23 @@ nodes:
       config:
         default_room_id: '{{ default_room_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Provider: messaging.webex.bot
-        Config schema: schemas/messaging/webex/public.config.schema.json
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: summary
+          text: |
+            Provider: messaging.webex.bot
+            Config schema: schemas/messaging/webex/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.webex.bot",
-          "config_required": ["public_base_url"],
-          "config_optional": ["default_room_id"],
-          "secret_required": ["WEBEX_BOT_TOKEN"],
-          "secret_optional": [],
-          "oauth_required": false,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.webex.bot",
+              "config_required": ["public_base_url"],
+              "config_optional": ["default_room_id"],
+              "secret_required": ["WEBEX_BOT_TOKEN"],
+              "secret_optional": [],
+              "oauth_required": false,
+              "subscriptions_required": false
+            }
 
-        Notes: Webex bots register webhooks for inbound.
+            Notes: Webex bots register webhooks for inbound.

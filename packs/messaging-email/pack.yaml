@@ -1,10 +1,10 @@
 pack_id: messaging-email
-version: 0.4.21
+version: 0.4.22
 kind: application
 publisher: Greentic
 components:
 - id: ai.greentic.component-provision
-  version: 0.4.21
+  version: 0.4.22
   world: greentic:component-provision/provision@0.1.0
   supports:
   - messaging
@@ -19,7 +19,7 @@ components:
     host: {}
   wasm: components/provision.wasm
 - id: ai.greentic.component-questions
-  version: 0.4.21
+  version: 0.4.22
   world: greentic:questions/questions@0.1.0
   supports:
   - messaging
@@ -34,7 +34,7 @@ components:
     host: {}
   wasm: components/questions.wasm
 - id: ai.greentic.component-templates
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -49,7 +49,7 @@ components:
     host: {}
   wasm: components/ai.greentic.component-templates.wasm
 - id: diagnostics___checks
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -64,7 +64,7 @@ components:
     host: {}
   wasm: components/diagnostics___checks.wasm
 - id: diagnostics___summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -79,7 +79,7 @@ components:
     host: {}
   wasm: components/diagnostics___summary.wasm
 - id: diagnostics__checks
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -94,7 +94,7 @@ components:
     host: {}
   wasm: components/diagnostics__checks.wasm
 - id: diagnostics__summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -109,7 +109,7 @@ components:
     host: {}
   wasm: components/diagnostics__summary.wasm
 - id: messaging-provider-email
-  version: 0.4.21
+  version: 0.4.22
   world: greentic:provider/schema-core@1.0.0
   supports:
   - messaging
@@ -124,7 +124,7 @@ components:
     host: {}
   wasm: components/messaging-provider-email.wasm
 - id: requirements___summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -139,7 +139,7 @@ components:
     host: {}
   wasm: components/requirements___summary.wasm
 - id: setup_custom___apply
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -154,7 +154,7 @@ components:
     host: {}
   wasm: components/setup_custom___apply.wasm
 - id: setup_custom___collect
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -169,7 +169,7 @@ components:
     host: {}
   wasm: components/setup_custom___collect.wasm
 - id: setup_custom___setup_custom__apply
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -184,7 +184,7 @@ components:
     host: {}
   wasm: components/setup_custom___setup_custom__apply.wasm
 - id: setup_custom___setup_custom__collect
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -199,7 +199,7 @@ components:
     host: {}
   wasm: components/setup_custom___setup_custom__collect.wasm
 - id: setup_custom___setup_custom__emit_questions
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -214,7 +214,7 @@ components:
     host: {}
   wasm: components/setup_custom___setup_custom__emit_questions.wasm
 - id: setup_custom___setup_custom__summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -229,7 +229,7 @@ components:
     host: {}
   wasm: components/setup_custom___setup_custom__summary.wasm
 - id: setup_custom___setup_custom__validate
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -244,7 +244,7 @@ components:
     host: {}
   wasm: components/setup_custom___setup_custom__validate.wasm
 - id: setup_custom___summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -259,7 +259,7 @@ components:
     host: {}
   wasm: components/setup_custom___summary.wasm
 - id: setup_custom___validate
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -274,7 +274,7 @@ components:
     host: {}
   wasm: components/setup_custom___validate.wasm
 - id: setup_custom__apply
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -289,7 +289,7 @@ components:
     host: {}
   wasm: components/setup_custom__apply.wasm
 - id: setup_custom__collect
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -304,7 +304,7 @@ components:
     host: {}
   wasm: components/setup_custom__collect.wasm
 - id: setup_custom__summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -319,7 +319,7 @@ components:
     host: {}
   wasm: components/setup_custom__summary.wasm
 - id: setup_custom__validate
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -334,7 +334,7 @@ components:
     host: {}
   wasm: components/setup_custom__validate.wasm
 - id: setup_default___apply
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -349,7 +349,7 @@ components:
     host: {}
   wasm: components/setup_default___apply.wasm
 - id: setup_default___collect
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -364,7 +364,7 @@ components:
     host: {}
   wasm: components/setup_default___collect.wasm
 - id: setup_default___setup_default__apply
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -379,7 +379,7 @@ components:
     host: {}
   wasm: components/setup_default___setup_default__apply.wasm
 - id: setup_default___setup_default__collect
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -394,7 +394,7 @@ components:
     host: {}
   wasm: components/setup_default___setup_default__collect.wasm
 - id: setup_default___setup_default__emit_questions
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -409,7 +409,7 @@ components:
     host: {}
   wasm: components/setup_default___setup_default__emit_questions.wasm
 - id: setup_default___setup_default__summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -424,7 +424,7 @@ components:
     host: {}
   wasm: components/setup_default___setup_default__summary.wasm
 - id: setup_default___setup_default__validate
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -439,7 +439,7 @@ components:
     host: {}
   wasm: components/setup_default___setup_default__validate.wasm
 - id: setup_default___summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -454,7 +454,7 @@ components:
     host: {}
   wasm: components/setup_default___summary.wasm
 - id: setup_default___validate
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -469,7 +469,7 @@ components:
     host: {}
   wasm: components/setup_default___validate.wasm
 - id: setup_default__apply
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -484,7 +484,7 @@ components:
     host: {}
   wasm: components/setup_default__apply.wasm
 - id: setup_default__collect
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -499,7 +499,7 @@ components:
     host: {}
   wasm: components/setup_default__collect.wasm
 - id: setup_default__summary
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -514,7 +514,7 @@ components:
     host: {}
   wasm: components/setup_default__summary.wasm
 - id: setup_default__validate
-  version: 0.4.21
+  version: 0.4.22
   world: root:component/root
   supports:
   - messaging
@@ -529,7 +529,7 @@ components:
     host: {}
   wasm: components/setup_default__validate.wasm
 - id: text
-  version: 0.4.21
+  version: 0.4.22
   world: greentic:component/component@0.5.0
   supports:
   - messaging
@@ -587,7 +587,7 @@ assets:
 extensions:
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.21
+    version: 0.4.22
     inline:
       validators:
       - component_ref: oci://ghcr.io/greentic-ai/validators/messaging:0.4.19
@@ -595,7 +595,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.21
+    version: 0.4.22
     inline:
       providers:
       - provider_type: messaging.email.smtp
@@ -613,7 +613,7 @@ extensions:
         docs_ref: ''
   messaging.provider_flow_hints:
     kind: messaging.provider_flow_hints
-    version: 0.4.21
+    version: 0.4.22
     inline:
       messaging.email.smtp:
         diagnostics: diagnostics

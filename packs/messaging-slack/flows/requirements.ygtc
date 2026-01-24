@@ -12,19 +12,23 @@ nodes:
       config:
         default_channel: '{{ default_channel }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Provider: messaging.slack.api
-        Config schema: schemas/messaging/slack/public.config.schema.json
+      msg:
+        provider: messaging.slack.api
+        message:
+          id: summary
+          text: |
+            Provider: messaging.slack.api
+            Config schema: schemas/messaging/slack/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.slack.api",
-          "config_required": ["public_base_url"],
-          "config_optional": ["default_channel", "team_id"],
-          "secret_required": ["SLACK_BOT_TOKEN"],
-          "secret_optional": ["SLACK_SIGNING_SECRET"],
-          "oauth_required": true,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.slack.api",
+              "config_required": ["public_base_url"],
+              "config_optional": ["default_channel", "team_id"],
+              "secret_required": ["SLACK_BOT_TOKEN"],
+              "secret_optional": ["SLACK_SIGNING_SECRET"],
+              "oauth_required": true,
+              "subscriptions_required": false
+            }
 
-        Notes: Uses Slack Events API for inbound webhooks.
+            Notes: Uses Slack Events API for inbound webhooks.

@@ -13,9 +13,13 @@ nodes:
       config:
         default_room_id: '{{ default_room_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - Ensure access token exists.
-        - Call /people/me to confirm validity.
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: token_check
+          text: |
+            - Ensure access token exists.
+            - Call /people/me to confirm validity.
   room_check:
     routing:
     - to: webhook_check
@@ -23,8 +27,12 @@ nodes:
       config:
         default_room_id: '{{ default_room_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - If default or configured rooms exist, ensure membership and postability (dry-run or actual message if requested).
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: room_check
+          text: |
+            - If default or configured rooms exist, ensure membership and postability (dry-run or actual message if requested).
   webhook_check:
     routing:
     - to: summary
@@ -32,12 +40,20 @@ nodes:
       config:
         default_room_id: '{{ default_room_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        - If webhook configured, list webhooks and ensure target URL matches; renew if needed.
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: webhook_check
+          text: |
+            - If webhook configured, list webhooks and ensure target URL matches; renew if needed.
   summary:
     routing: out
     text:
       config:
         default_room_id: '{{ default_room_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: Diagnostics complete; token valid, rooms reachable, webhook {{#if payload.verify_webhook}}checked{{else}}not requested{{/if}}.
+      msg:
+        provider: messaging.webex.bot
+        message:
+          id: summary
+          text: Diagnostics complete; token valid, rooms reachable, webhook {{#if payload.verify_webhook}}checked{{else}}not requested{{/if}}.

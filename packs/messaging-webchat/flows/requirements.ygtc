@@ -13,19 +13,23 @@ nodes:
         ingress_path: '{{ ingress_path }}'
         mode: '{{ mode }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Provider: messaging.webchat
-        Config schema: schemas/messaging/webchat/public.config.schema.json
+      msg:
+        provider: messaging.webchat
+        message:
+          id: summary
+          text: |
+            Provider: messaging.webchat
+            Config schema: schemas/messaging/webchat/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.webchat",
-          "config_required": ["mode", "public_base_url"],
-          "config_optional": ["ingress_path"],
-          "secret_required": [],
-          "secret_optional": [],
-          "oauth_required": false,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.webchat",
+              "config_required": ["mode", "public_base_url"],
+              "config_optional": ["ingress_path"],
+              "secret_required": [],
+              "secret_optional": [],
+              "oauth_required": false,
+              "subscriptions_required": false
+            }
 
-        Notes: Inbound webhooks depend on selected mode.
+            Notes: Inbound webhooks depend on selected mode.

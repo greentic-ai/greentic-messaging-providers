@@ -13,19 +13,23 @@ nodes:
         business_account_id: '{{ business_account_id }}'
         phone_number_id: '{{ phone_number_id }}'
         public_base_url: '{{ public_base_url }}'
-      text: |
-        Provider: messaging.whatsapp.cloud
-        Config schema: schemas/messaging/whatsapp/public.config.schema.json
+      msg:
+        provider: messaging.whatsapp.cloud
+        message:
+          id: summary
+          text: |
+            Provider: messaging.whatsapp.cloud
+            Config schema: schemas/messaging/whatsapp/public.config.schema.json
 
-        Machine-readable requirements (JSON):
-        {
-          "provider": "messaging.whatsapp.cloud",
-          "config_required": ["phone_number_id", "public_base_url"],
-          "config_optional": ["business_account_id"],
-          "secret_required": ["WHATSAPP_TOKEN"],
-          "secret_optional": ["WHATSAPP_VERIFY_TOKEN"],
-          "oauth_required": false,
-          "subscriptions_required": false
-        }
+            Machine-readable requirements (JSON):
+            {
+              "provider": "messaging.whatsapp.cloud",
+              "config_required": ["phone_number_id", "public_base_url"],
+              "config_optional": ["business_account_id"],
+              "secret_required": ["WHATSAPP_TOKEN"],
+              "secret_optional": ["WHATSAPP_VERIFY_TOKEN"],
+              "oauth_required": false,
+              "subscriptions_required": false
+            }
 
-        Notes: WhatsApp Cloud API uses webhook verification with verify token.
+            Notes: WhatsApp Cloud API uses webhook verification with verify token.
