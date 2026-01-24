@@ -15,7 +15,14 @@ export PACK_VERSION
 export GREENTIC_RUNNER_SMOKE=1
 
 echo "==> cargo fmt --check"
-cargo fmt --check
+if ! cargo fmt --check; then
+  if command -v rustup >/dev/null 2>&1; then
+    rustup component add rustfmt clippy
+    cargo fmt --check
+  else
+    exit 1
+  fi
+fi
 
 echo "==> tools/build_components.sh"
 ./tools/build_components.sh
