@@ -1,0 +1,35 @@
+{
+  "provider": "webchat",
+  "config": {
+    "required": [
+      { "key": "public_base_url", "type": "string", "example": "https://example.com/webhooks/webchat" }
+    ]
+  },
+  "secrets": {
+    "required": [
+      { "key": "jwt_signing_key", "example": "jwt-secret" }
+    ]
+  },
+  "to": {
+    "shape": {
+      "route": "webchat-route",
+      "tenant_channel_id": "tenant-channel"
+    }
+  },
+  "values": {
+    "config": {
+      "route": "webchat-route",
+      "tenant_channel_id": "tenant-channel",
+      "public_base_url": "https://example.com/webhooks/webchat"
+    },
+    "secrets": {
+      "jwt_signing_key": "dummy-jwt-secret"
+    },
+    "to": {
+      "route": "webchat-route",
+      "tenant_channel_id": "tenant-channel"
+    },
+    "http": "mock",
+    "state": {}
+  }
+}

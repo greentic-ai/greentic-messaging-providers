@@ -1,13 +1,14 @@
 {
   "provider": "messaging.webchat",
   "config_required": [
-    "mode",
     "public_base_url"
   ],
   "config_optional": [
     "ingress_path"
   ],
-  "secret_required": [],
+  "secret_required": [
+    "jwt_signing_key"
+  ],
   "secret_optional": [],
   "oauth_required": false,
   "subscriptions_required": false

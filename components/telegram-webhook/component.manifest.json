@@ -47,5 +47,5 @@
   "secret_requirements": [],
   "supports": ["messaging"],
   "version": "0.1.0",
-  "world": "greentic:component/component@0.5.0"
+  "world": "greentic:component/node@0.5.0"
 }

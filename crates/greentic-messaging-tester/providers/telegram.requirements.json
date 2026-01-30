@@ -1,0 +1,33 @@
+{
+  "provider": "telegram",
+  "config": {
+    "required": [
+      { "key": "api_base", "type": "string", "example": "https://api.telegram.org" }
+    ]
+  },
+  "secrets": {
+    "required": [
+      { "key": "TELEGRAM_BOT_TOKEN", "example": "xxxxx" }
+    ]
+  },
+  "to": {
+    "shape": {
+      "chat_id": "123456789",
+      "channel": "telegram"
+    }
+  },
+  "values": {
+    "config": {
+      "api_base": "https://api.telegram.org"
+    },
+    "secrets": {
+      "TELEGRAM_BOT_TOKEN": "dummy-token"
+    },
+    "to": {
+      "chat_id": "123456789",
+      "channel": "telegram"
+    },
+    "http": "mock",
+    "state": {}
+  }
+}

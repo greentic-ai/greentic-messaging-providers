@@ -35,6 +35,7 @@ CI will reject any direct edits to `packs/*/flows/*.ygtc`.
   - `cargo install cargo-component --locked`
 - Run the full check/build pipeline: `./ci/local_check.sh` (fmt, tests, and component builds).
 - Component artifacts are copied to `target/components/*.wasm`; the build script uses `cargo component build` by default.
+- Build the provider WASMs that power the tester harness and other helpers: `scripts/build-provider-wasms.sh` (outputs `<component>.wasm` files under `dist/wasms`).
 
 ## CardKit CLI
 - `cargo run -p greentic-messaging-cardkit -- render --provider slack --fixture crates/messaging-cardkit/tests/fixtures/cards/basic.json`

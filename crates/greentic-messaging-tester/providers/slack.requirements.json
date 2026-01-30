@@ -1,0 +1,31 @@
+{
+  "provider": "slack",
+  "config": {
+    "required": [
+      { "key": "api_base", "type": "string", "example": "https://slack.com/api" }
+    ]
+  },
+  "secrets": {
+    "required": [
+      { "key": "SLACK_BOT_TOKEN", "example": "xoxb-..." }
+    ]
+  },
+  "to": {
+    "shape": {
+      "channel": "C12345"
+    }
+  },
+  "values": {
+    "config": {
+      "api_base": "https://slack.com/api"
+    },
+    "secrets": {
+      "SLACK_BOT_TOKEN": "xoxb-dummy"
+    },
+    "to": {
+      "channel": "C12345"
+    },
+    "http": "mock",
+    "state": {}
+  }
+}

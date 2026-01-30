@@ -1,6 +1,5 @@
 {
   "config_patch": {
-    "mode": "<value>",
     "public_base_url": "<value>",
     "ingress_path": "<value>"
   },
@@ -11,7 +10,7 @@
   "webhook_ops": [
     {
       "op": "register",
-      "url": "<public_base_url>/webhook"
+      "url": "<public_base_url>"
     }
   ],
   "subscription_ops": [],

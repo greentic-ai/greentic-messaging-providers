@@ -1,4 +1,4 @@
-use base64::{decode as base64_decode, encode as base64_encode};
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use messaging_universal_dto::{
     EncodeInV1, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
     SendPayloadInV1, SendPayloadResultV1,
@@ -71,7 +71,7 @@ impl Guest for Component {
             "reply" => handle_send(&input_json, true),
             "ingest_http" => ingest_http(&input_json),
             "render_plan" => render_plan(&input_json),
-            "encode" => encode(&input_json),
+            "encode" => encode_op(&input_json),
             "send_payload" => send_payload(&input_json),
             other => json_bytes(&json!({"ok": false, "error": format!("unsupported op: {other}")})),
         }
@@ -249,7 +249,7 @@ fn ingest_http(input_json: &[u8]) -> Vec<u8> {
         Ok(req) => req,
         Err(err) => return http_out_error(400, &format!("invalid http input: {err}")),
     };
-    let body_bytes = match base64_decode(&request.body_b64) {
+    let body_bytes = match STANDARD.decode(&request.body_b64) {
         Ok(bytes) => bytes,
         Err(err) => return http_out_error(400, &format!("invalid body encoding: {err}")),
     };
@@ -262,7 +262,7 @@ fn ingest_http(input_json: &[u8]) -> Vec<u8> {
     let out = HttpOutV1 {
         status: 200,
         headers: Vec::new(),
-        body_b64: base64_encode(&normalized_bytes),
+        body_b64: STANDARD.encode(&normalized_bytes),
         events: Vec::new(),
     };
     json_bytes(&out)
@@ -293,7 +293,7 @@ fn render_plan(input_json: &[u8]) -> Vec<u8> {
     json_bytes(&json!({"ok": true, "plan": plan_out}))
 }
 
-fn encode(input_json: &[u8]) -> Vec<u8> {
+fn encode_op(input_json: &[u8]) -> Vec<u8> {
     let encode_in = match serde_json::from_slice::<EncodeInV1>(input_json) {
         Ok(value) => value,
         Err(err) => return encode_error(&format!("invalid encode input: {err}")),
@@ -321,7 +321,7 @@ fn encode(input_json: &[u8]) -> Vec<u8> {
     metadata.insert("channel".to_string(), Value::String(channel));
     let payload = ProviderPayloadV1 {
         content_type: "application/json".to_string(),
-        body_b64: base64_encode(&body_bytes),
+        body_b64: STANDARD.encode(&body_bytes),
         metadata,
     };
     json_bytes(&json!({"ok": true, "payload": payload}))
@@ -345,7 +345,7 @@ fn send_payload(input_json: &[u8]) -> Vec<u8> {
     let url = metadata_string(&metadata, "url")
         .unwrap_or_else(|| format!("{}/chat.postMessage", DEFAULT_API_BASE));
     let method = metadata_string(&metadata, "method").unwrap_or_else(|| "POST".to_string());
-    let body_bytes = match base64_decode(&body_b64) {
+    let body_bytes = match STANDARD.decode(&body_b64) {
         Ok(bytes) => bytes,
         Err(err) => return send_payload_error(&format!("payload decode failed: {err}"), false),
     };
@@ -387,7 +387,7 @@ fn http_out_error(status: u16, message: &str) -> Vec<u8> {
     let out = HttpOutV1 {
         status,
         headers: Vec::new(),
-        body_b64: base64_encode(message.as_bytes()),
+        body_b64: STANDARD.encode(message.as_bytes()),
         events: Vec::new(),
     };
     json_bytes(&out)

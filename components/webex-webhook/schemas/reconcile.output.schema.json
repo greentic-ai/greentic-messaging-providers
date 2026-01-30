@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "ok": { "type": "boolean" },
+    "provider": { "type": "string" },
+    "target_url": { "type": "string" },
+    "webhook_name": { "type": "string" },
+    "actions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "webhooks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": ["string", "null"] },
+          "name": { "type": "string" },
+          "resource": { "type": "string" },
+          "event": { "type": "string" },
+          "target_url": { "type": "string" },
+          "status": { "type": ["string", "null"] }
+        },
+        "required": ["name", "resource", "event", "target_url"]
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["ok", "provider", "target_url", "webhook_name", "actions", "webhooks", "notes"]
+}

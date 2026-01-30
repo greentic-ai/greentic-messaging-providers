@@ -164,6 +164,162 @@ pub mod greentic {
             }
         }
     }
+    pub mod secrets_store {
+        /// Read-only secrets interface exposed by Greentic hosts.
+        #[allow(dead_code, async_fn_in_trait, unused_imports, clippy::all)]
+        pub mod secrets_store {
+            #[used]
+            #[doc(hidden)]
+            static __FORCE_SECTION_REF: fn() = super::super::super::__link_custom_section_describing_imports;
+            use super::super::super::_rt;
+            /// Canonical error payload for secret lookups.
+            #[repr(u8)]
+            #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
+            pub enum SecretsError {
+                /// Secret was not found or not provisioned for this component.
+                NotFound,
+                /// Access to the secret was denied by host policy.
+                Denied,
+                /// The provided key was invalid or malformed.
+                InvalidKey,
+                /// An internal host error occurred.
+                Internal,
+            }
+            impl SecretsError {
+                pub fn name(&self) -> &'static str {
+                    match self {
+                        SecretsError::NotFound => "not-found",
+                        SecretsError::Denied => "denied",
+                        SecretsError::InvalidKey => "invalid-key",
+                        SecretsError::Internal => "internal",
+                    }
+                }
+                pub fn message(&self) -> &'static str {
+                    match self {
+                        SecretsError::NotFound => {
+                            "Secret was not found or not provisioned for this component."
+                        }
+                        SecretsError::Denied => {
+                            "Access to the secret was denied by host policy."
+                        }
+                        SecretsError::InvalidKey => {
+                            "The provided key was invalid or malformed."
+                        }
+                        SecretsError::Internal => "An internal host error occurred.",
+                    }
+                }
+            }
+            impl ::core::fmt::Debug for SecretsError {
+                fn fmt(
+                    &self,
+                    f: &mut ::core::fmt::Formatter<'_>,
+                ) -> ::core::fmt::Result {
+                    f.debug_struct("SecretsError")
+                        .field("code", &(*self as i32))
+                        .field("name", &self.name())
+                        .field("message", &self.message())
+                        .finish()
+                }
+            }
+            impl ::core::fmt::Display for SecretsError {
+                fn fmt(
+                    &self,
+                    f: &mut ::core::fmt::Formatter<'_>,
+                ) -> ::core::fmt::Result {
+                    write!(f, "{} (error {})", self.name(), * self as i32)
+                }
+            }
+            impl std::error::Error for SecretsError {}
+            impl SecretsError {
+                #[doc(hidden)]
+                pub unsafe fn _lift(val: u8) -> SecretsError {
+                    if !cfg!(debug_assertions) {
+                        return ::core::mem::transmute(val);
+                    }
+                    match val {
+                        0 => SecretsError::NotFound,
+                        1 => SecretsError::Denied,
+                        2 => SecretsError::InvalidKey,
+                        3 => SecretsError::Internal,
+                        _ => panic!("invalid enum discriminant"),
+                    }
+                }
+            }
+            #[allow(unused_unsafe, clippy::all)]
+            /// Reads a secret value; returns `none` when the key is missing.
+            pub fn get(key: &str) -> Result<Option<_rt::Vec<u8>>, SecretsError> {
+                unsafe {
+                    #[cfg_attr(target_pointer_width = "64", repr(align(8)))]
+                    #[cfg_attr(target_pointer_width = "32", repr(align(4)))]
+                    struct RetArea(
+                        [::core::mem::MaybeUninit<
+                            u8,
+                        >; 4 * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let mut ret_area = RetArea(
+                        [::core::mem::MaybeUninit::uninit(); 4
+                            * ::core::mem::size_of::<*const u8>()],
+                    );
+                    let vec0 = key;
+                    let ptr0 = vec0.as_ptr().cast::<u8>();
+                    let len0 = vec0.len();
+                    let ptr1 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    #[cfg(target_arch = "wasm32")]
+                    #[link(
+                        wasm_import_module = "greentic:secrets-store/secrets-store@1.0.0"
+                    )]
+                    unsafe extern "C" {
+                        #[link_name = "get"]
+                        fn wit_import2(_: *mut u8, _: usize, _: *mut u8);
+                    }
+                    #[cfg(not(target_arch = "wasm32"))]
+                    unsafe extern "C" fn wit_import2(_: *mut u8, _: usize, _: *mut u8) {
+                        unreachable!()
+                    }
+                    unsafe { wit_import2(ptr0.cast_mut(), len0, ptr1) };
+                    let l3 = i32::from(*ptr1.add(0).cast::<u8>());
+                    let result9 = match l3 {
+                        0 => {
+                            let e = {
+                                let l4 = i32::from(
+                                    *ptr1.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                );
+                                match l4 {
+                                    0 => None,
+                                    1 => {
+                                        let e = {
+                                            let l5 = *ptr1
+                                                .add(2 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<*mut u8>();
+                                            let l6 = *ptr1
+                                                .add(3 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<usize>();
+                                            let len7 = l6;
+                                            _rt::Vec::from_raw_parts(l5.cast(), len7, len7)
+                                        };
+                                        Some(e)
+                                    }
+                                    _ => _rt::invalid_enum_discriminant(),
+                                }
+                            };
+                            Ok(e)
+                        }
+                        1 => {
+                            let e = {
+                                let l8 = i32::from(
+                                    *ptr1.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                );
+                                SecretsError::_lift(l8 as u8)
+                            };
+                            Err(e)
+                        }
+                        _ => _rt::invalid_enum_discriminant(),
+                    };
+                    result9
+                }
+            }
+        }
+    }
     pub mod state {
         #[allow(dead_code, async_fn_in_trait, unused_imports, clippy::all)]
         pub mod state_store {
@@ -2065,9 +2221,9 @@ pub(crate) use __export_messaging_provider_webchat_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 1885] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xcc\x0d\x01A\x02\x01\
-A\x08\x01B6\x01s\x04\0\x06env-id\x03\0\0\x01s\x04\0\x09tenant-id\x03\0\x02\x01s\x04\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 2025] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xd8\x0e\x01A\x02\x01\
+A\x0a\x01B6\x01s\x04\0\x06env-id\x03\0\0\x01s\x04\0\x09tenant-id\x03\0\x02\x01s\x04\
 \0\x07team-id\x03\0\x04\x01s\x04\0\x07user-id\x03\0\x06\x01s\x04\0\x09state-key\x03\
 \0\x08\x01s\x04\0\x0bsession-key\x03\0\x0a\x01ks\x01r\x02\x08actor-id\x07\x06rea\
 son\x0c\x04\0\x0dimpersonation\x03\0\x0d\x01k\x05\x01k\x07\x01o\x02ss\x01p\x11\x01\
@@ -2097,15 +2253,18 @@ de-id\x0c\x08providers\x08start-ms\x13\x06end-ms\x13\x04\0\x0cspan-context\x03\0
 p}\x01j\x01\x09\x01\x05\x01@\x02\x03key\x01\x03ctx\x08\0\x0a\x04\0\x04read\x01\x0b\
 \x01j\x01\x07\x01\x05\x01@\x03\x03key\x01\x05bytes\x09\x03ctx\x08\0\x0c\x04\0\x05\
 write\x01\x0d\x01@\x02\x03key\x01\x03ctx\x08\0\x0c\x04\0\x06delete\x01\x0e\x03\0\
-\x20greentic:state/state-store@1.0.0\x05\x03\x01B\x0f\x01p}\x04\0\x11validation-\
-result\x03\0\0\x01p}\x04\0\x0dhealth-status\x03\0\x02\x01p}\x04\0\x0dinvoke-resu\
-lt\x03\0\x04\x01p}\x01@\0\0\x06\x04\0\x08describe\x01\x07\x01@\x01\x0bconfig-jso\
-n\x06\0\x01\x04\0\x0fvalidate-config\x01\x08\x01@\0\0\x03\x04\0\x0bhealthcheck\x01\
-\x09\x01@\x02\x02ops\x0ainput-json\x06\0\x05\x04\0\x06invoke\x01\x0a\x04\03green\
-tic:provider-schema-core/schema-core-api@1.0.0\x05\x04\x04\0Igreentic:messaging-\
-provider-webchat-core/messaging-provider-webchat@0.0.1\x04\0\x0b\x20\x01\0\x1ame\
-ssaging-provider-webchat\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-\
-component\x070.227.1\x10wit-bindgen-rust\x060.41.0";
+\x20greentic:state/state-store@1.0.0\x05\x03\x01B\x07\x01m\x04\x09not-found\x06d\
+enied\x0binvalid-key\x08internal\x04\0\x0dsecrets-error\x03\0\0\x01p}\x01k\x02\x01\
+j\x01\x03\x01\x01\x01@\x01\x03keys\0\x04\x04\0\x03get\x01\x05\x03\0*greentic:sec\
+rets-store/secrets-store@1.0.0\x05\x04\x01B\x0f\x01p}\x04\0\x11validation-result\
+\x03\0\0\x01p}\x04\0\x0dhealth-status\x03\0\x02\x01p}\x04\0\x0dinvoke-result\x03\
+\0\x04\x01p}\x01@\0\0\x06\x04\0\x08describe\x01\x07\x01@\x01\x0bconfig-json\x06\0\
+\x01\x04\0\x0fvalidate-config\x01\x08\x01@\0\0\x03\x04\0\x0bhealthcheck\x01\x09\x01\
+@\x02\x02ops\x0ainput-json\x06\0\x05\x04\0\x06invoke\x01\x0a\x04\03greentic:prov\
+ider-schema-core/schema-core-api@1.0.0\x05\x05\x04\0Igreentic:messaging-provider\
+-webchat-core/messaging-provider-webchat@0.0.1\x04\0\x0b\x20\x01\0\x1amessaging-\
+provider-webchat\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-componen\
+t\x070.227.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

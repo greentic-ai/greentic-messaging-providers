@@ -1,0 +1,27 @@
+[package]
+name = "webex-webhook"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+wit-bindgen.workspace = true
+greentic-interfaces-guest = { workspace = true, features = ["component-node"], default-features = false }
+
+[package.metadata.component]
+package = "greentic:webex-webhook"
+
+[package.metadata.component.target]
+path = "../../wit/component-node"
+world = "node"
+
+[package.metadata.component.target.dependencies]
+"greentic:http" = { path = "wit/webex-webhook/deps/http" }
+"greentic:secrets-store" = { path = "wit/webex-webhook/deps/secrets-store" }
+"greentic:interfaces-types" = { path = "wit/webex-webhook/deps/interfaces-types" }

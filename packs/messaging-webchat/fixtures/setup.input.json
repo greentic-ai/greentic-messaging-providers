@@ -1,7 +1,6 @@
 {
-  "mode": "dry-run",
+  "mode": "local_queue",
   "config": {
-    "mode": "<value>",
     "public_base_url": "<value>"
   },
   "secrets": {}

@@ -1,4 +1,4 @@
-use base64::{decode as base64_decode, encode as base64_encode};
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use chrono::{DateTime, Duration, SecondsFormat, TimeZone, Utc};
 use messaging_universal_dto::{
     AuthUserRefV1, EncodeInV1, Header, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1,
@@ -118,7 +118,7 @@ impl Guest for Component {
             "reply" => handle_reply(&input_json),
             "ingest_http" => ingest_http(&input_json),
             "render_plan" => render_plan(&input_json),
-            "encode" => encode(&input_json),
+            "encode" => encode_op(&input_json),
             "send_payload" => send_payload(&input_json),
             "subscription_ensure" => subscription_ensure(&input_json),
             "subscription_renew" => subscription_renew(&input_json),
@@ -280,7 +280,7 @@ fn render_plan(input_json: &[u8]) -> Vec<u8> {
     json_bytes(&json!({"ok": true, "plan": plan_out}))
 }
 
-fn encode(input_json: &[u8]) -> Vec<u8> {
+fn encode_op(input_json: &[u8]) -> Vec<u8> {
     let encode_in = match serde_json::from_slice::<EncodeInV1>(input_json) {
         Ok(value) => value,
         Err(err) => return encode_error(&format!("invalid encode input: {err}")),
@@ -313,11 +313,11 @@ fn encode(input_json: &[u8]) -> Vec<u8> {
     metadata.insert("to".to_string(), Value::String(to));
     metadata.insert("subject".to_string(), Value::String(subject));
     metadata.insert("method".to_string(), Value::String("POST".to_string()));
-    let payload = ProviderPayloadV1 {
-        content_type: "application/json".to_string(),
-        body_b64: base64_encode(&body_bytes),
-        metadata,
-    };
+        let payload = ProviderPayloadV1 {
+            content_type: "application/json".to_string(),
+            body_b64: STANDARD.encode(&body_bytes),
+            metadata,
+        };
     json_bytes(&json!({"ok": true, "payload": payload}))
 }
 
@@ -331,7 +331,7 @@ fn send_payload(input_json: &[u8]) -> Vec<u8> {
     if send_in.provider_type != PROVIDER_TYPE {
         return send_payload_error("provider type mismatch", false);
     }
-    let payload_bytes = match base64_decode(&send_in.payload.body_b64) {
+    let payload_bytes = match STANDARD.decode(&send_in.payload.body_b64) {
         Ok(bytes) => bytes,
         Err(err) => {
             return send_payload_error(&format!("payload decode failed: {err}"), false);
@@ -415,7 +415,7 @@ fn http_out_error(status: u16, message: &str) -> Vec<u8> {
     let out = HttpOutV1 {
         status,
         headers: Vec::new(),
-        body_b64: base64_encode(message.as_bytes()),
+        body_b64: STANDARD.encode(message.as_bytes()),
         events: Vec::new(),
     };
     json_bytes(&out)
@@ -740,7 +740,7 @@ fn handle_validation(http: &HttpInV1) -> Vec<u8> {
     let out = HttpOutV1 {
         status: 200,
         headers,
-        body_b64: base64_encode(token.as_bytes()),
+        body_b64: STANDARD.encode(token.as_bytes()),
         events: Vec::new(),
     };
     json_bytes(&out)
@@ -822,8 +822,8 @@ fn binding_to_user(binding: Option<&String>) -> Result<AuthUserRefV1, String> {
 }
 
 fn parse_graph_notifications(body_b64: &str) -> Result<Vec<(String, String)>, String> {
-    let bytes =
-        base64_decode(body_b64).map_err(|err| format!("invalid notification body: {err}"))?;
+    let bytes = STANDARD.decode(body_b64)
+        .map_err(|err| format!("invalid notification body: {err}"))?;
     let json: Value = serde_json::from_slice(&bytes)
         .map_err(|err| format!("notification decode failed: {err}"))?;
     let entries = json

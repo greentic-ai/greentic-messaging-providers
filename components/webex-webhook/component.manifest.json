@@ -1,0 +1,51 @@
+{
+  "$schema": "https://greentic-ai.github.io/greentic-component/schemas/v1/component.manifest.schema.json",
+  "artifacts": {
+    "component_wasm": "webex-webhook.wasm"
+  },
+  "capabilities": {
+    "host": {
+      "messaging": {
+        "inbound": false,
+        "outbound": false
+      },
+      "telemetry": {
+        "scope": "node"
+      }
+    },
+    "wasi": {
+      "clocks": false,
+      "filesystem": {
+        "mode": "none",
+        "mounts": []
+      },
+      "random": false
+    }
+  },
+  "config_schema": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": false
+  },
+  "default_operation": "reconcile_webhook",
+  "describe_export": "get-manifest",
+  "operations": [
+    {
+      "name": "reconcile_webhook",
+      "input_schema": {
+        "$ref": "schemas/reconcile.input.schema.json"
+      },
+      "output_schema": {
+        "$ref": "schemas/reconcile.output.schema.json"
+      }
+    }
+  ],
+  "profiles": {
+    "default": "stateless",
+    "supported": ["stateless"]
+  },
+  "secret_requirements": [],
+  "supports": ["messaging"],
+  "version": "0.1.0",
+  "world": "greentic:component/node@0.5.0"
+}

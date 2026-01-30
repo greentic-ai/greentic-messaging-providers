@@ -81,4 +81,4 @@ for PACKAGE_NAME in "${PACKAGES[@]}"; do
 done
 
 # Clean nested target triples produced by cargo-component to keep output tidy.
-rm -rf "${TARGET_DIR_OVERRIDE}/wasm32-wasip1" "${TARGET_DIR_OVERRIDE}/wasm32-wasip2" || true
+rm -rf "${TARGET_DIR_OVERRIDE}/wasm32-wasip2" || true

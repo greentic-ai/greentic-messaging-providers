@@ -9,13 +9,6 @@ questions:
     help: "Example: https://xxxx.trycloudflare.com"
     validate:
       regex: "^https://"
-  - name: mode
-    title: Mode
-    kind: choice
-    required: true
-    choices:
-      - webhook
-      - polling
   - name: ingress_path
     title: Ingress path
     kind: string

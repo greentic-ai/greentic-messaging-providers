@@ -1,0 +1,19 @@
+{
+  "provider": "dummy",
+  "config": {
+    "required": []
+  },
+  "secrets": {
+    "required": []
+  },
+  "to": {
+    "shape": {}
+  },
+  "values": {
+    "config": {},
+    "secrets": {},
+    "to": {},
+    "http": "mock",
+    "state": {}
+  }
+}

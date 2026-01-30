@@ -155,6 +155,16 @@ impl bindings::greentic::state::state_store::Host for HostState {
 
 impl bindings::greentic::interfaces_types::types::Host for HostState {}
 
+impl bindings::greentic::secrets_store::secrets_store::Host for HostState {
+    fn get(
+        &mut self,
+        _key: String,
+    ) -> Result<Option<Vec<u8>>, bindings::greentic::secrets_store::secrets_store::SecretsError>
+    {
+        Ok(None)
+    }
+}
+
 fn add_wasi_to_linker(linker: &mut Linker<HostState>) {
     wasmtime_wasi::p2::add_to_linker_sync(linker).expect("add wasi");
 }
@@ -243,6 +253,11 @@ fn invoke_send_and_ingest_smoke_test() -> Result<()> {
         |state: &mut HostState| state,
     )
     .expect("link state");
+    bindings::greentic::secrets_store::secrets_store::add_to_linker::<HostState, HasSelf<HostState>>(
+        &mut linker,
+        |state: &mut HostState| state,
+    )
+    .expect("link secrets");
     bindings::greentic::interfaces_types::types::add_to_linker::<HostState, HasSelf<HostState>>(
         &mut linker,
         |state: &mut HostState| state,
@@ -299,7 +314,11 @@ fn invoke_send_and_ingest_smoke_test() -> Result<()> {
     let input = json!({
         "route": "chat:abc",
         "text": "hello webchat",
-        "config": {"route": "chat:abc", "mode": "local_queue"}
+        "mode": "local_queue",
+        "config": {
+            "route": "chat:abc",
+            "public_base_url": "https://example.invalid"
+        }
     });
     let input_bytes = serde_json::to_vec(&input)?;
     let (resp,) = invoke

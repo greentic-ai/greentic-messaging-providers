@@ -34,7 +34,7 @@ Writes:
 - Secrets: WEBEX_BOT_TOKEN
 
 Webhooks:
-- public_base_url + /webhooks/webex
+- public_base_url (registered for `messages.created`; the provided secret is mirrored in `X-Webex-Signature` so your ingress should validate it, and Webex only delivers events for rooms where the bot is a member)
 
 Subscriptions:
 - none

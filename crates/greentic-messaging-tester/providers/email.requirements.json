@@ -1,0 +1,38 @@
+{
+  "provider": "email",
+  "config": {
+    "required": [
+      { "key": "host", "type": "string", "example": "smtp.example.com" },
+      { "key": "username", "type": "string", "example": "user" },
+      { "key": "from_address", "type": "string", "example": "noreply@example.com" }
+    ]
+  },
+  "secrets": {
+    "required": [
+      { "key": "EMAIL_PASSWORD", "example": "s3cret" }
+    ]
+  },
+  "to": {
+    "shape": {
+      "to": "recipient@example.com",
+      "subject": "test"
+    }
+  },
+  "values": {
+    "config": {
+      "host": "smtp.example.com",
+      "username": "user@example.com",
+      "from_address": "noreply@example.com",
+      "tls_mode": "starttls"
+    },
+    "secrets": {
+      "EMAIL_PASSWORD": "secret"
+    },
+    "to": {
+      "to": "recipient@example.com",
+      "subject": "hello"
+    },
+    "http": "mock",
+    "state": {}
+  }
+}

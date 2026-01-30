@@ -1,0 +1,14 @@
+{
+  "config": {
+    "api_base": "https://api.telegram.org"
+  },
+  "secrets": {
+    "TELEGRAM_BOT_TOKEN": "dummy-token"
+  },
+  "to": {
+    "chat_id": "123456789",
+    "channel": "telegram-cli"
+  },
+  "http": "mock",
+  "state": {}
+}

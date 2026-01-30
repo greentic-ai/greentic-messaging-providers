@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: MIT
+
+package greentic:webex-webhook@0.0.1;
+
+use greentic:http/client@1.1.0 as http-client;
+use greentic:secrets-store/secrets-store@1.0.0;
+
+world webex-webhook {
+  import http-client;
+  import secrets-store;
+}
