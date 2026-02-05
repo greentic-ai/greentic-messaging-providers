@@ -954,12 +954,20 @@ mod tests {
             .join("target/components")
             .join(format!("{package}.wasm"));
         if !wasm_path.exists() {
-            let status = Command::new("cargo")
+            let output = Command::new("cargo")
                 .current_dir(&root)
                 .args(["component", "build", "-p", package])
-                .status()
+                .output()
                 .expect("failed to spawn cargo component build");
-            assert!(status.success());
+            if !output.status.success() {
+                panic!(
+                    "cargo component build failed for {} (status: {}):\nstdout:\n{}\nstderr:\n{}",
+                    package,
+                    output.status,
+                    String::from_utf8_lossy(&output.stdout),
+                    String::from_utf8_lossy(&output.stderr)
+                );
+            }
         }
         find_component_wasm_path(package).expect("wasm component should exist after build")
     }
