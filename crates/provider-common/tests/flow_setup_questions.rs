@@ -16,16 +16,16 @@ fn get_mapping<'a>(value: &'a Value, label: &str) -> Result<&'a serde_yaml_bw::M
         .ok_or_else(|| anyhow!("{label} is not a mapping"))
 }
 
-fn flow_root<'a>(value: &'a Value) -> Result<&'a serde_yaml_bw::Mapping> {
+fn flow_root(value: &Value) -> Result<&serde_yaml_bw::Mapping> {
     let map = get_mapping(value, "flow")?;
-    if let Some(root) = map.get(&Value::String("flow".to_string(), None)) {
+    if let Some(root) = map.get(Value::String("flow".to_string(), None)) {
         return get_mapping(root, "flow");
     }
     Ok(map)
 }
 
 fn map_get<'a>(map: &'a serde_yaml_bw::Mapping, key: &str) -> Result<&'a Value> {
-    map.get(&Value::String(key.to_string(), None))
+    map.get(Value::String(key.to_string(), None))
         .ok_or_else(|| anyhow!("missing key {key}"))
 }
 
@@ -47,8 +47,8 @@ fn setup_flows_use_questions_emit_and_validate() -> Result<()> {
         let validate_id = format!("{prefix}__validate");
 
         let entry_node = flow_root
-            .get(&Value::String("in".to_string(), None))
-            .or_else(|| flow_root.get(&Value::String("start".to_string(), None)))
+            .get(Value::String("in".to_string(), None))
+            .or_else(|| flow_root.get(Value::String("start".to_string(), None)))
             .ok_or_else(|| anyhow!("missing flow entry"))?
             .as_str()
             .ok_or_else(|| anyhow!("flow entry is not a string"))?;
@@ -61,7 +61,7 @@ fn setup_flows_use_questions_emit_and_validate() -> Result<()> {
 
         let emit_node = map_get(nodes, &emit_id)?;
         let emit_node = get_mapping(emit_node, &emit_id)?;
-        if !emit_node.contains_key(&Value::String("emit".to_string(), None)) {
+        if !emit_node.contains_key(Value::String("emit".to_string(), None)) {
             return Err(anyhow!("{} missing emit op", path.display()));
         }
 

@@ -17,7 +17,7 @@ fn send_telegram_records_http_calls() -> Result<(), Box<dyn std::error::Error>> 
     let http_calls = parsed
         .get("http_calls")
         .and_then(Value::as_array)
-        .map(|calls| calls.clone())
+        .cloned()
         .unwrap_or_default();
     assert!(!http_calls.is_empty(), "expected http_calls to be recorded");
     Ok(())

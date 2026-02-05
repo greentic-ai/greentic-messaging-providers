@@ -3,55 +3,55 @@
   "components": [
     {
       "name": "diagnostics___summary",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
       "digest": "sha256:c8d19b90dd5e3d42189e7836639e36e04ca41e32dd75905569eb09cd68188733",
       "component_id": "ai.greentic.component-templates"
     },
     {
       "name": "requirements___summary",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
       "digest": "sha256:c8d19b90dd5e3d42189e7836639e36e04ca41e32dd75905569eb09cd68188733",
       "component_id": "ai.greentic.component-templates"
     },
     {
       "name": "setup_custom___setup_custom__apply",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/provision/provision.wasm",
-      "digest": "sha256:d281edce379062f8bee3e6b7856180386354b25cb3fd7d6d43da20d2e316a6a4",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/provision/provision.wasm",
+      "digest": "sha256:2d25bd09e40751331afd3737cb87381bb38da370b463bca3033483d1f0916caf",
       "component_id": "ai.greentic.component-provision"
     },
     {
       "name": "setup_custom___setup_custom__collect",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
       "digest": "sha256:c8d19b90dd5e3d42189e7836639e36e04ca41e32dd75905569eb09cd68188733",
       "component_id": "ai.greentic.component-templates"
     },
     {
       "name": "setup_custom___setup_custom__emit_questions",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/questions/questions.wasm",
-      "digest": "sha256:e00125f7226fa193d025b6fd1db8c6610c382e98fffe0e8c835caa194e07bfd0",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/questions/questions.wasm",
+      "digest": "sha256:63b1affd7ceb76f2eb815e185bf75f3e58f9f93b8ccd720059184358cb60ba31",
       "component_id": "ai.greentic.component-questions"
     },
     {
       "name": "setup_default___setup_default__apply",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/provision/provision.wasm",
-      "digest": "sha256:d281edce379062f8bee3e6b7856180386354b25cb3fd7d6d43da20d2e316a6a4",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/provision/provision.wasm",
+      "digest": "sha256:2d25bd09e40751331afd3737cb87381bb38da370b463bca3033483d1f0916caf",
       "component_id": "ai.greentic.component-provision"
     },
     {
       "name": "setup_default___setup_default__collect",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
       "digest": "sha256:c8d19b90dd5e3d42189e7836639e36e04ca41e32dd75905569eb09cd68188733",
       "component_id": "ai.greentic.component-templates"
     },
     {
       "name": "setup_default___setup_default__emit_questions",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/questions/questions.wasm",
-      "digest": "sha256:e00125f7226fa193d025b6fd1db8c6610c382e98fffe0e8c835caa194e07bfd0",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/questions/questions.wasm",
+      "digest": "sha256:63b1affd7ceb76f2eb815e185bf75f3e58f9f93b8ccd720059184358cb60ba31",
       "component_id": "ai.greentic.component-questions"
     },
     {
       "name": "sync_subscriptions___summary",
-      "ref": "file:///projects/ai/greentic-ng/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
+      "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-dummy/flows/../components/templates/templates.wasm",
       "digest": "sha256:c8d19b90dd5e3d42189e7836639e36e04ca41e32dd75905569eb09cd68188733",
       "component_id": "ai.greentic.component-templates"
     }

@@ -471,13 +471,11 @@ fn validate_spec(spec_path: &Path, spec: &Spec) -> Result<()> {
         if ingress.export.is_none() {
             return Err(anyhow::anyhow!("components.ingress.export must be set"));
         }
-        if spec.source.is_none() {
-            if !known_worlds.contains(&ingress.world) {
-                return Err(anyhow::anyhow!(
-                    "components.ingress.world '{}' is not a known WIT world from greentic-interfaces.",
-                    ingress.world
-                ));
-            }
+        if spec.source.is_none() && !known_worlds.contains(&ingress.world) {
+            return Err(anyhow::anyhow!(
+                "components.ingress.world '{}' is not a known WIT world from greentic-interfaces.",
+                ingress.world
+            ));
         }
         if !ingress.component_ref.starts_with("local:")
             && !ingress.component_ref.starts_with("oci://")
@@ -498,13 +496,11 @@ fn validate_spec(spec_path: &Path, spec: &Spec) -> Result<()> {
                 "components.subscriptions.export must be set"
             ));
         }
-        if spec.source.is_none() {
-            if !known_worlds.contains(&subscriptions.world) {
-                return Err(anyhow::anyhow!(
-                    "components.subscriptions.world '{}' is not a known WIT world from greentic-interfaces.",
-                    subscriptions.world
-                ));
-            }
+        if spec.source.is_none() && !known_worlds.contains(&subscriptions.world) {
+            return Err(anyhow::anyhow!(
+                "components.subscriptions.world '{}' is not a known WIT world from greentic-interfaces.",
+                subscriptions.world
+            ));
         }
         if !subscriptions.component_ref.starts_with("local:")
             && !subscriptions.component_ref.starts_with("oci://")
@@ -631,7 +627,7 @@ fn validate_source_spec(
         ));
     }
     for key in &source.extensions.include {
-        if !source_extensions.contains_key(&serde_yaml::Value::String(key.clone())) {
+        if !source_extensions.contains_key(serde_yaml::Value::String(key.clone())) {
             return Err(anyhow::anyhow!("source pack missing extension '{}'", key));
         }
     }
@@ -640,21 +636,21 @@ fn validate_source_spec(
     validate_provider_entry(spec, provider_entry)?;
 
     let component_worlds = source_component_worlds(&source_pack);
-    if let Some(ingress) = &spec.components.ingress {
-        if !component_worlds.contains(&ingress.world) {
-            return Err(anyhow::anyhow!(
-                "components.ingress.world '{}' not found in source pack components",
-                ingress.world
-            ));
-        }
+    if let Some(ingress) = &spec.components.ingress
+        && !component_worlds.contains(&ingress.world)
+    {
+        return Err(anyhow::anyhow!(
+            "components.ingress.world '{}' not found in source pack components",
+            ingress.world
+        ));
     }
-    if let Some(subscriptions) = &spec.components.subscriptions {
-        if !component_worlds.contains(&subscriptions.world) {
-            return Err(anyhow::anyhow!(
-                "components.subscriptions.world '{}' not found in source pack components",
-                subscriptions.world
-            ));
-        }
+    if let Some(subscriptions) = &spec.components.subscriptions
+        && !component_worlds.contains(&subscriptions.world)
+    {
+        return Err(anyhow::anyhow!(
+            "components.subscriptions.world '{}' not found in source pack components",
+            subscriptions.world
+        ));
     }
 
     Ok(())
@@ -674,27 +670,26 @@ fn validate_contract(spec: &Spec, contract: &ContractSpec, flows: &[String]) -> 
                 "contract.ingress.mode=custom requires components.ingress"
             ));
         }
-        if ingress.mode == "custom" {
-            if let Some(source) = &spec.source {
-                if !source
-                    .extensions
-                    .include
-                    .iter()
-                    .any(|key| key == "messaging.provider_ingress.v1")
-                {
-                    return Err(anyhow::anyhow!(
-                        "contract.ingress.mode=custom requires messaging.provider_ingress.v1 extension"
-                    ));
-                }
-            }
-        }
-    }
-    if let Some(webhooks) = &contract.webhooks {
-        if webhooks.required && !flows.iter().any(|flow| flow == "verify_webhooks") {
+        if ingress.mode == "custom"
+            && let Some(source) = &spec.source
+            && !source
+                .extensions
+                .include
+                .iter()
+                .any(|key| key == "messaging.provider_ingress.v1")
+        {
             return Err(anyhow::anyhow!(
-                "contract.webhooks.required=true requires verify_webhooks flow"
+                "contract.ingress.mode=custom requires messaging.provider_ingress.v1 extension"
             ));
         }
+    }
+    if let Some(webhooks) = &contract.webhooks
+        && webhooks.required
+        && !flows.iter().any(|flow| flow == "verify_webhooks")
+    {
+        return Err(anyhow::anyhow!(
+            "contract.webhooks.required=true requires verify_webhooks flow"
+        ));
     }
     if let Some(subscriptions) = &contract.subscriptions {
         if subscriptions.required && !flows.iter().any(|flow| flow == "sync_subscriptions") {
@@ -702,27 +697,26 @@ fn validate_contract(spec: &Spec, contract: &ContractSpec, flows: &[String]) -> 
                 "contract.subscriptions.required=true requires sync_subscriptions flow"
             ));
         }
-        if subscriptions.required {
-            if let Some(source) = &spec.source {
-                if !source
-                    .extensions
-                    .include
-                    .iter()
-                    .any(|key| key == "messaging.subscriptions.v1")
-                {
-                    return Err(anyhow::anyhow!(
-                        "contract.subscriptions.required=true requires messaging.subscriptions.v1 extension"
-                    ));
-                }
-            }
-        }
-    }
-    if let Some(render) = &contract.render {
-        if render.required && spec.components.renderer.is_none() {
+        if subscriptions.required
+            && let Some(source) = &spec.source
+            && !source
+                .extensions
+                .include
+                .iter()
+                .any(|key| key == "messaging.subscriptions.v1")
+        {
             return Err(anyhow::anyhow!(
-                "contract.render.required=true requires components.renderer"
+                "contract.subscriptions.required=true requires messaging.subscriptions.v1 extension"
             ));
         }
+    }
+    if let Some(render) = &contract.render
+        && render.required
+        && spec.components.renderer.is_none()
+    {
+        return Err(anyhow::anyhow!(
+            "contract.render.required=true requires components.renderer"
+        ));
     }
     Ok(())
 }
@@ -998,7 +992,7 @@ fn provider_id(spec: &Spec) -> String {
     spec.provider
         .provider_type
         .split('.')
-        .last()
+        .next_back()
         .unwrap_or(&spec.pack.id)
         .to_string()
 }
@@ -1234,6 +1228,7 @@ fn update_pack_yaml(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn generate_from_source(
     spec_path: &Path,
     out_dir: &Path,
@@ -1369,13 +1364,13 @@ fn flow_entrypoints_from_pack(pack: &serde_yaml::Value) -> BTreeSet<(String, Vec
             continue;
         };
         let Some(id) = flow_map
-            .get(&serde_yaml::Value::String("id".to_string()))
+            .get(serde_yaml::Value::String("id".to_string()))
             .and_then(|value| value.as_str())
         else {
             continue;
         };
         let entry = flow_map
-            .get(&serde_yaml::Value::String("entrypoints".to_string()))
+            .get(serde_yaml::Value::String("entrypoints".to_string()))
             .and_then(|value| value.as_sequence())
             .map(|seq| {
                 seq.iter()
@@ -1400,7 +1395,7 @@ fn source_component_worlds(pack: &serde_yaml::Value) -> BTreeSet<String> {
             continue;
         };
         if let Some(world) = component_map
-            .get(&serde_yaml::Value::String("world".to_string()))
+            .get(serde_yaml::Value::String("world".to_string()))
             .and_then(|value| value.as_str())
         {
             worlds.insert(world.to_string());
@@ -1430,7 +1425,7 @@ fn merge_extensions_from_source(
         return Err(anyhow::anyhow!("pack.yaml extensions is not a mapping"));
     };
     for key in &source_spec.extensions.include {
-        let Some(value) = source_extensions.get(&serde_yaml::Value::String(key.clone())) else {
+        let Some(value) = source_extensions.get(serde_yaml::Value::String(key.clone())) else {
             continue;
         };
         dest_extensions.insert(serde_yaml::Value::String(key.clone()), value.clone());
@@ -1458,22 +1453,22 @@ fn merge_components_from_source(
 fn validator_from_source(source_pack: &serde_yaml::Value) -> Option<ValidatorSpec> {
     let extensions = source_pack.get("extensions")?.as_mapping()?;
     let validators = extensions
-        .get(&serde_yaml::Value::String(
+        .get(serde_yaml::Value::String(
             "greentic.messaging.validators.v1".to_string(),
         ))?
         .as_mapping()?;
     let inline = validators
-        .get(&serde_yaml::Value::String("inline".to_string()))?
+        .get(serde_yaml::Value::String("inline".to_string()))?
         .as_mapping()?;
     let validators_list = inline
-        .get(&serde_yaml::Value::String("validators".to_string()))?
+        .get(serde_yaml::Value::String("validators".to_string()))?
         .as_sequence()?;
     let first = validators_list.first()?.as_mapping()?;
     let id = first
-        .get(&serde_yaml::Value::String("id".to_string()))?
+        .get(serde_yaml::Value::String("id".to_string()))?
         .as_str()?;
     let component_ref = first
-        .get(&serde_yaml::Value::String("component_ref".to_string()))?
+        .get(serde_yaml::Value::String("component_ref".to_string()))?
         .as_str()?;
     Some(ValidatorSpec {
         id: id.to_string(),
@@ -1490,17 +1485,15 @@ fn find_provider_entry<'a>(
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("pack.yaml missing extensions"))?;
     let provider_extension = extensions
-        .get(&serde_yaml::Value::String(
-            PROVIDER_EXTENSION_ID.to_string(),
-        ))
+        .get(serde_yaml::Value::String(PROVIDER_EXTENSION_ID.to_string()))
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("pack.yaml missing {}", PROVIDER_EXTENSION_ID))?;
     let inline = provider_extension
-        .get(&serde_yaml::Value::String("inline".to_string()))
+        .get(serde_yaml::Value::String("inline".to_string()))
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("{} inline block missing", PROVIDER_EXTENSION_ID))?;
     let providers = inline
-        .get(&serde_yaml::Value::String("providers".to_string()))
+        .get(serde_yaml::Value::String("providers".to_string()))
         .and_then(|value| value.as_sequence())
         .ok_or_else(|| anyhow::anyhow!("{} providers missing", PROVIDER_EXTENSION_ID))?;
     for provider in providers {
@@ -1508,7 +1501,7 @@ fn find_provider_entry<'a>(
             continue;
         };
         let Some(existing_type) = provider_map
-            .get(&serde_yaml::Value::String("provider_type".to_string()))
+            .get(serde_yaml::Value::String("provider_type".to_string()))
             .and_then(|value| value.as_str())
         else {
             continue;
@@ -1526,7 +1519,7 @@ fn find_provider_entry<'a>(
 
 fn validate_provider_entry(spec: &Spec, provider_entry: &serde_yaml::Mapping) -> Result<()> {
     let ops = provider_entry
-        .get(&serde_yaml::Value::String("ops".to_string()))
+        .get(serde_yaml::Value::String("ops".to_string()))
         .and_then(|value| value.as_sequence())
         .map(|seq| {
             seq.iter()
@@ -1542,42 +1535,42 @@ fn validate_provider_entry(spec: &Spec, provider_entry: &serde_yaml::Mapping) ->
     }
 
     let runtime = provider_entry
-        .get(&serde_yaml::Value::String("runtime".to_string()))
+        .get(serde_yaml::Value::String("runtime".to_string()))
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("provider runtime missing"))?;
     let component_ref = runtime
-        .get(&serde_yaml::Value::String("component_ref".to_string()))
+        .get(serde_yaml::Value::String("component_ref".to_string()))
         .and_then(|value| value.as_str())
         .unwrap_or("");
     let export = runtime
-        .get(&serde_yaml::Value::String("export".to_string()))
+        .get(serde_yaml::Value::String("export".to_string()))
         .and_then(|value| value.as_str())
         .unwrap_or("");
     let world = runtime
-        .get(&serde_yaml::Value::String("world".to_string()))
+        .get(serde_yaml::Value::String("world".to_string()))
         .and_then(|value| value.as_str())
         .unwrap_or("");
 
-    if let Some(expected_id) = &spec.components.adapter.id {
-        if component_ref != expected_id {
-            return Err(anyhow::anyhow!(
-                "provider runtime component_ref '{}' does not match spec adapter id '{}'",
-                component_ref,
-                expected_id
-            ));
-        }
+    if let Some(expected_id) = &spec.components.adapter.id
+        && component_ref != expected_id
+    {
+        return Err(anyhow::anyhow!(
+            "provider runtime component_ref '{}' does not match spec adapter id '{}'",
+            component_ref,
+            expected_id
+        ));
     }
     if spec.components.adapter.id.is_none() && !component_ref.is_empty() {
         // Skip strict id check if not provided in spec.
     }
-    if let Some(expected) = &spec.components.adapter.export {
-        if export != expected {
-            return Err(anyhow::anyhow!(
-                "provider runtime export '{}' does not match spec adapter export '{}'",
-                export,
-                expected
-            ));
-        }
+    if let Some(expected) = &spec.components.adapter.export
+        && export != expected
+    {
+        return Err(anyhow::anyhow!(
+            "provider runtime export '{}' does not match spec adapter export '{}'",
+            export,
+            expected
+        ));
     }
     if world != spec.components.adapter.world {
         return Err(anyhow::anyhow!(
@@ -1630,7 +1623,7 @@ fn verify_pack_dir(out_dir: &Path, spec: &Spec, flows: &[String]) -> Result<()> 
         .ok_or_else(|| anyhow::anyhow!("pack.yaml is not a mapping"))?;
 
     let pack_id = mapping
-        .get(&serde_yaml::Value::String("pack_id".to_string()))
+        .get(serde_yaml::Value::String("pack_id".to_string()))
         .and_then(|value| value.as_str())
         .unwrap_or("");
     if pack_id != spec.pack.id {
@@ -1642,7 +1635,7 @@ fn verify_pack_dir(out_dir: &Path, spec: &Spec, flows: &[String]) -> Result<()> 
     }
 
     let flows_value = mapping
-        .get(&serde_yaml::Value::String("flows".to_string()))
+        .get(serde_yaml::Value::String("flows".to_string()))
         .ok_or_else(|| anyhow::anyhow!("pack.yaml missing flows section"))?;
     let pack_flows = flows_value
         .as_sequence()
@@ -1653,13 +1646,13 @@ fn verify_pack_dir(out_dir: &Path, spec: &Spec, flows: &[String]) -> Result<()> 
             continue;
         };
         let Some(id) = flow_map
-            .get(&serde_yaml::Value::String("id".to_string()))
+            .get(serde_yaml::Value::String("id".to_string()))
             .and_then(|value| value.as_str())
         else {
             continue;
         };
         let entrypoints = flow_map
-            .get(&serde_yaml::Value::String("entrypoints".to_string()))
+            .get(serde_yaml::Value::String("entrypoints".to_string()))
             .and_then(|value| value.as_sequence())
             .map(|seq| {
                 seq.iter()
@@ -1676,36 +1669,32 @@ fn verify_pack_dir(out_dir: &Path, spec: &Spec, flows: &[String]) -> Result<()> 
             .find(|(id, _)| id == flow)
             .map(|(_, entrypoints)| entrypoints)
             .ok_or_else(|| anyhow::anyhow!("pack.yaml missing flow '{}'", flow))?;
-        if spec.source.is_none() {
-            let expected = expected_entrypoint(flow);
-            if let Some(expected) = expected {
-                if !entrypoints.iter().any(|value| value == expected) {
-                    return Err(anyhow::anyhow!(
-                        "flow '{}' missing entrypoint '{}'",
-                        flow,
-                        expected
-                    ));
-                }
-            }
+        if spec.source.is_none()
+            && let Some(expected) = expected_entrypoint(flow)
+            && !entrypoints.iter().any(|value| value == expected)
+        {
+            return Err(anyhow::anyhow!(
+                "flow '{}' missing entrypoint '{}'",
+                flow,
+                expected
+            ));
         }
     }
 
     let extensions = mapping
-        .get(&serde_yaml::Value::String("extensions".to_string()))
+        .get(serde_yaml::Value::String("extensions".to_string()))
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("pack.yaml missing extensions section"))?;
     let provider_extension = extensions
-        .get(&serde_yaml::Value::String(
-            PROVIDER_EXTENSION_ID.to_string(),
-        ))
+        .get(serde_yaml::Value::String(PROVIDER_EXTENSION_ID.to_string()))
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("pack.yaml missing {}", PROVIDER_EXTENSION_ID))?;
     let inline = provider_extension
-        .get(&serde_yaml::Value::String("inline".to_string()))
+        .get(serde_yaml::Value::String("inline".to_string()))
         .and_then(|value| value.as_mapping())
         .ok_or_else(|| anyhow::anyhow!("{} inline block missing", PROVIDER_EXTENSION_ID))?;
     let providers = inline
-        .get(&serde_yaml::Value::String("providers".to_string()))
+        .get(serde_yaml::Value::String("providers".to_string()))
         .and_then(|value| value.as_sequence())
         .ok_or_else(|| anyhow::anyhow!("{} providers missing", PROVIDER_EXTENSION_ID))?;
     let mut has_provider = false;
@@ -1714,7 +1703,7 @@ fn verify_pack_dir(out_dir: &Path, spec: &Spec, flows: &[String]) -> Result<()> 
             continue;
         };
         let Some(provider_type) = provider_map
-            .get(&serde_yaml::Value::String("provider_type".to_string()))
+            .get(serde_yaml::Value::String("provider_type".to_string()))
             .and_then(|value| value.as_str())
         else {
             continue;
@@ -1738,7 +1727,7 @@ fn update_flow_entrypoints(
     source_entrypoints: &BTreeSet<(String, Vec<String>)>,
 ) -> Result<()> {
     let flows_value = mapping
-        .get_mut(&serde_yaml::Value::String("flows".to_string()))
+        .get_mut(serde_yaml::Value::String("flows".to_string()))
         .ok_or_else(|| anyhow::anyhow!("pack.yaml missing flows section"))?;
     let flows = flows_value
         .as_sequence_mut()
@@ -1748,7 +1737,7 @@ fn update_flow_entrypoints(
             continue;
         };
         let Some(id) = flow_map
-            .get(&serde_yaml::Value::String("id".to_string()))
+            .get(serde_yaml::Value::String("id".to_string()))
             .and_then(|value| value.as_str())
         else {
             continue;
@@ -1771,7 +1760,7 @@ fn update_flow_entrypoints(
             serde_yaml::Value::Sequence(
                 entrypoints
                     .into_iter()
-                    .map(|value| serde_yaml::Value::String(value))
+                    .map(serde_yaml::Value::String)
                     .collect(),
             ),
         );
@@ -2407,6 +2396,7 @@ fn flow_new(flow_path: &Path, flow_id: &str, flow_type: &str) -> Result<()> {
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 fn flow_add_step(
     flows_dir: &Path,
     flow_path: &Path,
@@ -2713,10 +2703,10 @@ fn hash_files(paths: &[PathBuf]) -> Result<String> {
     sorted.sort();
     for path in sorted {
         hasher.update(path.to_string_lossy().as_bytes());
-        hasher.update(&[0u8]);
+        hasher.update([0u8]);
         let data = fs::read(&path).with_context(|| format!("reading {}", path.display()))?;
         hasher.update(&data);
-        hasher.update(&[0u8]);
+        hasher.update([0u8]);
     }
     Ok(format!("{:x}", hasher.finalize()))
 }
@@ -2861,12 +2851,12 @@ fn stage_component(
             Some(Err(err)) => return Err(err),
             None => infer_manifest_path(&src_path),
         };
-        if let Some(manifest_path) = manifest_path {
-            if manifest_has_id(&manifest_path)? {
-                write_inline_manifest(&manifest_path, &dest_dir.join("component.manifest.json"))?;
-                if let Some(src_dir) = manifest_path.parent() {
-                    copy_dir_if_exists(&src_dir.join("schemas"), &dest_dir.join("schemas"))?;
-                }
+        if let Some(manifest_path) = manifest_path
+            && manifest_has_id(&manifest_path)?
+        {
+            write_inline_manifest(&manifest_path, &dest_dir.join("component.manifest.json"))?;
+            if let Some(src_dir) = manifest_path.parent() {
+                copy_dir_if_exists(&src_dir.join("schemas"), &dest_dir.join("schemas"))?;
             }
         }
     } else if component_ref.starts_with("oci://") {
@@ -3007,6 +2997,36 @@ fn copy_dir_if_exists(src: &Path, dest: &Path) -> Result<()> {
     Ok(())
 }
 
+fn manifest_has_id(path: &Path) -> Result<bool> {
+    if !path.exists() {
+        return Ok(false);
+    }
+    let contents =
+        fs::read_to_string(path).with_context(|| format!("reading manifest {}", path.display()))?;
+    let value: serde_json::Value = serde_json::from_str(&contents)?;
+    Ok(value.get("id").and_then(|v| v.as_str()).is_some())
+}
+
+fn absolute_path(path: &Path) -> Result<PathBuf> {
+    if path.is_absolute() {
+        return Ok(path.to_path_buf());
+    }
+    let cwd = std::env::current_dir()?;
+    Ok(cwd.join(path))
+}
+
+fn workspace_root() -> Result<PathBuf> {
+    let mut dir = std::env::current_dir()?;
+    loop {
+        if dir.join("Cargo.toml").exists() {
+            return Ok(dir);
+        }
+        if !dir.pop() {
+            return Err(anyhow::anyhow!("could not find workspace root"));
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -3114,35 +3134,5 @@ mod tests {
             err.to_string().contains("spec.pack.id must be set"),
             "unexpected error: {err}"
         );
-    }
-}
-
-fn manifest_has_id(path: &Path) -> Result<bool> {
-    if !path.exists() {
-        return Ok(false);
-    }
-    let contents =
-        fs::read_to_string(path).with_context(|| format!("reading manifest {}", path.display()))?;
-    let value: serde_json::Value = serde_json::from_str(&contents)?;
-    Ok(value.get("id").and_then(|v| v.as_str()).is_some())
-}
-
-fn absolute_path(path: &Path) -> Result<PathBuf> {
-    if path.is_absolute() {
-        return Ok(path.to_path_buf());
-    }
-    let cwd = std::env::current_dir()?;
-    Ok(cwd.join(path))
-}
-
-fn workspace_root() -> Result<PathBuf> {
-    let mut dir = std::env::current_dir()?;
-    loop {
-        if dir.join("Cargo.toml").exists() {
-            return Ok(dir);
-        }
-        if !dir.pop() {
-            return Err(anyhow::anyhow!("could not find workspace root"));
-        }
     }
 }

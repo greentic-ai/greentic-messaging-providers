@@ -677,10 +677,10 @@ fn ensure_provider(provider: &str) -> Result<(), String> {
 }
 
 fn target_expiration(minutes: Option<u32>, target_unix_ms: Option<u64>) -> DateTime<Utc> {
-    if let Some(ms) = target_unix_ms {
-        if let Some(dt) = parse_datetime_value(ms) {
-            return dt;
-        }
+    if let Some(ms) = target_unix_ms
+        && let Some(dt) = parse_datetime_value(ms)
+    {
+        return dt;
     }
     if let Some(mins) = minutes {
         return Utc::now() + Duration::minutes(mins as i64);
@@ -776,11 +776,10 @@ fn handle_validation(http: &HttpInV1) -> Vec<u8> {
     if token.is_empty() {
         return http_out_error(400, "validationToken missing");
     }
-    let mut headers = Vec::new();
-    headers.push(Header {
+    let headers = vec![Header {
         name: "Content-Type".into(),
         value: "text/plain".into(),
-    });
+    }];
     let out = HttpOutV1 {
         status: 200,
         headers,
@@ -837,12 +836,11 @@ fn handle_graph_notifications(http: &HttpInV1) -> Vec<u8> {
 fn query_param_value(query: &str, key: &str) -> Option<String> {
     for part in query.split('&') {
         let mut kv = part.splitn(2, '=');
-        if let Some(k) = kv.next() {
-            if k == key {
-                if let Some(v) = kv.next() {
-                    return url_decode(v).ok().map(|cow| cow.into_owned());
-                }
-            }
+        if let Some(k) = kv.next()
+            && k == key
+            && let Some(v) = kv.next()
+        {
+            return url_decode(v).ok().map(|cow| cow.into_owned());
         }
     }
     None

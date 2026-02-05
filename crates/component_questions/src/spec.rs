@@ -79,10 +79,10 @@ impl TryFrom<&QuestionDef> for QuestionSpecItem {
     type Error = anyhow::Error;
 
     fn try_from(value: &QuestionDef) -> Result<Self, Self::Error> {
-        if let Some(validate) = value.validate.as_ref() {
-            if let Some(regex) = validate.regex.as_ref() {
-                Regex::new(regex).map_err(|e| anyhow!("invalid regex for {}: {e}", value.name))?;
-            }
+        if let Some(validate) = value.validate.as_ref()
+            && let Some(regex) = validate.regex.as_ref()
+        {
+            Regex::new(regex).map_err(|e| anyhow!("invalid regex for {}: {e}", value.name))?;
         }
         Ok(Self {
             name: value.name.clone(),

@@ -20,7 +20,7 @@ pub struct HostStateStore;
 impl StateStore for HostStateStore {
     fn read(&mut self, key: &str) -> Result<Option<Vec<u8>>, String> {
         match state_store::read(key, None) {
-            Ok(bytes) => Ok(Some(bytes.into())),
+            Ok(bytes) => Ok(Some(bytes)),
             Err(err) => {
                 let code = err.code.to_ascii_lowercase().replace('-', "_");
                 if code == "not_found" {
@@ -45,7 +45,7 @@ pub struct HostSecretStore;
 impl SecretStore for HostSecretStore {
     fn get(&self, key: &str) -> Result<Option<Vec<u8>>, String> {
         match secrets_store::get(key) {
-            Ok(opt) => Ok(opt.map(|bytes| bytes.into())),
+            Ok(opt) => Ok(opt),
             Err(err) => Err(format!("secret error: {} - {}", err.name(), err.message())),
         }
     }

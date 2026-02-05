@@ -283,11 +283,10 @@ impl ProviderHarness {
         let (result,) = self
             .invoke
             .call(&mut self.store, (op.to_string(), payload))
-            .map_err(|err| {
+            .inspect_err(|err| {
                 if let Some(trap) = err.downcast_ref::<Trap>() {
                     eprintln!("trap trace: {:?}", trap);
                 }
-                err
             })
             .context(format!("invoke {op}"))?;
         self.invoke
@@ -362,7 +361,7 @@ fn fixtures_root() -> PathBuf {
 fn load_http_fixture(name: &str) -> Result<HttpFixture> {
     let path = fixtures_root().join(name);
     let raw = fs::read_to_string(&path).context("load fixture")?;
-    Ok(serde_json::from_str(&raw).context("parse fixture")?)
+    serde_json::from_str(&raw).context("parse fixture")
 }
 
 fn http_input_from_fixture(fixture: HttpFixture) -> HttpInV1 {

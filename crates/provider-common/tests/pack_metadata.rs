@@ -19,7 +19,7 @@ fn greentic_pack_path() -> PathBuf {
             env::var_os("GREENTIC_PACK_BIN")
                 .map(PathBuf::from)
                 .or_else(|| find_in_path("greentic-pack"))
-                .unwrap_or_else(|| install_greentic_pack())
+                .unwrap_or_else(install_greentic_pack)
         })
         .clone()
 }
@@ -213,10 +213,10 @@ fn build_dummy_pack() -> Result<(tempfile::TempDir, PathBuf)> {
         let mut yaml: YamlValue = serde_yaml_bw::from_str(&fs::read_to_string(&pack_yaml)?)?;
         if let Some(extensions) = yaml
             .as_mapping_mut()
-            .and_then(|map| map.get_mut(&YamlValue::from("extensions")))
+            .and_then(|map| map.get_mut(YamlValue::from("extensions")))
             .and_then(|value| value.as_mapping_mut())
         {
-            extensions.remove(&YamlValue::from("greentic.messaging.validators.v1"));
+            extensions.remove(YamlValue::from("greentic.messaging.validators.v1"));
         }
         fs::write(&pack_yaml, serde_yaml_bw::to_string(&yaml)?)?;
     }

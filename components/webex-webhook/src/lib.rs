@@ -263,14 +263,11 @@ fn build_webhook_name(input: &ReconcileInput) -> String {
 }
 
 fn first_non_empty<'a>(candidates: &'a [Option<&'a str>]) -> Option<&'a str> {
-    for candidate in candidates {
-        if let Some(value) = candidate {
-            if !value.trim().is_empty() {
-                return Some(value);
-            }
-        }
-    }
-    None
+    candidates
+        .iter()
+        .flatten()
+        .find(|value| !value.trim().is_empty())
+        .copied()
 }
 
 fn find_primary_webhook_index(

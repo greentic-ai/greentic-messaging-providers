@@ -30,5 +30,5 @@ x-generated-by: greentic-messaging-packgen
 x-generated-from:
   spec: specs/providers/webchat.yaml
   spec-hash: sha256:9f7f797de9fff7ca90f884528db64c7a83a2b5029496f557d65645051f474021
-  manifest-hash: sha256:119dfe93f286b9e336592ccc0ab3c73c8ed72fbdd62f98ac54f8713f9206ce4c
-  schemas-hash: sha256:eb5aee0cdf22bd72a36f6d49b014b255b4a96b73efd5aaa5313aa89fc64c642e
+  manifest-hash: sha256:95560aa0889fea8d9aaf5dd6a5b598af4d03d128d9f283909c14ae94d7fcef5e
+  schemas-hash: sha256:da4d8cbca7825fa82528cd6da9606519fcc0196a1e99a149d778f312bd0fd13d

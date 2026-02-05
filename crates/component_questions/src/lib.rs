@@ -189,17 +189,15 @@ pub fn validate_answers_for_spec(
                     errors.push(type_error(&question.name, "string"));
                     continue;
                 };
-                if let Some(validate) = question.validate.as_ref() {
-                    if let Some(regex) = validate.regex.as_ref() {
-                        if let Ok(pattern) = Regex::new(regex) {
-                            if !pattern.is_match(text) {
-                                errors.push(ValidationError {
-                                    path: question.name.clone(),
-                                    message: "regex".to_string(),
-                                });
-                            }
-                        }
-                    }
+                if let Some(validate) = question.validate.as_ref()
+                    && let Some(regex) = validate.regex.as_ref()
+                    && let Ok(pattern) = Regex::new(regex)
+                    && !pattern.is_match(text)
+                {
+                    errors.push(ValidationError {
+                        path: question.name.clone(),
+                        message: "regex".to_string(),
+                    });
                 }
                 if !question.choices.is_empty()
                     && !question.choices.iter().any(|choice| choice == value)
@@ -221,21 +219,21 @@ pub fn validate_answers_for_spec(
                     continue;
                 };
                 if let Some(validate) = question.validate.as_ref() {
-                    if let Some(min) = validate.min {
-                        if num < min {
-                            errors.push(ValidationError {
-                                path: question.name.clone(),
-                                message: "min".to_string(),
-                            });
-                        }
+                    if let Some(min) = validate.min
+                        && num < min
+                    {
+                        errors.push(ValidationError {
+                            path: question.name.clone(),
+                            message: "min".to_string(),
+                        });
                     }
-                    if let Some(max) = validate.max {
-                        if num > max {
-                            errors.push(ValidationError {
-                                path: question.name.clone(),
-                                message: "max".to_string(),
-                            });
-                        }
+                    if let Some(max) = validate.max
+                        && num > max
+                    {
+                        errors.push(ValidationError {
+                            path: question.name.clone(),
+                            message: "max".to_string(),
+                        });
                     }
                 }
             }

@@ -3,6 +3,18 @@ set -euo pipefail
 
 # Regenerates pack manifests, syncs schemas, bumps versions, and stages WASM artifacts from target/components.
 
+die() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+trap 'die "sync_packs failed."' ERR
+
+if [ -z "${BASH_VERSION:-}" ]; then
+  die "This script requires bash. Run: bash tools/sync_packs.sh"
+fi
+
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PACKS_DIR="${PACKS_DIR:-${ROOT_DIR}/packs}"
 TARGET_COMPONENTS="${ROOT_DIR}/target/components"
@@ -110,7 +122,7 @@ fetch_oci_component() {
   local tmpdir
   tmpdir="$(mktemp -d)"
   echo "Fetching OCI component ${ref}..."
-  oras pull --output "${tmpdir}" "${ref}"
+  oras_pull "${ref}" "${tmpdir}"
   local src_path="${tmpdir}/${artifact}"
   if [ ! -f "${src_path}" ]; then
     echo "OCI component artifact ${artifact} not found in ${tmpdir}" >&2
@@ -130,8 +142,29 @@ fetch_oci_component() {
   rm -rf "${tmpdir}"
 }
 
-declare -A OCI_CACHE_DIRS=()
+OCI_CACHE_KEYS=()
+OCI_CACHE_DIRS=()
 OCI_CACHE_TMPDIRS=()
+
+oci_cache_get() {
+  local key="$1"
+  local idx=0
+  for existing in "${OCI_CACHE_KEYS[@]:-}"; do
+    if [ "${existing}" = "${key}" ]; then
+      echo "${OCI_CACHE_DIRS[$idx]}"
+      return 0
+    fi
+    idx=$((idx + 1))
+  done
+  return 1
+}
+
+oci_cache_set() {
+  local key="$1"
+  local value="$2"
+  OCI_CACHE_KEYS+=("${key}")
+  OCI_CACHE_DIRS+=("${value}")
+}
 
 cleanup_oci_cache() {
   for dir in "${OCI_CACHE_TMPDIRS[@]:-}"; do
@@ -159,14 +192,15 @@ fetch_locked_component() {
 
   local ref_clean="${ref#oci://}"
   local cache_key="${digest:-${ref_clean}}"
-  local tmpdir="${OCI_CACHE_DIRS[${cache_key}]:-}"
+  local tmpdir=""
+  tmpdir="$(oci_cache_get "${cache_key}")" || tmpdir=""
 
   if [ -z "${tmpdir}" ]; then
     tmpdir="$(mktemp -d)"
-    OCI_CACHE_DIRS["${cache_key}"]="${tmpdir}"
+    oci_cache_set "${cache_key}" "${tmpdir}"
     OCI_CACHE_TMPDIRS+=("${tmpdir}")
     echo "Fetching OCI component ${ref_clean}..."
-    oras pull --output "${tmpdir}" "${ref_clean}"
+    oras_pull "${ref_clean}" "${tmpdir}"
   fi
 
   local manifest="${tmpdir}/component.publish.manifest.json"
@@ -184,6 +218,21 @@ fetch_locked_component() {
   fi
   mkdir -p "$(dirname "${dest_wasm}")"
   cp "${tmpdir}/${artifact}" "${dest_wasm}"
+}
+
+oras_pull() {
+  local ref="$1"
+  local out_dir="$2"
+
+  if [ -n "${GHCR_TOKEN:-}" ]; then
+    local ghcr_user="${GHCR_USERNAME:-${GHCR_USER:-${USER:-}}}"
+    if [ -z "${ghcr_user}" ]; then
+      die "GHCR_TOKEN is set but no username found. Set GHCR_USERNAME."
+    fi
+    printf '%s' "${GHCR_TOKEN}" | oras pull --output "${out_dir}" --username "${ghcr_user}" --password-stdin "${ref}"
+  else
+    oras pull --output "${out_dir}" "${ref}"
+  fi
 }
 
 for dir in "${PACKS_DIR}"/*; do

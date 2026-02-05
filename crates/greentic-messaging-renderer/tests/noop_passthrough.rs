@@ -40,7 +40,7 @@ fn v13_card_unchanged() {
         &RenderContext::default(),
         RendererMode::Passthrough,
     );
-    assert!(matches!(plan.items.get(0), Some(RenderItem::Text(t)) if t == "hello"));
+    assert!(matches!(plan.items.first(), Some(RenderItem::Text(t)) if t == "hello"));
     assert_eq!(
         plan.items.get(1),
         Some(&RenderItem::AdaptiveCard(card.clone()))

@@ -1,8 +1,9 @@
 use std::env;
 
 /// Rendering mode switch.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum RendererMode {
+    #[default]
     Passthrough,
     Downsample,
 }
@@ -23,11 +24,5 @@ impl RendererMode {
             .ok()
             .and_then(|value| Self::parse(&value))
             .unwrap_or_default()
-    }
-}
-
-impl Default for RendererMode {
-    fn default() -> Self {
-        RendererMode::Passthrough
     }
 }

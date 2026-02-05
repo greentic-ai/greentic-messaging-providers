@@ -572,103 +572,76 @@ fn handle_webhook_event(body: &Value, cfg: &ProviderConfig) -> IngestOutcome {
         .and_then(|v| v.as_str())
         .map(|s| s.to_string());
 
-    if resource == "messages" && event == "created" {
-        if let Some(message_id) = message_id.clone() {
-            let api_base = cfg
-                .api_base_url
-                .as_deref()
-                .filter(|s| !s.trim().is_empty())
-                .unwrap_or(DEFAULT_API_BASE)
-                .trim_end_matches('/')
-                .to_string();
-            match get_secret_string(DEFAULT_TOKEN_KEY) {
-                Ok(token) => match fetch_message_details(&message_id, &api_base, &token) {
-                    Ok(details) => {
-                        let session_id = details
-                            .room_id
-                            .clone()
-                            .or(webhook_room.clone())
-                            .unwrap_or_else(|| message_id.clone());
-                        let sender = pick_sender(&details.person_email, &details.person_id)
-                            .or_else(|| pick_sender(&webhook_person_email, &webhook_person_id));
-                        let text = details
-                            .markdown
-                            .as_deref()
-                            .filter(|value| !value.trim().is_empty())
-                            .map(ToOwned::to_owned)
-                            .or_else(|| details.text.clone())
-                            .unwrap_or_default();
-                        let attachment_types = if details.attachments.is_empty() {
-                            None
-                        } else {
-                            Some(
-                                details
-                                    .attachments
-                                    .iter()
-                                    .map(|a| a.mime_type.clone())
-                                    .collect::<Vec<_>>()
-                                    .join(","),
-                            )
-                        };
-                        let metadata = build_webhook_metadata(
-                            resource,
-                            event,
-                            Some(&message_id),
-                            details.room_id.as_ref().or(webhook_room.as_ref()),
+    if resource == "messages"
+        && event == "created"
+        && let Some(message_id) = message_id.clone()
+    {
+        let api_base = cfg
+            .api_base_url
+            .as_deref()
+            .filter(|s| !s.trim().is_empty())
+            .unwrap_or(DEFAULT_API_BASE)
+            .trim_end_matches('/')
+            .to_string();
+        match get_secret_string(DEFAULT_TOKEN_KEY) {
+            Ok(token) => match fetch_message_details(&message_id, &api_base, &token) {
+                Ok(details) => {
+                    let session_id = details
+                        .room_id
+                        .clone()
+                        .or(webhook_room.clone())
+                        .unwrap_or_else(|| message_id.clone());
+                    let sender = pick_sender(&details.person_email, &details.person_id)
+                        .or_else(|| pick_sender(&webhook_person_email, &webhook_person_id));
+                    let text = details
+                        .markdown
+                        .as_deref()
+                        .filter(|value| !value.trim().is_empty())
+                        .map(ToOwned::to_owned)
+                        .or_else(|| details.text.clone())
+                        .unwrap_or_default();
+                    let attachment_types = if details.attachments.is_empty() {
+                        None
+                    } else {
+                        Some(
                             details
-                                .person_email
-                                .as_ref()
-                                .or(webhook_person_email.as_ref()),
-                            details.person_id.as_ref().or(webhook_person_id.as_ref()),
-                            None,
-                            attachment_types.clone(),
-                            Some(200),
-                        );
-                        let envelope = build_webhook_envelope(
-                            text,
-                            session_id,
-                            sender,
-                            metadata,
-                            details.attachments.clone(),
-                            Some(&message_id),
-                        );
-                        return IngestOutcome {
-                            envelope,
-                            status: 200,
-                            error: None,
-                        };
-                    }
-                    Err(err) => {
-                        println!("webex ingest fetch error for {message_id}: {err}");
-                        let session_id = webhook_room.clone().unwrap_or_else(|| message_id.clone());
-                        let sender = pick_sender(&webhook_person_email, &webhook_person_id);
-                        let metadata = build_webhook_metadata(
-                            resource,
-                            event,
-                            Some(&message_id),
-                            webhook_room.as_ref(),
-                            webhook_person_email.as_ref(),
-                            webhook_person_id.as_ref(),
-                            Some(&err),
-                            None,
-                            Some(502),
-                        );
-                        let envelope = build_webhook_envelope(
-                            "".to_string(),
-                            session_id,
-                            sender,
-                            metadata,
-                            Vec::new(),
-                            Some(&message_id),
-                        );
-                        return IngestOutcome {
-                            envelope,
-                            status: 502,
-                            error: Some(err),
-                        };
-                    }
-                },
+                                .attachments
+                                .iter()
+                                .map(|a| a.mime_type.clone())
+                                .collect::<Vec<_>>()
+                                .join(","),
+                        )
+                    };
+                    let metadata = build_webhook_metadata(
+                        resource,
+                        event,
+                        Some(&message_id),
+                        details.room_id.as_ref().or(webhook_room.as_ref()),
+                        details
+                            .person_email
+                            .as_ref()
+                            .or(webhook_person_email.as_ref()),
+                        details.person_id.as_ref().or(webhook_person_id.as_ref()),
+                        None,
+                        attachment_types.clone(),
+                        Some(200),
+                    );
+                    let envelope = build_webhook_envelope(
+                        text,
+                        session_id,
+                        sender,
+                        metadata,
+                        details.attachments.clone(),
+                        Some(&message_id),
+                    );
+                    return IngestOutcome {
+                        envelope,
+                        status: 200,
+                        error: None,
+                    };
+                }
                 Err(err) => {
+                    println!("webex ingest fetch error for {message_id}: {err}");
                     let session_id = webhook_room.clone().unwrap_or_else(|| message_id.clone());
                     let sender = pick_sender(&webhook_person_email, &webhook_person_id);
                     let metadata = build_webhook_metadata(
@@ -680,7 +653,7 @@ fn handle_webhook_event(body: &Value, cfg: &ProviderConfig) -> IngestOutcome {
                         webhook_person_id.as_ref(),
                         Some(&err),
                         None,
-                        Some(500),
+                        Some(502),
                     );
                     let envelope = build_webhook_envelope(
                         "".to_string(),
@@ -692,10 +665,38 @@ fn handle_webhook_event(body: &Value, cfg: &ProviderConfig) -> IngestOutcome {
                     );
                     return IngestOutcome {
                         envelope,
-                        status: 500,
+                        status: 502,
                         error: Some(err),
                     };
                 }
+            },
+            Err(err) => {
+                let session_id = webhook_room.clone().unwrap_or_else(|| message_id.clone());
+                let sender = pick_sender(&webhook_person_email, &webhook_person_id);
+                let metadata = build_webhook_metadata(
+                    resource,
+                    event,
+                    Some(&message_id),
+                    webhook_room.as_ref(),
+                    webhook_person_email.as_ref(),
+                    webhook_person_id.as_ref(),
+                    Some(&err),
+                    None,
+                    Some(500),
+                );
+                let envelope = build_webhook_envelope(
+                    "".to_string(),
+                    session_id,
+                    sender,
+                    metadata,
+                    Vec::new(),
+                    Some(&message_id),
+                );
+                return IngestOutcome {
+                    envelope,
+                    status: 500,
+                    error: Some(err),
+                };
             }
         }
     }
@@ -836,6 +837,7 @@ fn build_webex_attachment(message_id: &str, idx: usize, value: &Value) -> Option
     })
 }
 
+#[allow(clippy::too_many_arguments)]
 fn build_webhook_metadata(
     resource: &str,
     event: &str,
@@ -931,10 +933,7 @@ fn ingest_http(input_json: &[u8]) -> Vec<u8> {
         Err(err) => return http_out_error(400, &format!("invalid body encoding: {err}")),
     };
     let body_val: Value = serde_json::from_slice(&body_bytes).unwrap_or(Value::Null);
-    let cfg = match load_config(&json!({})) {
-        Ok(cfg) => cfg,
-        Err(_) => ProviderConfig::default(),
-    };
+    let cfg = load_config(&json!({})).unwrap_or_default();
     let outcome = handle_webhook_event(&body_val, &cfg);
 
     let mut normalized = json!({
@@ -1051,9 +1050,7 @@ fn send_payload(input_json: &[u8]) -> Vec<u8> {
         .metadata
         .get("adaptive_card")
         .and_then(|value| serde_json::from_str::<Value>(value).ok());
-    let card_summary = card_payload
-        .as_ref()
-        .and_then(|card| summarize_card_text(card));
+    let card_summary = card_payload.as_ref().and_then(summarize_card_text);
     if card_payload.is_none() && text.is_none() {
         eprintln!(
             "webex send_payload missing text envelope metadata={:?}",

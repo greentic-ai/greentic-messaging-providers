@@ -35,7 +35,7 @@ fn graph_token_endpoint(cfg: &ProviderConfig, user: &AuthUserRefV1) -> Result<St
     let tenant = user
         .tenant_id
         .as_deref()
-        .or_else(|| cfg.graph_tenant_id.as_deref())
+        .or(cfg.graph_tenant_id.as_deref())
         .ok_or_else(|| "missing Graph tenant id".to_string())?;
     let authority = cfg
         .graph_authority

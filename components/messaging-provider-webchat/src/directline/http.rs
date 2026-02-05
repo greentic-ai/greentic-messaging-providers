@@ -418,12 +418,11 @@ fn validate_attachments(body: &Value) -> Result<(), HttpOutV1> {
             )));
         }
 
-        if let Some(content) = attachment.get("content") {
-            if let Some(text) = content.as_str() {
-                if text.len() > MAX_ATTACHMENT_BYTES {
-                    return Err(respond_bad_request("attachment too large"));
-                }
-            }
+        if let Some(content) = attachment.get("content")
+            && let Some(text) = content.as_str()
+            && text.len() > MAX_ATTACHMENT_BYTES
+        {
+            return Err(respond_bad_request("attachment too large"));
         }
     }
 
@@ -524,10 +523,10 @@ fn decode_json_body(request: &HttpInV1) -> Result<Value, HttpOutV1> {
 }
 
 fn extract_user_id(body: &Value) -> Result<Option<String>, HttpOutV1> {
-    if let Some(value) = body.get("user") {
-        if let Some(id) = value.get("id").and_then(|v| v.as_str()) {
-            return Ok(Some(id.to_string()));
-        }
+    if let Some(value) = body.get("user")
+        && let Some(id) = value.get("id").and_then(|v| v.as_str())
+    {
+        return Ok(Some(id.to_string()));
     }
     Ok(None)
 }

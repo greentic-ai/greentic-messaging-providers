@@ -492,129 +492,6 @@ fn alias_response_from_host(resp: http_client::ResponseV1_1) -> http_client_clie
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use greentic_types::{ChannelMessageEnvelope, EnvId, MessageMetadata, TenantCtx, TenantId};
-    use messaging_universal_dto::RenderPlanInV1;
-    use serde_json::{Value, json};
-    use std::{collections::HashMap, path::PathBuf, process::Command};
-
-    #[test]
-    fn node_world_strategy_detected() {
-        let wasm = ensure_component_built("telegram-webhook");
-        let harness = WasmHarness::new_with_path(&wasm).expect("instantiate node component");
-        assert_eq!(harness.invoke_strategy(), InvokeStrategy::Node);
-    }
-
-    #[test]
-    fn schema_core_strategy_detected() {
-        ensure_component_built("messaging-provider-webchat");
-        let harness = WasmHarness::new("webchat").expect("instantiate schema-core component");
-        assert_eq!(harness.invoke_strategy(), InvokeStrategy::SchemaCore);
-    }
-
-    #[test]
-    fn node_world_can_invoke_reconcile_webhook() {
-        let wasm = ensure_component_built("telegram-webhook");
-        let harness = WasmHarness::new_with_path(&wasm).expect("instantiate node component");
-        assert_eq!(harness.invoke_strategy(), InvokeStrategy::Node);
-
-        let input = json!({
-            "public_base_url": "https://example.invalid/webhook",
-            "webhook_path": "",
-            "dry_run": true,
-        });
-        let secrets = HashMap::from([("TELEGRAM_BOT_TOKEN".to_string(), b"token".to_vec())]);
-        let history = http_mock::new_history();
-        let output = harness
-            .invoke(
-                "reconcile_webhook",
-                serde_json::to_vec(&input).expect("serialize input"),
-                &secrets,
-                HttpMode::Mock,
-                history,
-                None,
-            )
-            .expect("invoke");
-        let value: Value = serde_json::from_slice(&output).expect("parse json");
-        assert_eq!(value.get("ok").and_then(Value::as_bool), Some(true));
-        assert_eq!(
-            value
-                .get("expected_url")
-                .and_then(Value::as_str)
-                .unwrap_or_default(),
-            "https://example.invalid/webhook"
-        );
-    }
-
-    #[test]
-    fn schema_core_can_invoke_render_plan() {
-        ensure_component_built("messaging-provider-webchat");
-        let harness = WasmHarness::new("webchat").expect("instantiate schema-core component");
-        assert_eq!(harness.invoke_strategy(), InvokeStrategy::SchemaCore);
-
-        let envelope = build_test_envelope("webchat");
-        let plan_in = RenderPlanInV1 {
-            message: envelope,
-            metadata: HashMap::new(),
-        };
-        let input_bytes = serde_json::to_vec(&plan_in).expect("serialize render_plan input");
-        let history = http_mock::new_history();
-        let secrets = HashMap::new();
-        let output = harness
-            .invoke(
-                "render_plan",
-                input_bytes,
-                &secrets,
-                HttpMode::Mock,
-                history,
-                None,
-            )
-            .expect("render_plan invoke");
-        let value: Value = serde_json::from_slice(&output).expect("parse render_plan output");
-        assert_eq!(value.get("ok").and_then(Value::as_bool), Some(true));
-        assert!(value.get("plan").is_some());
-    }
-
-    fn ensure_component_built(package: &str) -> PathBuf {
-        let root = workspace_root();
-        let wasm_path = root
-            .join("target/components")
-            .join(format!("{package}.wasm"));
-        if !wasm_path.exists() {
-            let status = Command::new("cargo")
-                .current_dir(&root)
-                .args(["component", "build", "-p", package])
-                .status()
-                .expect("failed to spawn cargo component build");
-            assert!(status.success());
-        }
-        find_component_wasm_path(package).expect("wasm component should exist after build")
-    }
-
-    fn build_test_envelope(channel: &str) -> ChannelMessageEnvelope {
-        let env = EnvId::try_from("manual").expect("env id");
-        let tenant = TenantId::try_from("manual").expect("tenant id");
-        let mut metadata = MessageMetadata::new();
-        metadata.insert("universal".to_string(), "true".to_string());
-        metadata.insert("channel".to_string(), channel.to_string());
-        ChannelMessageEnvelope {
-            id: format!("tester-{channel}"),
-            tenant: TenantCtx::new(env.clone(), tenant.clone()),
-            channel: channel.to_string(),
-            session_id: channel.to_string(),
-            reply_scope: None,
-            from: None,
-            to: Vec::new(),
-            correlation_id: None,
-            text: Some("plan input".to_string()),
-            attachments: Vec::new(),
-            metadata,
-        }
-    }
-}
-
 fn alias_error_from_host(
     err: http_client::HttpClientErrorV1_1,
 ) -> http_client_client_alias::HostError {
@@ -984,4 +861,127 @@ fn detect_available_worlds(engine: &Engine, component: &Component) -> Result<Vec
         }
         Ok(worlds)
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use greentic_types::{ChannelMessageEnvelope, EnvId, MessageMetadata, TenantCtx, TenantId};
+    use messaging_universal_dto::RenderPlanInV1;
+    use serde_json::{Value, json};
+    use std::{collections::HashMap, path::PathBuf, process::Command};
+
+    #[test]
+    fn node_world_strategy_detected() {
+        let wasm = ensure_component_built("telegram-webhook");
+        let harness = WasmHarness::new_with_path(&wasm).expect("instantiate node component");
+        assert_eq!(harness.invoke_strategy(), InvokeStrategy::Node);
+    }
+
+    #[test]
+    fn schema_core_strategy_detected() {
+        ensure_component_built("messaging-provider-webchat");
+        let harness = WasmHarness::new("webchat").expect("instantiate schema-core component");
+        assert_eq!(harness.invoke_strategy(), InvokeStrategy::SchemaCore);
+    }
+
+    #[test]
+    fn node_world_can_invoke_reconcile_webhook() {
+        let wasm = ensure_component_built("telegram-webhook");
+        let harness = WasmHarness::new_with_path(&wasm).expect("instantiate node component");
+        assert_eq!(harness.invoke_strategy(), InvokeStrategy::Node);
+
+        let input = json!({
+            "public_base_url": "https://example.invalid/webhook",
+            "webhook_path": "",
+            "dry_run": true,
+        });
+        let secrets = HashMap::from([("TELEGRAM_BOT_TOKEN".to_string(), b"token".to_vec())]);
+        let history = http_mock::new_history();
+        let output = harness
+            .invoke(
+                "reconcile_webhook",
+                serde_json::to_vec(&input).expect("serialize input"),
+                &secrets,
+                HttpMode::Mock,
+                history,
+                None,
+            )
+            .expect("invoke");
+        let value: Value = serde_json::from_slice(&output).expect("parse json");
+        assert_eq!(value.get("ok").and_then(Value::as_bool), Some(true));
+        assert_eq!(
+            value
+                .get("expected_url")
+                .and_then(Value::as_str)
+                .unwrap_or_default(),
+            "https://example.invalid/webhook"
+        );
+    }
+
+    #[test]
+    fn schema_core_can_invoke_render_plan() {
+        ensure_component_built("messaging-provider-webchat");
+        let harness = WasmHarness::new("webchat").expect("instantiate schema-core component");
+        assert_eq!(harness.invoke_strategy(), InvokeStrategy::SchemaCore);
+
+        let envelope = build_test_envelope("webchat");
+        let plan_in = RenderPlanInV1 {
+            message: envelope,
+            metadata: HashMap::new(),
+        };
+        let input_bytes = serde_json::to_vec(&plan_in).expect("serialize render_plan input");
+        let history = http_mock::new_history();
+        let secrets = HashMap::new();
+        let output = harness
+            .invoke(
+                "render_plan",
+                input_bytes,
+                &secrets,
+                HttpMode::Mock,
+                history,
+                None,
+            )
+            .expect("render_plan invoke");
+        let value: Value = serde_json::from_slice(&output).expect("parse render_plan output");
+        assert_eq!(value.get("ok").and_then(Value::as_bool), Some(true));
+        assert!(value.get("plan").is_some());
+    }
+
+    fn ensure_component_built(package: &str) -> PathBuf {
+        let root = workspace_root();
+        let wasm_path = root
+            .join("target/components")
+            .join(format!("{package}.wasm"));
+        if !wasm_path.exists() {
+            let status = Command::new("cargo")
+                .current_dir(&root)
+                .args(["component", "build", "-p", package])
+                .status()
+                .expect("failed to spawn cargo component build");
+            assert!(status.success());
+        }
+        find_component_wasm_path(package).expect("wasm component should exist after build")
+    }
+
+    fn build_test_envelope(channel: &str) -> ChannelMessageEnvelope {
+        let env = EnvId::try_from("manual").expect("env id");
+        let tenant = TenantId::try_from("manual").expect("tenant id");
+        let mut metadata = MessageMetadata::new();
+        metadata.insert("universal".to_string(), "true".to_string());
+        metadata.insert("channel".to_string(), channel.to_string());
+        ChannelMessageEnvelope {
+            id: format!("tester-{channel}"),
+            tenant: TenantCtx::new(env.clone(), tenant.clone()),
+            channel: channel.to_string(),
+            session_id: channel.to_string(),
+            reply_scope: None,
+            from: None,
+            to: Vec::new(),
+            correlation_id: None,
+            text: Some("plan input".to_string()),
+            attachments: Vec::new(),
+            metadata,
+        }
+    }
 }

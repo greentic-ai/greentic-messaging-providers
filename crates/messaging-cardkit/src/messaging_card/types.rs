@@ -22,17 +22,12 @@ impl From<MessageCard> for Value {
     }
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Tier {
+    #[default]
     Basic,
     Advanced,
     Premium,
-}
-
-impl Default for Tier {
-    fn default() -> Self {
-        Tier::Basic
-    }
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]

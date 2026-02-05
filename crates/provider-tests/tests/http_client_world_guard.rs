@@ -19,14 +19,12 @@ fn providers_use_http_client_world() {
             let path = entry.path();
             if path.is_dir() {
                 visit(&path, offenders);
-            } else if let Some(ext) = path.extension() {
-                if ext == "wit" {
-                    if let Ok(text) = fs::read_to_string(&path) {
-                        if text.contains("greentic:http/http-client@") {
-                            offenders.push(path);
-                        }
-                    }
-                }
+            } else if let Some(ext) = path.extension()
+                && ext == "wit"
+                && let Ok(text) = fs::read_to_string(&path)
+                && text.contains("greentic:http/http-client@")
+            {
+                offenders.push(path);
             }
         }
     }
