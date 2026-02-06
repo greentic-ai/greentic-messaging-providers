@@ -991,8 +991,7 @@ mod tests {
                     package,
                     output.status,
                     String::from_utf8_lossy(&output.stdout),
-                    String::from_utf8_lossy(&output.stderr)
-                    ,
+                    String::from_utf8_lossy(&output.stderr),
                     rustup_targets.trim(),
                     cargo_component_version.trim()
                 );

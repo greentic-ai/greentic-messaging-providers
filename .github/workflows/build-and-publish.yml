@@ -181,7 +181,11 @@ jobs:
         run: rustup target add wasm32-wasip1
 
       - name: Cargo test
-        run: cargo test --workspace
+        env:
+          RUST_BACKTRACE: "1"
+        run: |
+          cargo test -p greentic-messaging-tester --bin greentic-messaging-tester -- --nocapture
+          cargo test --workspace
 
   pack-and-validate:
     runs-on: ubuntu-latest
