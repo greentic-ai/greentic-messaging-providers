@@ -954,18 +954,47 @@ mod tests {
             .join("target/components")
             .join(format!("{package}.wasm"));
         if !wasm_path.exists() {
+            eprintln!(
+                "component build missing: package={} wasm_path={}",
+                package,
+                wasm_path.display()
+            );
+            eprintln!(
+                "running: cargo component build -p {} (cwd={})",
+                package,
+                root.display()
+            );
             let output = Command::new("cargo")
                 .current_dir(&root)
                 .args(["component", "build", "-p", package])
                 .output()
                 .expect("failed to spawn cargo component build");
             if !output.status.success() {
+                let rustup_targets = Command::new("rustup")
+                    .args(["target", "list", "--installed"])
+                    .output()
+                    .ok()
+                    .map(|out| String::from_utf8_lossy(&out.stdout).to_string())
+                    .unwrap_or_else(|| "unavailable".to_string());
+                let cargo_component_version = Command::new("cargo")
+                    .args(["component", "--version"])
+                    .output()
+                    .ok()
+                    .map(|out| {
+                        let stdout = String::from_utf8_lossy(&out.stdout);
+                        let stderr = String::from_utf8_lossy(&out.stderr);
+                        format!("{stdout}{stderr}")
+                    })
+                    .unwrap_or_else(|| "unavailable".to_string());
                 panic!(
-                    "cargo component build failed for {} (status: {}):\nstdout:\n{}\nstderr:\n{}",
+                    "cargo component build failed for {} (status: {}):\nstdout:\n{}\nstderr:\n{}\nrustup targets: {}\ncargo-component: {}",
                     package,
                     output.status,
                     String::from_utf8_lossy(&output.stdout),
                     String::from_utf8_lossy(&output.stderr)
+                    ,
+                    rustup_targets.trim(),
+                    cargo_component_version.trim()
                 );
             }
         }
