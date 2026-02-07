@@ -3,6 +3,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use anyhow::{Context, Result, anyhow};
+use provider_tests::flow_gen::generate_flow_via_cli;
 use serde_json::Value;
 
 fn workspace_root() -> PathBuf {
@@ -205,6 +206,7 @@ fn pack_doctor_loads_validator() -> Result<()> {
     let pack_yaml = temp_dir.join("pack.yaml");
     replace_pack_version(&pack_yaml)?;
     run_metadata_generator(&root, &temp_dir)?;
+    generate_flow_via_cli(&temp_dir, "diagnostics", &[])?;
     let gtpack_path = build_gtpack(&temp_dir, "messaging-telegram")?;
 
     let output = Command::new("greentic-pack")
@@ -275,6 +277,7 @@ fn pack_doctor_skips_validator_without_extension() -> Result<()> {
     replace_pack_version(&pack_yaml)?;
     remove_validator_extension(&pack_yaml)?;
     run_metadata_generator(&root, &temp_dir)?;
+    generate_flow_via_cli(&temp_dir, "diagnostics", &[])?;
     let gtpack_path = build_gtpack(&temp_dir, "messaging-telegram")?;
 
     let output = Command::new("greentic-pack")

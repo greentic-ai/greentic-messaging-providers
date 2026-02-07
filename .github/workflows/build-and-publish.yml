@@ -470,6 +470,10 @@ jobs:
         run: |
           cargo binstall cargo-component --force --no-confirm --locked || cargo install cargo-component --force --locked
 
+      - name: Install greentic-flow
+        run: |
+          cargo binstall greentic-flow --force --no-confirm --locked || cargo install greentic-flow --force --locked
+
       - name: Download component artifacts
         uses: actions/download-artifact@v4
         with:
