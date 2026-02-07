@@ -52,7 +52,7 @@ jobs:
 
 
       - name: Build components
-        run: ./tools/build_components.sh
+        run: BUILD_COMPONENTS_JOBS="$(nproc)" ./tools/build_components.sh
 
       - name: Generate flows (packgen)
         run: ./ci/gen_flows.sh

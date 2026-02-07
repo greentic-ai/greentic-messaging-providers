@@ -40,7 +40,7 @@ jobs:
           version: 1.2.0
 
       - name: Build questions component
-        run: ./tools/build_components.sh
+        run: BUILD_COMPONENTS_JOBS="$(nproc)" ./tools/build_components.sh
 
       - name: Login to GHCR
         run: |
