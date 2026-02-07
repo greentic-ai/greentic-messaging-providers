@@ -199,7 +199,7 @@ jobs:
 
   gen-flows:
     runs-on: ubuntu-latest
-    needs: ensure-templates
+    needs: [ensure-templates, build-components]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -220,6 +220,23 @@ jobs:
           path: |
             ~/.cargo/bin
           key: cargo-bin-tools-${{ runner.os }}-v1
+
+      - name: Download component artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: components-wasm-*
+          path: target/components
+          merge-multiple: true
+
+      - name: Stage provision/questions wasm for packgen
+        run: |
+          mkdir -p components/provision components/questions
+          if [ -f target/components/provision.wasm ]; then
+            cp target/components/provision.wasm components/provision/provision.wasm
+          fi
+          if [ -f target/components/questions.wasm ]; then
+            cp target/components/questions.wasm components/questions/questions.wasm
+          fi
 
       - name: Step 06 - Generate flows
         run: ./ci/steps/06_gen_flows.sh
