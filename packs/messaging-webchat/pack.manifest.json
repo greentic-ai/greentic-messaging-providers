@@ -1033,5 +1033,5 @@
       "description": "Optional token used for webchat setup validation and conformance checks."
     }
   ],
-  "version": "0.4.31"
+  "version": "0.4.33"
 }

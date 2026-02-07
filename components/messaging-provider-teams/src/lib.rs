@@ -1,16 +1,16 @@
 use base64::{Engine, engine::general_purpose::STANDARD};
 use chrono::{DateTime, LocalResult, SecondsFormat, TimeZone, Utc};
-use greentic_types::{
-    Actor, ChannelMessageEnvelope, Destination, EnvId, MessageMetadata, TenantCtx, TenantId,
-};
-use messaging_universal_dto::{
+use greentic_types::messaging::universal_dto::{
     EncodeInV1, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
     SendPayloadInV1, SendPayloadResultV1, SubscriptionDeleteInV1, SubscriptionDeleteOutV1,
     SubscriptionEnsureInV1, SubscriptionEnsureOutV1, SubscriptionRenewInV1, SubscriptionRenewOutV1,
 };
+use greentic_types::{
+    Actor, ChannelMessageEnvelope, Destination, EnvId, MessageMetadata, TenantCtx, TenantId,
+};
 use serde::Deserialize;
 use serde_json::{Value, json};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fmt;
 use urlencoding::encode as url_encode;
 
@@ -465,7 +465,7 @@ fn encode_op(input_json: &[u8]) -> Vec<u8> {
         "channel_id": channel_id.clone(),
     });
     let body_bytes = serde_json::to_vec(&payload_body).unwrap_or_else(|_| b"{}".to_vec());
-    let mut metadata = HashMap::new();
+    let mut metadata = BTreeMap::new();
     if let Some(team) = team_id {
         metadata.insert("team_id".to_string(), Value::String(team));
     }

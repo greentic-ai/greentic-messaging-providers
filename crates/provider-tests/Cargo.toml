@@ -20,4 +20,3 @@ greentic-types = { workspace = true }
 insta = { workspace = true }
 hmac = { workspace = true }
 sha2 = { workspace = true }
-messaging-universal-dto = { workspace = true }

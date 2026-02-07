@@ -216,6 +216,7 @@ fn alias_tenant_ctx_to_host(
         team_id: ctx.team_id,
         user: ctx.user,
         user_id: ctx.user_id,
+        i18n_id: ctx.i18n_id,
         trace_id: ctx.trace_id,
         correlation_id: ctx.correlation_id,
         attributes: ctx.attributes,

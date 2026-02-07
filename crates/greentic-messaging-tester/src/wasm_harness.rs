@@ -470,6 +470,7 @@ fn alias_tenant_ctx_to_host(
         team_id: ctx.team_id,
         user: ctx.user,
         user_id: ctx.user_id,
+        i18n_id: ctx.i18n_id,
         trace_id: ctx.trace_id,
         correlation_id: ctx.correlation_id,
         attributes: ctx.attributes,
@@ -866,10 +867,10 @@ fn detect_available_worlds(engine: &Engine, component: &Component) -> Result<Vec
 #[cfg(test)]
 mod tests {
     use super::*;
+    use greentic_types::messaging::universal_dto::RenderPlanInV1;
     use greentic_types::{ChannelMessageEnvelope, EnvId, MessageMetadata, TenantCtx, TenantId};
-    use messaging_universal_dto::RenderPlanInV1;
     use serde_json::{Value, json};
-    use std::{collections::HashMap, path::PathBuf, process::Command};
+    use std::{collections::BTreeMap, collections::HashMap, path::PathBuf, process::Command};
 
     #[test]
     fn node_world_strategy_detected() {
@@ -928,7 +929,7 @@ mod tests {
         let envelope = build_test_envelope("webchat");
         let plan_in = RenderPlanInV1 {
             message: envelope,
-            metadata: HashMap::new(),
+            metadata: BTreeMap::new(),
         };
         let input_bytes = serde_json::to_vec(&plan_in).expect("serialize render_plan input");
         let history = http_mock::new_history();

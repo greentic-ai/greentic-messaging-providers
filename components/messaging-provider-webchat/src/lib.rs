@@ -1,13 +1,13 @@
 use base64::{Engine as _, engine::general_purpose};
-use greentic_types::{Actor, ChannelMessageEnvelope, EnvId, MessageMetadata, TenantCtx, TenantId};
-use messaging_universal_dto::{
+use greentic_types::messaging::universal_dto::{
     EncodeInV1, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
     SendPayloadInV1, SendPayloadResultV1,
 };
+use greentic_types::{Actor, ChannelMessageEnvelope, EnvId, MessageMetadata, TenantCtx, TenantId};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 mod bindings {
     wit_bindgen::generate!({
@@ -296,7 +296,7 @@ fn encode_op(input_json: &[u8]) -> Vec<u8> {
         "session_id": encode_in.message.session_id,
     });
     let body_bytes = serde_json::to_vec(&payload_body).unwrap_or_else(|_| b"{}".to_vec());
-    let mut metadata = HashMap::new();
+    let mut metadata = BTreeMap::new();
     metadata.insert("route".to_string(), Value::String(route_value.clone()));
     metadata.insert("method".to_string(), Value::String("POST".to_string()));
     let payload = ProviderPayloadV1 {

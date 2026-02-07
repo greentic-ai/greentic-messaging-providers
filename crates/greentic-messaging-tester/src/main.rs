@@ -4,7 +4,7 @@ mod values;
 mod wasm_harness;
 
 use std::{
-    collections::HashMap,
+    collections::{BTreeMap, HashMap},
     fs::File,
     io::{self, Write},
     path::{Path, PathBuf},
@@ -24,14 +24,14 @@ use base64::{Engine, engine::general_purpose::STANDARD};
 use clap::{ArgGroup, Parser, Subcommand};
 use greentic_interfaces_wasmtime::host_helpers::v1::http_client;
 use greentic_messaging_planned::encode_from_render_plan;
+use greentic_types::messaging::universal_dto::{
+    Header, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, SendPayloadInV1,
+    SendPayloadResultV1,
+};
 use greentic_types::{
     ChannelMessageEnvelope, Destination, EnvId, MessageMetadata, TenantCtx, TenantId,
 };
 use http::Request;
-use messaging_universal_dto::{
-    Header, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, SendPayloadInV1,
-    SendPayloadResultV1,
-};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use tokio::net::TcpListener;
@@ -288,7 +288,7 @@ fn handle_send(
     let message = build_message_envelope(&provider, final_text, card_value, metadata, destinations);
     let plan_in = RenderPlanInV1 {
         message: message.clone(),
-        metadata: HashMap::new(),
+        metadata: BTreeMap::new(),
     };
     let harness = WasmHarness::new(&provider).map_err(CliError::WasmLoad)?;
     let history = new_history();
@@ -818,7 +818,7 @@ mod tests {
     use crate::http_mock::{self, HttpMode, HttpResponseQueue, new_history, new_response_queue};
     use crate::wasm_harness::WasmHarness;
     use base64::{Engine, engine::general_purpose::STANDARD};
-    use messaging_universal_dto::{HttpInV1, HttpOutV1};
+    use greentic_types::messaging::universal_dto::{HttpInV1, HttpOutV1};
     use serde_json::json;
     use std::collections::HashMap;
 

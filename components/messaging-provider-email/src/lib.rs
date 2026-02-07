@@ -1,6 +1,6 @@
 use base64::{Engine, engine::general_purpose::STANDARD};
 use chrono::{DateTime, Duration, SecondsFormat, TimeZone, Utc};
-use messaging_universal_dto::{
+use greentic_types::messaging::universal_dto::{
     AuthUserRefV1, EncodeInV1, Header, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1,
     RenderPlanOutV1, SendPayloadInV1, SendPayloadResultV1, SubscriptionDeleteInV1,
     SubscriptionDeleteOutV1, SubscriptionEnsureInV1, SubscriptionEnsureOutV1,
@@ -9,7 +9,7 @@ use messaging_universal_dto::{
 use serde::Deserialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use urlencoding::decode as url_decode;
 
 mod bindings {
@@ -353,7 +353,7 @@ fn encode_op(input_json: &[u8]) -> Vec<u8> {
         "body": text,
     });
     let body_bytes = serde_json::to_vec(&payload_body).unwrap_or_else(|_| b"{}".to_vec());
-    let mut metadata = HashMap::new();
+    let mut metadata = BTreeMap::new();
     metadata.insert("to".to_string(), Value::String(to));
     metadata.insert("subject".to_string(), Value::String(subject));
     metadata.insert("method".to_string(), Value::String("POST".to_string()));

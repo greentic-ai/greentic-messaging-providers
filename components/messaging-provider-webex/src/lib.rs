@@ -1,15 +1,15 @@
 use base64::{Engine, engine::general_purpose::STANDARD};
+use greentic_types::messaging::universal_dto::{
+    EncodeInV1, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
+    SendPayloadInV1, SendPayloadResultV1,
+};
 use greentic_types::{
     Actor, Attachment, ChannelMessageEnvelope, Destination, EnvId, MessageMetadata, TenantCtx,
     TenantId,
 };
-use messaging_universal_dto::{
-    EncodeInV1, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
-    SendPayloadInV1, SendPayloadResultV1,
-};
 use serde::Deserialize;
 use serde_json::{Value, json};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 mod bindings {
     wit_bindgen::generate!({
@@ -991,7 +991,7 @@ fn encode_op(input_json: &[u8]) -> Vec<u8> {
     let payload = ProviderPayloadV1 {
         content_type: "application/json".to_string(),
         body_b64: STANDARD.encode(&body_bytes),
-        metadata: HashMap::new(),
+        metadata: BTreeMap::new(),
     };
     json_bytes(&json!({"ok": true, "payload": payload}))
 }

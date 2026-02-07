@@ -1,5 +1,5 @@
 pack_id: messaging-whatsapp
-version: 0.4.31
+version: 0.4.33
 kind: application
 publisher: Greentic
 components:

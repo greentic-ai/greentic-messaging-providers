@@ -1331,5 +1331,5 @@
       "description": "Slack bot token used for chat.postMessage calls."
     }
   ],
-  "version": "0.4.31"
+  "version": "0.4.33"
 }

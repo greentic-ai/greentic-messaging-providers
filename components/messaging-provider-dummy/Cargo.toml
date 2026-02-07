@@ -15,7 +15,6 @@ sha2.workspace = true
 greentic-types.workspace = true
 wit-bindgen.workspace = true
 base64.workspace = true
-messaging-universal-dto.workspace = true
 
 [package.metadata.component.target]
 path = "wit/messaging-provider-dummy"

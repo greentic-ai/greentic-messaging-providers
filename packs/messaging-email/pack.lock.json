@@ -16,7 +16,7 @@
     {
       "name": "setup_custom___setup_custom__apply",
       "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-email/flows/../components/provision/provision.wasm",
-      "digest": "sha256:2d25bd09e40751331afd3737cb87381bb38da370b463bca3033483d1f0916caf",
+      "digest": "sha256:aefb869a8b1fd13012e3eacb3f69137182404dc751e10f9bfcac85f089f9546a",
       "component_id": "ai.greentic.component-provision"
     },
     {
@@ -28,13 +28,13 @@
     {
       "name": "setup_custom___setup_custom__emit_questions",
       "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-email/flows/../components/questions/questions.wasm",
-      "digest": "sha256:63b1affd7ceb76f2eb815e185bf75f3e58f9f93b8ccd720059184358cb60ba31",
+      "digest": "sha256:d076d587ea2e2435f6781747ffc7876c981130091fed659425f6a17e860a4375",
       "component_id": "ai.greentic.component-questions"
     },
     {
       "name": "setup_default___setup_default__apply",
       "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-email/flows/../components/provision/provision.wasm",
-      "digest": "sha256:2d25bd09e40751331afd3737cb87381bb38da370b463bca3033483d1f0916caf",
+      "digest": "sha256:aefb869a8b1fd13012e3eacb3f69137182404dc751e10f9bfcac85f089f9546a",
       "component_id": "ai.greentic.component-provision"
     },
     {
@@ -46,7 +46,7 @@
     {
       "name": "setup_default___setup_default__emit_questions",
       "ref": "file:///Users/maarten/Documents/GitHub/agentic/greentic-messaging-providers/packs/messaging-email/flows/../components/questions/questions.wasm",
-      "digest": "sha256:63b1affd7ceb76f2eb815e185bf75f3e58f9f93b8ccd720059184358cb60ba31",
+      "digest": "sha256:d076d587ea2e2435f6781747ffc7876c981130091fed659425f6a17e860a4375",
       "component_id": "ai.greentic.component-questions"
     },
     {

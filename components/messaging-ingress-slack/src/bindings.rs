@@ -114,11 +114,11 @@ pub mod greentic {
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 48 + 56 * ::core::mem::size_of::<*const u8>()],
+                        >; 56 + 58 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 48
-                            + 56 * ::core::mem::size_of::<*const u8>()],
+                        [::core::mem::MaybeUninit::uninit(); 56
+                            + 58 * ::core::mem::size_of::<*const u8>()],
                     );
                     let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                     let Request {
@@ -284,6 +284,7 @@ pub mod greentic {
                                 user: user10,
                                 user_id: user_id10,
                                 trace_id: trace_id10,
+                                i18n_id: i18n_id10,
                                 correlation_id: correlation_id10,
                                 attributes: attributes10,
                                 session_id: session_id10,
@@ -427,7 +428,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match correlation_id10 {
+                            match i18n_id10 {
                                 Some(e) => {
                                     *ptr0
                                         .add(32 + 29 * ::core::mem::size_of::<*const u8>())
@@ -448,72 +449,72 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            let vec23 = attributes10;
-                            let len23 = vec23.len();
-                            let layout23 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec23.len() * (4 * ::core::mem::size_of::<*const u8>()),
+                            match correlation_id10 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(32 + 32 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    let vec20 = e;
+                                    let ptr20 = vec20.as_ptr().cast::<u8>();
+                                    let len20 = vec20.len();
+                                    *ptr0
+                                        .add(32 + 34 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len20;
+                                    *ptr0
+                                        .add(32 + 33 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr20.cast_mut();
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(32 + 32 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                            let vec24 = attributes10;
+                            let len24 = vec24.len();
+                            let layout24 = _rt::alloc::Layout::from_size_align_unchecked(
+                                vec24.len() * (4 * ::core::mem::size_of::<*const u8>()),
                                 ::core::mem::size_of::<*const u8>(),
                             );
-                            let result23 = if layout23.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout23).cast::<u8>();
+                            let result24 = if layout24.size() != 0 {
+                                let ptr = _rt::alloc::alloc(layout24).cast::<u8>();
                                 if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout23);
+                                    _rt::alloc::handle_alloc_error(layout24);
                                 }
                                 ptr
                             } else {
                                 ::core::ptr::null_mut()
                             };
-                            for (i, e) in vec23.into_iter().enumerate() {
-                                let base = result23
+                            for (i, e) in vec24.into_iter().enumerate() {
+                                let base = result24
                                     .add(i * (4 * ::core::mem::size_of::<*const u8>()));
                                 {
-                                    let (t20_0, t20_1) = e;
-                                    let vec21 = t20_0;
-                                    let ptr21 = vec21.as_ptr().cast::<u8>();
-                                    let len21 = vec21.len();
-                                    *base
-                                        .add(::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len21;
-                                    *base.add(0).cast::<*mut u8>() = ptr21.cast_mut();
-                                    let vec22 = t20_1;
+                                    let (t21_0, t21_1) = e;
+                                    let vec22 = t21_0;
                                     let ptr22 = vec22.as_ptr().cast::<u8>();
                                     let len22 = vec22.len();
                                     *base
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(::core::mem::size_of::<*const u8>())
                                         .cast::<usize>() = len22;
+                                    *base.add(0).cast::<*mut u8>() = ptr22.cast_mut();
+                                    let vec23 = t21_1;
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
+                                    *base
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len23;
                                     *base
                                         .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr22.cast_mut();
+                                        .cast::<*mut u8>() = ptr23.cast_mut();
                                 }
                             }
                             *ptr0
-                                .add(32 + 33 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len23;
+                                .add(32 + 36 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len24;
                             *ptr0
-                                .add(32 + 32 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = result23;
+                                .add(32 + 35 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = result24;
                             match session_id10 {
-                                Some(e) => {
-                                    *ptr0
-                                        .add(32 + 34 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (1i32) as u8;
-                                    let vec24 = e;
-                                    let ptr24 = vec24.as_ptr().cast::<u8>();
-                                    let len24 = vec24.len();
-                                    *ptr0
-                                        .add(32 + 36 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len24;
-                                    *ptr0
-                                        .add(32 + 35 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr24.cast_mut();
-                                }
-                                None => {
-                                    *ptr0
-                                        .add(32 + 34 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (0i32) as u8;
-                                }
-                            };
-                            match flow_id10 {
                                 Some(e) => {
                                     *ptr0
                                         .add(32 + 37 * ::core::mem::size_of::<*const u8>())
@@ -534,7 +535,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match node_id10 {
+                            match flow_id10 {
                                 Some(e) => {
                                     *ptr0
                                         .add(32 + 40 * ::core::mem::size_of::<*const u8>())
@@ -555,7 +556,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match provider_id10 {
+                            match node_id10 {
                                 Some(e) => {
                                     *ptr0
                                         .add(32 + 43 * ::core::mem::size_of::<*const u8>())
@@ -576,14 +577,20 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match deadline_ms10 {
+                            match provider_id10 {
                                 Some(e) => {
                                     *ptr0
                                         .add(32 + 46 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
+                                    let vec28 = e;
+                                    let ptr28 = vec28.as_ptr().cast::<u8>();
+                                    let len28 = vec28.len();
                                     *ptr0
-                                        .add(40 + 46 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<i64>() = _rt::as_i64(e);
+                                        .add(32 + 48 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len28;
+                                    *ptr0
+                                        .add(32 + 47 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr28.cast_mut();
                                 }
                                 None => {
                                     *ptr0
@@ -591,77 +598,92 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
+                            match deadline_ms10 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(40 + 48 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    *ptr0
+                                        .add(48 + 48 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<i64>() = _rt::as_i64(e);
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(40 + 48 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
                             *ptr0
-                                .add(48 + 46 * ::core::mem::size_of::<*const u8>())
+                                .add(56 + 48 * ::core::mem::size_of::<*const u8>())
                                 .cast::<i32>() = _rt::as_i32(attempt10);
                             match idempotency_key10 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(48 + 47 * ::core::mem::size_of::<*const u8>())
+                                        .add(56 + 49 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
-                                    let vec28 = e;
-                                    let ptr28 = vec28.as_ptr().cast::<u8>();
-                                    let len28 = vec28.len();
+                                    let vec29 = e;
+                                    let ptr29 = vec29.as_ptr().cast::<u8>();
+                                    let len29 = vec29.len();
                                     *ptr0
-                                        .add(48 + 49 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len28;
+                                        .add(56 + 51 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len29;
                                     *ptr0
-                                        .add(48 + 48 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr28.cast_mut();
+                                        .add(56 + 50 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr29.cast_mut();
                                 }
                                 None => {
                                     *ptr0
-                                        .add(48 + 47 * ::core::mem::size_of::<*const u8>())
+                                        .add(56 + 49 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
                             match impersonation10 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(48 + 50 * ::core::mem::size_of::<*const u8>())
+                                        .add(56 + 52 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
                                     let super::super::super::greentic::interfaces_types::types::Impersonation {
-                                        actor_id: actor_id29,
-                                        reason: reason29,
+                                        actor_id: actor_id30,
+                                        reason: reason30,
                                     } = e;
-                                    let vec30 = actor_id29;
-                                    let ptr30 = vec30.as_ptr().cast::<u8>();
-                                    let len30 = vec30.len();
+                                    let vec31 = actor_id30;
+                                    let ptr31 = vec31.as_ptr().cast::<u8>();
+                                    let len31 = vec31.len();
                                     *ptr0
-                                        .add(48 + 52 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len30;
+                                        .add(56 + 54 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len31;
                                     *ptr0
-                                        .add(48 + 51 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr30.cast_mut();
-                                    match reason29 {
+                                        .add(56 + 53 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr31.cast_mut();
+                                    match reason30 {
                                         Some(e) => {
                                             *ptr0
-                                                .add(48 + 53 * ::core::mem::size_of::<*const u8>())
+                                                .add(56 + 55 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (1i32) as u8;
-                                            let vec31 = e;
-                                            let ptr31 = vec31.as_ptr().cast::<u8>();
-                                            let len31 = vec31.len();
+                                            let vec32 = e;
+                                            let ptr32 = vec32.as_ptr().cast::<u8>();
+                                            let len32 = vec32.len();
                                             *ptr0
-                                                .add(48 + 55 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<usize>() = len31;
+                                                .add(56 + 57 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<usize>() = len32;
                                             *ptr0
-                                                .add(48 + 54 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<*mut u8>() = ptr31.cast_mut();
+                                                .add(56 + 56 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<*mut u8>() = ptr32.cast_mut();
                                         }
                                         None => {
                                             *ptr0
-                                                .add(48 + 53 * ::core::mem::size_of::<*const u8>())
+                                                .add(56 + 55 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                 }
                                 None => {
                                     *ptr0
-                                        .add(48 + 50 * ::core::mem::size_of::<*const u8>())
+                                        .add(56 + 52 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            cleanup_list.extend_from_slice(&[(result23, layout23)]);
+                            cleanup_list.extend_from_slice(&[(result24, layout24)]);
                         }
                         None => {
                             *ptr0
@@ -669,91 +691,91 @@ pub mod greentic {
                                 .cast::<u8>() = (0i32) as u8;
                         }
                     };
-                    let ptr32 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    let ptr33 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "greentic:http/client@1.1.0")]
                     unsafe extern "C" {
                         #[link_name = "send"]
-                        fn wit_import33(_: *mut u8, _: *mut u8);
+                        fn wit_import34(_: *mut u8, _: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import33(_: *mut u8, _: *mut u8) {
+                    unsafe extern "C" fn wit_import34(_: *mut u8, _: *mut u8) {
                         unreachable!()
                     }
-                    unsafe { wit_import33(ptr0, ptr32) };
-                    let l34 = i32::from(*ptr32.add(0).cast::<u8>());
-                    let result55 = match l34 {
+                    unsafe { wit_import34(ptr0, ptr33) };
+                    let l35 = i32::from(*ptr33.add(0).cast::<u8>());
+                    let result56 = match l35 {
                         0 => {
                             let e = {
-                                let l35 = i32::from(
-                                    *ptr32
+                                let l36 = i32::from(
+                                    *ptr33
                                         .add(::core::mem::size_of::<*const u8>())
                                         .cast::<u16>(),
                                 );
-                                let l36 = *ptr32
+                                let l37 = *ptr33
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l37 = *ptr32
+                                let l38 = *ptr33
                                     .add(3 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let base44 = l36;
-                                let len44 = l37;
-                                let mut result44 = _rt::Vec::with_capacity(len44);
-                                for i in 0..len44 {
-                                    let base = base44
+                                let base45 = l37;
+                                let len45 = l38;
+                                let mut result45 = _rt::Vec::with_capacity(len45);
+                                for i in 0..len45 {
+                                    let base = base45
                                         .add(i * (4 * ::core::mem::size_of::<*const u8>()));
-                                    let e44 = {
-                                        let l38 = *base.add(0).cast::<*mut u8>();
-                                        let l39 = *base
+                                    let e45 = {
+                                        let l39 = *base.add(0).cast::<*mut u8>();
+                                        let l40 = *base
                                             .add(::core::mem::size_of::<*const u8>())
                                             .cast::<usize>();
-                                        let len40 = l39;
-                                        let bytes40 = _rt::Vec::from_raw_parts(
-                                            l38.cast(),
-                                            len40,
-                                            len40,
+                                        let len41 = l40;
+                                        let bytes41 = _rt::Vec::from_raw_parts(
+                                            l39.cast(),
+                                            len41,
+                                            len41,
                                         );
-                                        let l41 = *base
+                                        let l42 = *base
                                             .add(2 * ::core::mem::size_of::<*const u8>())
                                             .cast::<*mut u8>();
-                                        let l42 = *base
+                                        let l43 = *base
                                             .add(3 * ::core::mem::size_of::<*const u8>())
                                             .cast::<usize>();
-                                        let len43 = l42;
-                                        let bytes43 = _rt::Vec::from_raw_parts(
-                                            l41.cast(),
-                                            len43,
-                                            len43,
+                                        let len44 = l43;
+                                        let bytes44 = _rt::Vec::from_raw_parts(
+                                            l42.cast(),
+                                            len44,
+                                            len44,
                                         );
-                                        (_rt::string_lift(bytes40), _rt::string_lift(bytes43))
+                                        (_rt::string_lift(bytes41), _rt::string_lift(bytes44))
                                     };
-                                    result44.push(e44);
+                                    result45.push(e45);
                                 }
                                 _rt::cabi_dealloc(
-                                    base44,
-                                    len44 * (4 * ::core::mem::size_of::<*const u8>()),
+                                    base45,
+                                    len45 * (4 * ::core::mem::size_of::<*const u8>()),
                                     ::core::mem::size_of::<*const u8>(),
                                 );
-                                let l45 = i32::from(
-                                    *ptr32
+                                let l46 = i32::from(
+                                    *ptr33
                                         .add(4 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>(),
                                 );
                                 Response {
-                                    status: l35 as u16,
-                                    headers: result44,
-                                    body: match l45 {
+                                    status: l36 as u16,
+                                    headers: result45,
+                                    body: match l46 {
                                         0 => None,
                                         1 => {
                                             let e = {
-                                                let l46 = *ptr32
+                                                let l47 = *ptr33
                                                     .add(5 * ::core::mem::size_of::<*const u8>())
                                                     .cast::<*mut u8>();
-                                                let l47 = *ptr32
+                                                let l48 = *ptr33
                                                     .add(6 * ::core::mem::size_of::<*const u8>())
                                                     .cast::<usize>();
-                                                let len48 = l47;
-                                                _rt::Vec::from_raw_parts(l46.cast(), len48, len48)
+                                                let len49 = l48;
+                                                _rt::Vec::from_raw_parts(l47.cast(), len49, len49)
                                             };
                                             Some(e)
                                         }
@@ -765,33 +787,33 @@ pub mod greentic {
                         }
                         1 => {
                             let e = {
-                                let l49 = *ptr32
+                                let l50 = *ptr33
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l50 = *ptr32
+                                let l51 = *ptr33
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len51 = l50;
-                                let bytes51 = _rt::Vec::from_raw_parts(
-                                    l49.cast(),
-                                    len51,
-                                    len51,
+                                let len52 = l51;
+                                let bytes52 = _rt::Vec::from_raw_parts(
+                                    l50.cast(),
+                                    len52,
+                                    len52,
                                 );
-                                let l52 = *ptr32
+                                let l53 = *ptr33
                                     .add(3 * ::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l53 = *ptr32
+                                let l54 = *ptr33
                                     .add(4 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len54 = l53;
-                                let bytes54 = _rt::Vec::from_raw_parts(
-                                    l52.cast(),
-                                    len54,
-                                    len54,
+                                let len55 = l54;
+                                let bytes55 = _rt::Vec::from_raw_parts(
+                                    l53.cast(),
+                                    len55,
+                                    len55,
                                 );
                                 HostError {
-                                    code: _rt::string_lift(bytes51),
-                                    message: _rt::string_lift(bytes54),
+                                    code: _rt::string_lift(bytes52),
+                                    message: _rt::string_lift(bytes55),
                                 }
                             };
                             Err(e)
@@ -806,7 +828,7 @@ pub mod greentic {
                             _rt::alloc::dealloc(ptr.cast(), layout);
                         }
                     }
-                    result55
+                    result56
                 }
             }
         }
@@ -858,6 +880,7 @@ pub mod greentic {
                 pub user: Option<UserId>,
                 pub user_id: Option<UserId>,
                 pub trace_id: Option<_rt::String>,
+                pub i18n_id: Option<_rt::String>,
                 pub correlation_id: Option<_rt::String>,
                 pub attributes: _rt::Vec<(_rt::String, _rt::String)>,
                 pub session_id: Option<_rt::String>,
@@ -883,6 +906,7 @@ pub mod greentic {
                         .field("user", &self.user)
                         .field("user-id", &self.user_id)
                         .field("trace-id", &self.trace_id)
+                        .field("i18n-id", &self.i18n_id)
                         .field("correlation-id", &self.correlation_id)
                         .field("attributes", &self.attributes)
                         .field("session-id", &self.session_id)
@@ -967,6 +991,56 @@ pub mod greentic {
                         7 => ErrorCode::RateLimited,
                         8 => ErrorCode::Unavailable,
                         9 => ErrorCode::Internal,
+                        _ => panic!("invalid enum discriminant"),
+                    }
+                }
+            }
+            /// Standard error codes returned by host services.
+            #[repr(u8)]
+            #[derive(Clone, Copy, Eq, Ord, PartialEq, PartialOrd)]
+            pub enum IfaceError {
+                InvalidArg,
+                NotFound,
+                Denied,
+                Unavailable,
+                Internal,
+            }
+            impl ::core::fmt::Debug for IfaceError {
+                fn fmt(
+                    &self,
+                    f: &mut ::core::fmt::Formatter<'_>,
+                ) -> ::core::fmt::Result {
+                    match self {
+                        IfaceError::InvalidArg => {
+                            f.debug_tuple("IfaceError::InvalidArg").finish()
+                        }
+                        IfaceError::NotFound => {
+                            f.debug_tuple("IfaceError::NotFound").finish()
+                        }
+                        IfaceError::Denied => {
+                            f.debug_tuple("IfaceError::Denied").finish()
+                        }
+                        IfaceError::Unavailable => {
+                            f.debug_tuple("IfaceError::Unavailable").finish()
+                        }
+                        IfaceError::Internal => {
+                            f.debug_tuple("IfaceError::Internal").finish()
+                        }
+                    }
+                }
+            }
+            impl IfaceError {
+                #[doc(hidden)]
+                pub unsafe fn _lift(val: u8) -> IfaceError {
+                    if !cfg!(debug_assertions) {
+                        return ::core::mem::transmute(val);
+                    }
+                    match val {
+                        0 => IfaceError::InvalidArg,
+                        1 => IfaceError::NotFound,
+                        2 => IfaceError::Denied,
+                        3 => IfaceError::Unavailable,
+                        4 => IfaceError::Internal,
                         _ => panic!("invalid enum discriminant"),
                     }
                 }
@@ -1231,11 +1305,11 @@ pub mod greentic {
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 24 + 50 * ::core::mem::size_of::<*const u8>()],
+                        >; 32 + 52 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 24
-                            + 50 * ::core::mem::size_of::<*const u8>()],
+                        [::core::mem::MaybeUninit::uninit(); 32
+                            + 52 * ::core::mem::size_of::<*const u8>()],
                     );
                     let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                     let vec1 = key;
@@ -1257,6 +1331,7 @@ pub mod greentic {
                                 user: user2,
                                 user_id: user_id2,
                                 trace_id: trace_id2,
+                                i18n_id: i18n_id2,
                                 correlation_id: correlation_id2,
                                 attributes: attributes2,
                                 session_id: session_id2,
@@ -1400,7 +1475,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match correlation_id2 {
+                            match i18n_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 23 * ::core::mem::size_of::<*const u8>())
@@ -1421,72 +1496,72 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            let vec15 = attributes2;
-                            let len15 = vec15.len();
-                            let layout15 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec15.len() * (4 * ::core::mem::size_of::<*const u8>()),
+                            match correlation_id2 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(8 + 26 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    let vec12 = e;
+                                    let ptr12 = vec12.as_ptr().cast::<u8>();
+                                    let len12 = vec12.len();
+                                    *ptr0
+                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len12;
+                                    *ptr0
+                                        .add(8 + 27 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr12.cast_mut();
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(8 + 26 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                            let vec16 = attributes2;
+                            let len16 = vec16.len();
+                            let layout16 = _rt::alloc::Layout::from_size_align_unchecked(
+                                vec16.len() * (4 * ::core::mem::size_of::<*const u8>()),
                                 ::core::mem::size_of::<*const u8>(),
                             );
-                            let result15 = if layout15.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout15).cast::<u8>();
+                            let result16 = if layout16.size() != 0 {
+                                let ptr = _rt::alloc::alloc(layout16).cast::<u8>();
                                 if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout15);
+                                    _rt::alloc::handle_alloc_error(layout16);
                                 }
                                 ptr
                             } else {
                                 ::core::ptr::null_mut()
                             };
-                            for (i, e) in vec15.into_iter().enumerate() {
-                                let base = result15
+                            for (i, e) in vec16.into_iter().enumerate() {
+                                let base = result16
                                     .add(i * (4 * ::core::mem::size_of::<*const u8>()));
                                 {
-                                    let (t12_0, t12_1) = e;
-                                    let vec13 = t12_0;
-                                    let ptr13 = vec13.as_ptr().cast::<u8>();
-                                    let len13 = vec13.len();
-                                    *base
-                                        .add(::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len13;
-                                    *base.add(0).cast::<*mut u8>() = ptr13.cast_mut();
-                                    let vec14 = t12_1;
+                                    let (t13_0, t13_1) = e;
+                                    let vec14 = t13_0;
                                     let ptr14 = vec14.as_ptr().cast::<u8>();
                                     let len14 = vec14.len();
                                     *base
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(::core::mem::size_of::<*const u8>())
                                         .cast::<usize>() = len14;
+                                    *base.add(0).cast::<*mut u8>() = ptr14.cast_mut();
+                                    let vec15 = t13_1;
+                                    let ptr15 = vec15.as_ptr().cast::<u8>();
+                                    let len15 = vec15.len();
+                                    *base
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len15;
                                     *base
                                         .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr14.cast_mut();
+                                        .cast::<*mut u8>() = ptr15.cast_mut();
                                 }
                             }
                             *ptr0
-                                .add(8 + 27 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len15;
+                                .add(8 + 30 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len16;
                             *ptr0
-                                .add(8 + 26 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = result15;
+                                .add(8 + 29 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = result16;
                             match session_id2 {
-                                Some(e) => {
-                                    *ptr0
-                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (1i32) as u8;
-                                    let vec16 = e;
-                                    let ptr16 = vec16.as_ptr().cast::<u8>();
-                                    let len16 = vec16.len();
-                                    *ptr0
-                                        .add(8 + 30 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len16;
-                                    *ptr0
-                                        .add(8 + 29 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr16.cast_mut();
-                                }
-                                None => {
-                                    *ptr0
-                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (0i32) as u8;
-                                }
-                            };
-                            match flow_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 31 * ::core::mem::size_of::<*const u8>())
@@ -1507,7 +1582,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match node_id2 {
+                            match flow_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 34 * ::core::mem::size_of::<*const u8>())
@@ -1528,7 +1603,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match provider_id2 {
+                            match node_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 37 * ::core::mem::size_of::<*const u8>())
@@ -1549,14 +1624,20 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match deadline_ms2 {
+                            match provider_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 40 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
+                                    let vec20 = e;
+                                    let ptr20 = vec20.as_ptr().cast::<u8>();
+                                    let len20 = vec20.len();
                                     *ptr0
-                                        .add(16 + 40 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<i64>() = _rt::as_i64(e);
+                                        .add(8 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len20;
+                                    *ptr0
+                                        .add(8 + 41 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr20.cast_mut();
                                 }
                                 None => {
                                     *ptr0
@@ -1564,77 +1645,92 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
+                            match deadline_ms2 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(16 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    *ptr0
+                                        .add(24 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<i64>() = _rt::as_i64(e);
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(16 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
                             *ptr0
-                                .add(24 + 40 * ::core::mem::size_of::<*const u8>())
+                                .add(32 + 42 * ::core::mem::size_of::<*const u8>())
                                 .cast::<i32>() = _rt::as_i32(attempt2);
                             match idempotency_key2 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(24 + 41 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 43 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
-                                    let vec20 = e;
-                                    let ptr20 = vec20.as_ptr().cast::<u8>();
-                                    let len20 = vec20.len();
+                                    let vec21 = e;
+                                    let ptr21 = vec21.as_ptr().cast::<u8>();
+                                    let len21 = vec21.len();
                                     *ptr0
-                                        .add(24 + 43 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len20;
+                                        .add(32 + 45 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len21;
                                     *ptr0
-                                        .add(24 + 42 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr20.cast_mut();
+                                        .add(32 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr21.cast_mut();
                                 }
                                 None => {
                                     *ptr0
-                                        .add(24 + 41 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 43 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
                             match impersonation2 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(24 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 46 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
                                     let super::super::super::greentic::interfaces_types::types::Impersonation {
-                                        actor_id: actor_id21,
-                                        reason: reason21,
+                                        actor_id: actor_id22,
+                                        reason: reason22,
                                     } = e;
-                                    let vec22 = actor_id21;
-                                    let ptr22 = vec22.as_ptr().cast::<u8>();
-                                    let len22 = vec22.len();
+                                    let vec23 = actor_id22;
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
                                     *ptr0
-                                        .add(24 + 46 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len22;
+                                        .add(32 + 48 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len23;
                                     *ptr0
-                                        .add(24 + 45 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr22.cast_mut();
-                                    match reason21 {
+                                        .add(32 + 47 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr23.cast_mut();
+                                    match reason22 {
                                         Some(e) => {
                                             *ptr0
-                                                .add(24 + 47 * ::core::mem::size_of::<*const u8>())
+                                                .add(32 + 49 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (1i32) as u8;
-                                            let vec23 = e;
-                                            let ptr23 = vec23.as_ptr().cast::<u8>();
-                                            let len23 = vec23.len();
+                                            let vec24 = e;
+                                            let ptr24 = vec24.as_ptr().cast::<u8>();
+                                            let len24 = vec24.len();
                                             *ptr0
-                                                .add(24 + 49 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<usize>() = len23;
+                                                .add(32 + 51 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<usize>() = len24;
                                             *ptr0
-                                                .add(24 + 48 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<*mut u8>() = ptr23.cast_mut();
+                                                .add(32 + 50 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<*mut u8>() = ptr24.cast_mut();
                                         }
                                         None => {
                                             *ptr0
-                                                .add(24 + 47 * ::core::mem::size_of::<*const u8>())
+                                                .add(32 + 49 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                 }
                                 None => {
                                     *ptr0
-                                        .add(24 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 46 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            cleanup_list.extend_from_slice(&[(result15, layout15)]);
+                            cleanup_list.extend_from_slice(&[(result16, layout16)]);
                         }
                         None => {
                             *ptr0
@@ -1642,62 +1738,62 @@ pub mod greentic {
                                 .cast::<u8>() = (0i32) as u8;
                         }
                     };
-                    let ptr24 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    let ptr25 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "greentic:state/state-store@1.0.0")]
                     unsafe extern "C" {
                         #[link_name = "read"]
-                        fn wit_import25(_: *mut u8, _: *mut u8);
+                        fn wit_import26(_: *mut u8, _: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import25(_: *mut u8, _: *mut u8) {
+                    unsafe extern "C" fn wit_import26(_: *mut u8, _: *mut u8) {
                         unreachable!()
                     }
-                    unsafe { wit_import25(ptr0, ptr24) };
-                    let l26 = i32::from(*ptr24.add(0).cast::<u8>());
-                    let result36 = match l26 {
+                    unsafe { wit_import26(ptr0, ptr25) };
+                    let l27 = i32::from(*ptr25.add(0).cast::<u8>());
+                    let result37 = match l27 {
                         0 => {
                             let e = {
-                                let l27 = *ptr24
+                                let l28 = *ptr25
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l28 = *ptr24
+                                let l29 = *ptr25
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len29 = l28;
-                                _rt::Vec::from_raw_parts(l27.cast(), len29, len29)
+                                let len30 = l29;
+                                _rt::Vec::from_raw_parts(l28.cast(), len30, len30)
                             };
                             Ok(e)
                         }
                         1 => {
                             let e = {
-                                let l30 = *ptr24
+                                let l31 = *ptr25
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l31 = *ptr24
+                                let l32 = *ptr25
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len32 = l31;
-                                let bytes32 = _rt::Vec::from_raw_parts(
-                                    l30.cast(),
-                                    len32,
-                                    len32,
+                                let len33 = l32;
+                                let bytes33 = _rt::Vec::from_raw_parts(
+                                    l31.cast(),
+                                    len33,
+                                    len33,
                                 );
-                                let l33 = *ptr24
+                                let l34 = *ptr25
                                     .add(3 * ::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l34 = *ptr24
+                                let l35 = *ptr25
                                     .add(4 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len35 = l34;
-                                let bytes35 = _rt::Vec::from_raw_parts(
-                                    l33.cast(),
-                                    len35,
-                                    len35,
+                                let len36 = l35;
+                                let bytes36 = _rt::Vec::from_raw_parts(
+                                    l34.cast(),
+                                    len36,
+                                    len36,
                                 );
                                 HostError {
-                                    code: _rt::string_lift(bytes32),
-                                    message: _rt::string_lift(bytes35),
+                                    code: _rt::string_lift(bytes33),
+                                    message: _rt::string_lift(bytes36),
                                 }
                             };
                             Err(e)
@@ -1709,7 +1805,7 @@ pub mod greentic {
                             _rt::alloc::dealloc(ptr.cast(), layout);
                         }
                     }
-                    result36
+                    result37
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
@@ -1725,11 +1821,11 @@ pub mod greentic {
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 24 + 52 * ::core::mem::size_of::<*const u8>()],
+                        >; 32 + 54 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 24
-                            + 52 * ::core::mem::size_of::<*const u8>()],
+                        [::core::mem::MaybeUninit::uninit(); 32
+                            + 54 * ::core::mem::size_of::<*const u8>()],
                     );
                     let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                     let vec1 = key;
@@ -1758,6 +1854,7 @@ pub mod greentic {
                                 user: user3,
                                 user_id: user_id3,
                                 trace_id: trace_id3,
+                                i18n_id: i18n_id3,
                                 correlation_id: correlation_id3,
                                 attributes: attributes3,
                                 session_id: session_id3,
@@ -1901,7 +1998,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match correlation_id3 {
+                            match i18n_id3 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 25 * ::core::mem::size_of::<*const u8>())
@@ -1922,72 +2019,72 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            let vec16 = attributes3;
-                            let len16 = vec16.len();
-                            let layout16 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec16.len() * (4 * ::core::mem::size_of::<*const u8>()),
+                            match correlation_id3 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    let vec13 = e;
+                                    let ptr13 = vec13.as_ptr().cast::<u8>();
+                                    let len13 = vec13.len();
+                                    *ptr0
+                                        .add(8 + 30 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len13;
+                                    *ptr0
+                                        .add(8 + 29 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr13.cast_mut();
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                            let vec17 = attributes3;
+                            let len17 = vec17.len();
+                            let layout17 = _rt::alloc::Layout::from_size_align_unchecked(
+                                vec17.len() * (4 * ::core::mem::size_of::<*const u8>()),
                                 ::core::mem::size_of::<*const u8>(),
                             );
-                            let result16 = if layout16.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout16).cast::<u8>();
+                            let result17 = if layout17.size() != 0 {
+                                let ptr = _rt::alloc::alloc(layout17).cast::<u8>();
                                 if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout16);
+                                    _rt::alloc::handle_alloc_error(layout17);
                                 }
                                 ptr
                             } else {
                                 ::core::ptr::null_mut()
                             };
-                            for (i, e) in vec16.into_iter().enumerate() {
-                                let base = result16
+                            for (i, e) in vec17.into_iter().enumerate() {
+                                let base = result17
                                     .add(i * (4 * ::core::mem::size_of::<*const u8>()));
                                 {
-                                    let (t13_0, t13_1) = e;
-                                    let vec14 = t13_0;
-                                    let ptr14 = vec14.as_ptr().cast::<u8>();
-                                    let len14 = vec14.len();
-                                    *base
-                                        .add(::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len14;
-                                    *base.add(0).cast::<*mut u8>() = ptr14.cast_mut();
-                                    let vec15 = t13_1;
+                                    let (t14_0, t14_1) = e;
+                                    let vec15 = t14_0;
                                     let ptr15 = vec15.as_ptr().cast::<u8>();
                                     let len15 = vec15.len();
                                     *base
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(::core::mem::size_of::<*const u8>())
                                         .cast::<usize>() = len15;
+                                    *base.add(0).cast::<*mut u8>() = ptr15.cast_mut();
+                                    let vec16 = t14_1;
+                                    let ptr16 = vec16.as_ptr().cast::<u8>();
+                                    let len16 = vec16.len();
+                                    *base
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len16;
                                     *base
                                         .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr15.cast_mut();
+                                        .cast::<*mut u8>() = ptr16.cast_mut();
                                 }
                             }
                             *ptr0
-                                .add(8 + 29 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len16;
+                                .add(8 + 32 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len17;
                             *ptr0
-                                .add(8 + 28 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = result16;
+                                .add(8 + 31 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = result17;
                             match session_id3 {
-                                Some(e) => {
-                                    *ptr0
-                                        .add(8 + 30 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (1i32) as u8;
-                                    let vec17 = e;
-                                    let ptr17 = vec17.as_ptr().cast::<u8>();
-                                    let len17 = vec17.len();
-                                    *ptr0
-                                        .add(8 + 32 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len17;
-                                    *ptr0
-                                        .add(8 + 31 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr17.cast_mut();
-                                }
-                                None => {
-                                    *ptr0
-                                        .add(8 + 30 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (0i32) as u8;
-                                }
-                            };
-                            match flow_id3 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 33 * ::core::mem::size_of::<*const u8>())
@@ -2008,7 +2105,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match node_id3 {
+                            match flow_id3 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 36 * ::core::mem::size_of::<*const u8>())
@@ -2029,7 +2126,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match provider_id3 {
+                            match node_id3 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 39 * ::core::mem::size_of::<*const u8>())
@@ -2050,14 +2147,20 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match deadline_ms3 {
+                            match provider_id3 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 42 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
+                                    let vec21 = e;
+                                    let ptr21 = vec21.as_ptr().cast::<u8>();
+                                    let len21 = vec21.len();
                                     *ptr0
-                                        .add(16 + 42 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<i64>() = _rt::as_i64(e);
+                                        .add(8 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len21;
+                                    *ptr0
+                                        .add(8 + 43 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr21.cast_mut();
                                 }
                                 None => {
                                     *ptr0
@@ -2065,77 +2168,92 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
+                            match deadline_ms3 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(16 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    *ptr0
+                                        .add(24 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<i64>() = _rt::as_i64(e);
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(16 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
                             *ptr0
-                                .add(24 + 42 * ::core::mem::size_of::<*const u8>())
+                                .add(32 + 44 * ::core::mem::size_of::<*const u8>())
                                 .cast::<i32>() = _rt::as_i32(attempt3);
                             match idempotency_key3 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(24 + 43 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 45 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
-                                    let vec21 = e;
-                                    let ptr21 = vec21.as_ptr().cast::<u8>();
-                                    let len21 = vec21.len();
+                                    let vec22 = e;
+                                    let ptr22 = vec22.as_ptr().cast::<u8>();
+                                    let len22 = vec22.len();
                                     *ptr0
-                                        .add(24 + 45 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len21;
+                                        .add(32 + 47 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len22;
                                     *ptr0
-                                        .add(24 + 44 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr21.cast_mut();
+                                        .add(32 + 46 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr22.cast_mut();
                                 }
                                 None => {
                                     *ptr0
-                                        .add(24 + 43 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 45 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
                             match impersonation3 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(24 + 46 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 48 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
                                     let super::super::super::greentic::interfaces_types::types::Impersonation {
-                                        actor_id: actor_id22,
-                                        reason: reason22,
+                                        actor_id: actor_id23,
+                                        reason: reason23,
                                     } = e;
-                                    let vec23 = actor_id22;
-                                    let ptr23 = vec23.as_ptr().cast::<u8>();
-                                    let len23 = vec23.len();
+                                    let vec24 = actor_id23;
+                                    let ptr24 = vec24.as_ptr().cast::<u8>();
+                                    let len24 = vec24.len();
                                     *ptr0
-                                        .add(24 + 48 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len23;
+                                        .add(32 + 50 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len24;
                                     *ptr0
-                                        .add(24 + 47 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr23.cast_mut();
-                                    match reason22 {
+                                        .add(32 + 49 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr24.cast_mut();
+                                    match reason23 {
                                         Some(e) => {
                                             *ptr0
-                                                .add(24 + 49 * ::core::mem::size_of::<*const u8>())
+                                                .add(32 + 51 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (1i32) as u8;
-                                            let vec24 = e;
-                                            let ptr24 = vec24.as_ptr().cast::<u8>();
-                                            let len24 = vec24.len();
+                                            let vec25 = e;
+                                            let ptr25 = vec25.as_ptr().cast::<u8>();
+                                            let len25 = vec25.len();
                                             *ptr0
-                                                .add(24 + 51 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<usize>() = len24;
+                                                .add(32 + 53 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<usize>() = len25;
                                             *ptr0
-                                                .add(24 + 50 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<*mut u8>() = ptr24.cast_mut();
+                                                .add(32 + 52 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<*mut u8>() = ptr25.cast_mut();
                                         }
                                         None => {
                                             *ptr0
-                                                .add(24 + 49 * ::core::mem::size_of::<*const u8>())
+                                                .add(32 + 51 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                 }
                                 None => {
                                     *ptr0
-                                        .add(24 + 46 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 48 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            cleanup_list.extend_from_slice(&[(result16, layout16)]);
+                            cleanup_list.extend_from_slice(&[(result17, layout17)]);
                         }
                         None => {
                             *ptr0
@@ -2143,58 +2261,58 @@ pub mod greentic {
                                 .cast::<u8>() = (0i32) as u8;
                         }
                     };
-                    let ptr25 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    let ptr26 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "greentic:state/state-store@1.0.0")]
                     unsafe extern "C" {
                         #[link_name = "write"]
-                        fn wit_import26(_: *mut u8, _: *mut u8);
+                        fn wit_import27(_: *mut u8, _: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import26(_: *mut u8, _: *mut u8) {
+                    unsafe extern "C" fn wit_import27(_: *mut u8, _: *mut u8) {
                         unreachable!()
                     }
-                    unsafe { wit_import26(ptr0, ptr25) };
-                    let l27 = i32::from(*ptr25.add(0).cast::<u8>());
-                    let result35 = match l27 {
+                    unsafe { wit_import27(ptr0, ptr26) };
+                    let l28 = i32::from(*ptr26.add(0).cast::<u8>());
+                    let result36 = match l28 {
                         0 => {
                             let e = {
-                                let l28 = i32::from(
-                                    *ptr25.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                let l29 = i32::from(
+                                    *ptr26.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
                                 );
-                                OpAck::_lift(l28 as u8)
+                                OpAck::_lift(l29 as u8)
                             };
                             Ok(e)
                         }
                         1 => {
                             let e = {
-                                let l29 = *ptr25
+                                let l30 = *ptr26
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l30 = *ptr25
+                                let l31 = *ptr26
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len31 = l30;
-                                let bytes31 = _rt::Vec::from_raw_parts(
-                                    l29.cast(),
-                                    len31,
-                                    len31,
+                                let len32 = l31;
+                                let bytes32 = _rt::Vec::from_raw_parts(
+                                    l30.cast(),
+                                    len32,
+                                    len32,
                                 );
-                                let l32 = *ptr25
+                                let l33 = *ptr26
                                     .add(3 * ::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l33 = *ptr25
+                                let l34 = *ptr26
                                     .add(4 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len34 = l33;
-                                let bytes34 = _rt::Vec::from_raw_parts(
-                                    l32.cast(),
-                                    len34,
-                                    len34,
+                                let len35 = l34;
+                                let bytes35 = _rt::Vec::from_raw_parts(
+                                    l33.cast(),
+                                    len35,
+                                    len35,
                                 );
                                 HostError {
-                                    code: _rt::string_lift(bytes31),
-                                    message: _rt::string_lift(bytes34),
+                                    code: _rt::string_lift(bytes32),
+                                    message: _rt::string_lift(bytes35),
                                 }
                             };
                             Err(e)
@@ -2206,7 +2324,7 @@ pub mod greentic {
                             _rt::alloc::dealloc(ptr.cast(), layout);
                         }
                     }
-                    result35
+                    result36
                 }
             }
             #[allow(unused_unsafe, clippy::all)]
@@ -2221,11 +2339,11 @@ pub mod greentic {
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 24 + 50 * ::core::mem::size_of::<*const u8>()],
+                        >; 32 + 52 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 24
-                            + 50 * ::core::mem::size_of::<*const u8>()],
+                        [::core::mem::MaybeUninit::uninit(); 32
+                            + 52 * ::core::mem::size_of::<*const u8>()],
                     );
                     let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                     let vec1 = key;
@@ -2247,6 +2365,7 @@ pub mod greentic {
                                 user: user2,
                                 user_id: user_id2,
                                 trace_id: trace_id2,
+                                i18n_id: i18n_id2,
                                 correlation_id: correlation_id2,
                                 attributes: attributes2,
                                 session_id: session_id2,
@@ -2390,7 +2509,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match correlation_id2 {
+                            match i18n_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 23 * ::core::mem::size_of::<*const u8>())
@@ -2411,72 +2530,72 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            let vec15 = attributes2;
-                            let len15 = vec15.len();
-                            let layout15 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec15.len() * (4 * ::core::mem::size_of::<*const u8>()),
+                            match correlation_id2 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(8 + 26 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    let vec12 = e;
+                                    let ptr12 = vec12.as_ptr().cast::<u8>();
+                                    let len12 = vec12.len();
+                                    *ptr0
+                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len12;
+                                    *ptr0
+                                        .add(8 + 27 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr12.cast_mut();
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(8 + 26 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                            let vec16 = attributes2;
+                            let len16 = vec16.len();
+                            let layout16 = _rt::alloc::Layout::from_size_align_unchecked(
+                                vec16.len() * (4 * ::core::mem::size_of::<*const u8>()),
                                 ::core::mem::size_of::<*const u8>(),
                             );
-                            let result15 = if layout15.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout15).cast::<u8>();
+                            let result16 = if layout16.size() != 0 {
+                                let ptr = _rt::alloc::alloc(layout16).cast::<u8>();
                                 if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout15);
+                                    _rt::alloc::handle_alloc_error(layout16);
                                 }
                                 ptr
                             } else {
                                 ::core::ptr::null_mut()
                             };
-                            for (i, e) in vec15.into_iter().enumerate() {
-                                let base = result15
+                            for (i, e) in vec16.into_iter().enumerate() {
+                                let base = result16
                                     .add(i * (4 * ::core::mem::size_of::<*const u8>()));
                                 {
-                                    let (t12_0, t12_1) = e;
-                                    let vec13 = t12_0;
-                                    let ptr13 = vec13.as_ptr().cast::<u8>();
-                                    let len13 = vec13.len();
-                                    *base
-                                        .add(::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len13;
-                                    *base.add(0).cast::<*mut u8>() = ptr13.cast_mut();
-                                    let vec14 = t12_1;
+                                    let (t13_0, t13_1) = e;
+                                    let vec14 = t13_0;
                                     let ptr14 = vec14.as_ptr().cast::<u8>();
                                     let len14 = vec14.len();
                                     *base
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(::core::mem::size_of::<*const u8>())
                                         .cast::<usize>() = len14;
+                                    *base.add(0).cast::<*mut u8>() = ptr14.cast_mut();
+                                    let vec15 = t13_1;
+                                    let ptr15 = vec15.as_ptr().cast::<u8>();
+                                    let len15 = vec15.len();
+                                    *base
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len15;
                                     *base
                                         .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr14.cast_mut();
+                                        .cast::<*mut u8>() = ptr15.cast_mut();
                                 }
                             }
                             *ptr0
-                                .add(8 + 27 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len15;
+                                .add(8 + 30 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len16;
                             *ptr0
-                                .add(8 + 26 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = result15;
+                                .add(8 + 29 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = result16;
                             match session_id2 {
-                                Some(e) => {
-                                    *ptr0
-                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (1i32) as u8;
-                                    let vec16 = e;
-                                    let ptr16 = vec16.as_ptr().cast::<u8>();
-                                    let len16 = vec16.len();
-                                    *ptr0
-                                        .add(8 + 30 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len16;
-                                    *ptr0
-                                        .add(8 + 29 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr16.cast_mut();
-                                }
-                                None => {
-                                    *ptr0
-                                        .add(8 + 28 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (0i32) as u8;
-                                }
-                            };
-                            match flow_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 31 * ::core::mem::size_of::<*const u8>())
@@ -2497,7 +2616,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match node_id2 {
+                            match flow_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 34 * ::core::mem::size_of::<*const u8>())
@@ -2518,7 +2637,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match provider_id2 {
+                            match node_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 37 * ::core::mem::size_of::<*const u8>())
@@ -2539,14 +2658,20 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match deadline_ms2 {
+                            match provider_id2 {
                                 Some(e) => {
                                     *ptr0
                                         .add(8 + 40 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
+                                    let vec20 = e;
+                                    let ptr20 = vec20.as_ptr().cast::<u8>();
+                                    let len20 = vec20.len();
                                     *ptr0
-                                        .add(16 + 40 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<i64>() = _rt::as_i64(e);
+                                        .add(8 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len20;
+                                    *ptr0
+                                        .add(8 + 41 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr20.cast_mut();
                                 }
                                 None => {
                                     *ptr0
@@ -2554,77 +2679,92 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
+                            match deadline_ms2 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(16 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    *ptr0
+                                        .add(24 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<i64>() = _rt::as_i64(e);
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(16 + 42 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
                             *ptr0
-                                .add(24 + 40 * ::core::mem::size_of::<*const u8>())
+                                .add(32 + 42 * ::core::mem::size_of::<*const u8>())
                                 .cast::<i32>() = _rt::as_i32(attempt2);
                             match idempotency_key2 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(24 + 41 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 43 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
-                                    let vec20 = e;
-                                    let ptr20 = vec20.as_ptr().cast::<u8>();
-                                    let len20 = vec20.len();
+                                    let vec21 = e;
+                                    let ptr21 = vec21.as_ptr().cast::<u8>();
+                                    let len21 = vec21.len();
                                     *ptr0
-                                        .add(24 + 43 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len20;
+                                        .add(32 + 45 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len21;
                                     *ptr0
-                                        .add(24 + 42 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr20.cast_mut();
+                                        .add(32 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr21.cast_mut();
                                 }
                                 None => {
                                     *ptr0
-                                        .add(24 + 41 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 43 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
                             match impersonation2 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(24 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 46 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
                                     let super::super::super::greentic::interfaces_types::types::Impersonation {
-                                        actor_id: actor_id21,
-                                        reason: reason21,
+                                        actor_id: actor_id22,
+                                        reason: reason22,
                                     } = e;
-                                    let vec22 = actor_id21;
-                                    let ptr22 = vec22.as_ptr().cast::<u8>();
-                                    let len22 = vec22.len();
+                                    let vec23 = actor_id22;
+                                    let ptr23 = vec23.as_ptr().cast::<u8>();
+                                    let len23 = vec23.len();
                                     *ptr0
-                                        .add(24 + 46 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len22;
+                                        .add(32 + 48 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len23;
                                     *ptr0
-                                        .add(24 + 45 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr22.cast_mut();
-                                    match reason21 {
+                                        .add(32 + 47 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr23.cast_mut();
+                                    match reason22 {
                                         Some(e) => {
                                             *ptr0
-                                                .add(24 + 47 * ::core::mem::size_of::<*const u8>())
+                                                .add(32 + 49 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (1i32) as u8;
-                                            let vec23 = e;
-                                            let ptr23 = vec23.as_ptr().cast::<u8>();
-                                            let len23 = vec23.len();
+                                            let vec24 = e;
+                                            let ptr24 = vec24.as_ptr().cast::<u8>();
+                                            let len24 = vec24.len();
                                             *ptr0
-                                                .add(24 + 49 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<usize>() = len23;
+                                                .add(32 + 51 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<usize>() = len24;
                                             *ptr0
-                                                .add(24 + 48 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<*mut u8>() = ptr23.cast_mut();
+                                                .add(32 + 50 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<*mut u8>() = ptr24.cast_mut();
                                         }
                                         None => {
                                             *ptr0
-                                                .add(24 + 47 * ::core::mem::size_of::<*const u8>())
+                                                .add(32 + 49 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                 }
                                 None => {
                                     *ptr0
-                                        .add(24 + 44 * ::core::mem::size_of::<*const u8>())
+                                        .add(32 + 46 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            cleanup_list.extend_from_slice(&[(result15, layout15)]);
+                            cleanup_list.extend_from_slice(&[(result16, layout16)]);
                         }
                         None => {
                             *ptr0
@@ -2632,58 +2772,58 @@ pub mod greentic {
                                 .cast::<u8>() = (0i32) as u8;
                         }
                     };
-                    let ptr24 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    let ptr25 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "greentic:state/state-store@1.0.0")]
                     unsafe extern "C" {
                         #[link_name = "delete"]
-                        fn wit_import25(_: *mut u8, _: *mut u8);
+                        fn wit_import26(_: *mut u8, _: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import25(_: *mut u8, _: *mut u8) {
+                    unsafe extern "C" fn wit_import26(_: *mut u8, _: *mut u8) {
                         unreachable!()
                     }
-                    unsafe { wit_import25(ptr0, ptr24) };
-                    let l26 = i32::from(*ptr24.add(0).cast::<u8>());
-                    let result34 = match l26 {
+                    unsafe { wit_import26(ptr0, ptr25) };
+                    let l27 = i32::from(*ptr25.add(0).cast::<u8>());
+                    let result35 = match l27 {
                         0 => {
                             let e = {
-                                let l27 = i32::from(
-                                    *ptr24.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                let l28 = i32::from(
+                                    *ptr25.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
                                 );
-                                OpAck::_lift(l27 as u8)
+                                OpAck::_lift(l28 as u8)
                             };
                             Ok(e)
                         }
                         1 => {
                             let e = {
-                                let l28 = *ptr24
+                                let l29 = *ptr25
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l29 = *ptr24
+                                let l30 = *ptr25
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len30 = l29;
-                                let bytes30 = _rt::Vec::from_raw_parts(
-                                    l28.cast(),
-                                    len30,
-                                    len30,
+                                let len31 = l30;
+                                let bytes31 = _rt::Vec::from_raw_parts(
+                                    l29.cast(),
+                                    len31,
+                                    len31,
                                 );
-                                let l31 = *ptr24
+                                let l32 = *ptr25
                                     .add(3 * ::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l32 = *ptr24
+                                let l33 = *ptr25
                                     .add(4 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len33 = l32;
-                                let bytes33 = _rt::Vec::from_raw_parts(
-                                    l31.cast(),
-                                    len33,
-                                    len33,
+                                let len34 = l33;
+                                let bytes34 = _rt::Vec::from_raw_parts(
+                                    l32.cast(),
+                                    len34,
+                                    len34,
                                 );
                                 HostError {
-                                    code: _rt::string_lift(bytes30),
-                                    message: _rt::string_lift(bytes33),
+                                    code: _rt::string_lift(bytes31),
+                                    message: _rt::string_lift(bytes34),
                                 }
                             };
                             Err(e)
@@ -2695,7 +2835,7 @@ pub mod greentic {
                             _rt::alloc::dealloc(ptr.cast(), layout);
                         }
                     }
-                    result34
+                    result35
                 }
             }
         }
@@ -2775,11 +2915,11 @@ pub mod greentic {
                     struct RetArea(
                         [::core::mem::MaybeUninit<
                             u8,
-                        >; 56 + 62 * ::core::mem::size_of::<*const u8>()],
+                        >; 64 + 64 * ::core::mem::size_of::<*const u8>()],
                     );
                     let mut ret_area = RetArea(
-                        [::core::mem::MaybeUninit::uninit(); 56
-                            + 62 * ::core::mem::size_of::<*const u8>()],
+                        [::core::mem::MaybeUninit::uninit(); 64
+                            + 64 * ::core::mem::size_of::<*const u8>()],
                     );
                     let ptr0 = ret_area.0.as_mut_ptr().cast::<u8>();
                     let super::super::super::greentic::interfaces_types::types::SpanContext {
@@ -2942,6 +3082,7 @@ pub mod greentic {
                                 user: user11,
                                 user_id: user_id11,
                                 trace_id: trace_id11,
+                                i18n_id: i18n_id11,
                                 correlation_id: correlation_id11,
                                 attributes: attributes11,
                                 session_id: session_id11,
@@ -3085,7 +3226,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match correlation_id11 {
+                            match i18n_id11 {
                                 Some(e) => {
                                     *ptr0
                                         .add(40 + 35 * ::core::mem::size_of::<*const u8>())
@@ -3106,72 +3247,72 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            let vec24 = attributes11;
-                            let len24 = vec24.len();
-                            let layout24 = _rt::alloc::Layout::from_size_align_unchecked(
-                                vec24.len() * (4 * ::core::mem::size_of::<*const u8>()),
+                            match correlation_id11 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(40 + 38 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    let vec21 = e;
+                                    let ptr21 = vec21.as_ptr().cast::<u8>();
+                                    let len21 = vec21.len();
+                                    *ptr0
+                                        .add(40 + 40 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len21;
+                                    *ptr0
+                                        .add(40 + 39 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr21.cast_mut();
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(40 + 38 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
+                            let vec25 = attributes11;
+                            let len25 = vec25.len();
+                            let layout25 = _rt::alloc::Layout::from_size_align_unchecked(
+                                vec25.len() * (4 * ::core::mem::size_of::<*const u8>()),
                                 ::core::mem::size_of::<*const u8>(),
                             );
-                            let result24 = if layout24.size() != 0 {
-                                let ptr = _rt::alloc::alloc(layout24).cast::<u8>();
+                            let result25 = if layout25.size() != 0 {
+                                let ptr = _rt::alloc::alloc(layout25).cast::<u8>();
                                 if ptr.is_null() {
-                                    _rt::alloc::handle_alloc_error(layout24);
+                                    _rt::alloc::handle_alloc_error(layout25);
                                 }
                                 ptr
                             } else {
                                 ::core::ptr::null_mut()
                             };
-                            for (i, e) in vec24.into_iter().enumerate() {
-                                let base = result24
+                            for (i, e) in vec25.into_iter().enumerate() {
+                                let base = result25
                                     .add(i * (4 * ::core::mem::size_of::<*const u8>()));
                                 {
-                                    let (t21_0, t21_1) = e;
-                                    let vec22 = t21_0;
-                                    let ptr22 = vec22.as_ptr().cast::<u8>();
-                                    let len22 = vec22.len();
-                                    *base
-                                        .add(::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len22;
-                                    *base.add(0).cast::<*mut u8>() = ptr22.cast_mut();
-                                    let vec23 = t21_1;
+                                    let (t22_0, t22_1) = e;
+                                    let vec23 = t22_0;
                                     let ptr23 = vec23.as_ptr().cast::<u8>();
                                     let len23 = vec23.len();
                                     *base
-                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .add(::core::mem::size_of::<*const u8>())
                                         .cast::<usize>() = len23;
+                                    *base.add(0).cast::<*mut u8>() = ptr23.cast_mut();
+                                    let vec24 = t22_1;
+                                    let ptr24 = vec24.as_ptr().cast::<u8>();
+                                    let len24 = vec24.len();
+                                    *base
+                                        .add(3 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len24;
                                     *base
                                         .add(2 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr23.cast_mut();
+                                        .cast::<*mut u8>() = ptr24.cast_mut();
                                 }
                             }
                             *ptr0
-                                .add(40 + 39 * ::core::mem::size_of::<*const u8>())
-                                .cast::<usize>() = len24;
+                                .add(40 + 42 * ::core::mem::size_of::<*const u8>())
+                                .cast::<usize>() = len25;
                             *ptr0
-                                .add(40 + 38 * ::core::mem::size_of::<*const u8>())
-                                .cast::<*mut u8>() = result24;
+                                .add(40 + 41 * ::core::mem::size_of::<*const u8>())
+                                .cast::<*mut u8>() = result25;
                             match session_id11 {
-                                Some(e) => {
-                                    *ptr0
-                                        .add(40 + 40 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (1i32) as u8;
-                                    let vec25 = e;
-                                    let ptr25 = vec25.as_ptr().cast::<u8>();
-                                    let len25 = vec25.len();
-                                    *ptr0
-                                        .add(40 + 42 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len25;
-                                    *ptr0
-                                        .add(40 + 41 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr25.cast_mut();
-                                }
-                                None => {
-                                    *ptr0
-                                        .add(40 + 40 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<u8>() = (0i32) as u8;
-                                }
-                            };
-                            match flow_id11 {
                                 Some(e) => {
                                     *ptr0
                                         .add(40 + 43 * ::core::mem::size_of::<*const u8>())
@@ -3192,7 +3333,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match node_id11 {
+                            match flow_id11 {
                                 Some(e) => {
                                     *ptr0
                                         .add(40 + 46 * ::core::mem::size_of::<*const u8>())
@@ -3213,7 +3354,7 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match provider_id11 {
+                            match node_id11 {
                                 Some(e) => {
                                     *ptr0
                                         .add(40 + 49 * ::core::mem::size_of::<*const u8>())
@@ -3234,14 +3375,20 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            match deadline_ms11 {
+                            match provider_id11 {
                                 Some(e) => {
                                     *ptr0
                                         .add(40 + 52 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
+                                    let vec29 = e;
+                                    let ptr29 = vec29.as_ptr().cast::<u8>();
+                                    let len29 = vec29.len();
                                     *ptr0
-                                        .add(48 + 52 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<i64>() = _rt::as_i64(e);
+                                        .add(40 + 54 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len29;
+                                    *ptr0
+                                        .add(40 + 53 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr29.cast_mut();
                                 }
                                 None => {
                                     *ptr0
@@ -3249,77 +3396,92 @@ pub mod greentic {
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
+                            match deadline_ms11 {
+                                Some(e) => {
+                                    *ptr0
+                                        .add(48 + 54 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (1i32) as u8;
+                                    *ptr0
+                                        .add(56 + 54 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<i64>() = _rt::as_i64(e);
+                                }
+                                None => {
+                                    *ptr0
+                                        .add(48 + 54 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<u8>() = (0i32) as u8;
+                                }
+                            };
                             *ptr0
-                                .add(56 + 52 * ::core::mem::size_of::<*const u8>())
+                                .add(64 + 54 * ::core::mem::size_of::<*const u8>())
                                 .cast::<i32>() = _rt::as_i32(attempt11);
                             match idempotency_key11 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(56 + 53 * ::core::mem::size_of::<*const u8>())
+                                        .add(64 + 55 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
-                                    let vec29 = e;
-                                    let ptr29 = vec29.as_ptr().cast::<u8>();
-                                    let len29 = vec29.len();
+                                    let vec30 = e;
+                                    let ptr30 = vec30.as_ptr().cast::<u8>();
+                                    let len30 = vec30.len();
                                     *ptr0
-                                        .add(56 + 55 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len29;
+                                        .add(64 + 57 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len30;
                                     *ptr0
-                                        .add(56 + 54 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr29.cast_mut();
+                                        .add(64 + 56 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr30.cast_mut();
                                 }
                                 None => {
                                     *ptr0
-                                        .add(56 + 53 * ::core::mem::size_of::<*const u8>())
+                                        .add(64 + 55 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
                             match impersonation11 {
                                 Some(e) => {
                                     *ptr0
-                                        .add(56 + 56 * ::core::mem::size_of::<*const u8>())
+                                        .add(64 + 58 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (1i32) as u8;
                                     let super::super::super::greentic::interfaces_types::types::Impersonation {
-                                        actor_id: actor_id30,
-                                        reason: reason30,
+                                        actor_id: actor_id31,
+                                        reason: reason31,
                                     } = e;
-                                    let vec31 = actor_id30;
-                                    let ptr31 = vec31.as_ptr().cast::<u8>();
-                                    let len31 = vec31.len();
+                                    let vec32 = actor_id31;
+                                    let ptr32 = vec32.as_ptr().cast::<u8>();
+                                    let len32 = vec32.len();
                                     *ptr0
-                                        .add(56 + 58 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<usize>() = len31;
+                                        .add(64 + 60 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<usize>() = len32;
                                     *ptr0
-                                        .add(56 + 57 * ::core::mem::size_of::<*const u8>())
-                                        .cast::<*mut u8>() = ptr31.cast_mut();
-                                    match reason30 {
+                                        .add(64 + 59 * ::core::mem::size_of::<*const u8>())
+                                        .cast::<*mut u8>() = ptr32.cast_mut();
+                                    match reason31 {
                                         Some(e) => {
                                             *ptr0
-                                                .add(56 + 59 * ::core::mem::size_of::<*const u8>())
+                                                .add(64 + 61 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (1i32) as u8;
-                                            let vec32 = e;
-                                            let ptr32 = vec32.as_ptr().cast::<u8>();
-                                            let len32 = vec32.len();
+                                            let vec33 = e;
+                                            let ptr33 = vec33.as_ptr().cast::<u8>();
+                                            let len33 = vec33.len();
                                             *ptr0
-                                                .add(56 + 61 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<usize>() = len32;
+                                                .add(64 + 63 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<usize>() = len33;
                                             *ptr0
-                                                .add(56 + 60 * ::core::mem::size_of::<*const u8>())
-                                                .cast::<*mut u8>() = ptr32.cast_mut();
+                                                .add(64 + 62 * ::core::mem::size_of::<*const u8>())
+                                                .cast::<*mut u8>() = ptr33.cast_mut();
                                         }
                                         None => {
                                             *ptr0
-                                                .add(56 + 59 * ::core::mem::size_of::<*const u8>())
+                                                .add(64 + 61 * ::core::mem::size_of::<*const u8>())
                                                 .cast::<u8>() = (0i32) as u8;
                                         }
                                     };
                                 }
                                 None => {
                                     *ptr0
-                                        .add(56 + 56 * ::core::mem::size_of::<*const u8>())
+                                        .add(64 + 58 * ::core::mem::size_of::<*const u8>())
                                         .cast::<u8>() = (0i32) as u8;
                                 }
                             };
-                            cleanup_list.extend_from_slice(&[(result24, layout24)]);
+                            cleanup_list.extend_from_slice(&[(result25, layout25)]);
                         }
                         None => {
                             *ptr0
@@ -3327,58 +3489,58 @@ pub mod greentic {
                                 .cast::<u8>() = (0i32) as u8;
                         }
                     };
-                    let ptr33 = ret_area.0.as_mut_ptr().cast::<u8>();
+                    let ptr34 = ret_area.0.as_mut_ptr().cast::<u8>();
                     #[cfg(target_arch = "wasm32")]
                     #[link(wasm_import_module = "greentic:telemetry/logger-api@1.0.0")]
                     unsafe extern "C" {
                         #[link_name = "log"]
-                        fn wit_import34(_: *mut u8, _: *mut u8);
+                        fn wit_import35(_: *mut u8, _: *mut u8);
                     }
                     #[cfg(not(target_arch = "wasm32"))]
-                    unsafe extern "C" fn wit_import34(_: *mut u8, _: *mut u8) {
+                    unsafe extern "C" fn wit_import35(_: *mut u8, _: *mut u8) {
                         unreachable!()
                     }
-                    unsafe { wit_import34(ptr0, ptr33) };
-                    let l35 = i32::from(*ptr33.add(0).cast::<u8>());
-                    let result43 = match l35 {
+                    unsafe { wit_import35(ptr0, ptr34) };
+                    let l36 = i32::from(*ptr34.add(0).cast::<u8>());
+                    let result44 = match l36 {
                         0 => {
                             let e = {
-                                let l36 = i32::from(
-                                    *ptr33.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
+                                let l37 = i32::from(
+                                    *ptr34.add(::core::mem::size_of::<*const u8>()).cast::<u8>(),
                                 );
-                                OpAck::_lift(l36 as u8)
+                                OpAck::_lift(l37 as u8)
                             };
                             Ok(e)
                         }
                         1 => {
                             let e = {
-                                let l37 = *ptr33
+                                let l38 = *ptr34
                                     .add(::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l38 = *ptr33
+                                let l39 = *ptr34
                                     .add(2 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len39 = l38;
-                                let bytes39 = _rt::Vec::from_raw_parts(
-                                    l37.cast(),
-                                    len39,
-                                    len39,
+                                let len40 = l39;
+                                let bytes40 = _rt::Vec::from_raw_parts(
+                                    l38.cast(),
+                                    len40,
+                                    len40,
                                 );
-                                let l40 = *ptr33
+                                let l41 = *ptr34
                                     .add(3 * ::core::mem::size_of::<*const u8>())
                                     .cast::<*mut u8>();
-                                let l41 = *ptr33
+                                let l42 = *ptr34
                                     .add(4 * ::core::mem::size_of::<*const u8>())
                                     .cast::<usize>();
-                                let len42 = l41;
-                                let bytes42 = _rt::Vec::from_raw_parts(
-                                    l40.cast(),
-                                    len42,
-                                    len42,
+                                let len43 = l42;
+                                let bytes43 = _rt::Vec::from_raw_parts(
+                                    l41.cast(),
+                                    len43,
+                                    len43,
                                 );
                                 HostError {
-                                    code: _rt::string_lift(bytes39),
-                                    message: _rt::string_lift(bytes42),
+                                    code: _rt::string_lift(bytes40),
+                                    message: _rt::string_lift(bytes43),
                                 }
                             };
                             Err(e)
@@ -3393,7 +3555,7 @@ pub mod greentic {
                             _rt::alloc::dealloc(ptr.cast(), layout);
                         }
                     }
-                    result43
+                    result44
                 }
             }
         }
@@ -3674,60 +3836,62 @@ pub(crate) use __export_messaging_ingress_slack_impl as export;
 )]
 #[doc(hidden)]
 #[allow(clippy::octal_escapes)]
-pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 2424] = *b"\
-\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xea\x11\x01A\x02\x01\
-A\x0f\x01B6\x01s\x04\0\x06env-id\x03\0\0\x01s\x04\0\x09tenant-id\x03\0\x02\x01s\x04\
+pub static __WIT_BINDGEN_COMPONENT_TYPE: [u8; 2537] = *b"\
+\0asm\x0d\0\x01\0\0\x19\x16wit-component-encoding\x04\0\x07\xdb\x12\x01A\x02\x01\
+A\x0f\x01B:\x01s\x04\0\x06env-id\x03\0\0\x01s\x04\0\x09tenant-id\x03\0\x02\x01s\x04\
 \0\x07team-id\x03\0\x04\x01s\x04\0\x07user-id\x03\0\x06\x01s\x04\0\x09state-key\x03\
 \0\x08\x01s\x04\0\x0bsession-key\x03\0\x0a\x01ks\x01r\x02\x08actor-id\x07\x06rea\
 son\x0c\x04\0\x0dimpersonation\x03\0\x0d\x01k\x05\x01k\x07\x01o\x02ss\x01p\x11\x01\
-kx\x01k\x0e\x01r\x12\x03env\x01\x06tenant\x03\x09tenant-id\x03\x04team\x0f\x07te\
-am-id\x0f\x04user\x10\x07user-id\x10\x08trace-id\x0c\x0ecorrelation-id\x0c\x0aat\
-tributes\x12\x0asession-id\x0c\x07flow-id\x0c\x07node-id\x0c\x0bprovider-id\x0c\x0b\
-deadline-ms\x13\x07attempty\x0fidempotency-key\x0c\x0dimpersonation\x14\x04\0\x0a\
-tenant-ctx\x03\0\x15\x01r\x03\x0cnode-pointers\x0bwait-reason\x0c\x0doutbox-mark\
-er\x0c\x04\0\x0esession-cursor\x03\0\x17\x01m\x0a\x07unknown\x0dinvalid-input\x09\
-not-found\x08conflict\x07timeout\x0funauthenticated\x11permission-denied\x0crate\
--limited\x0bunavailable\x08internal\x04\0\x0aerror-code\x03\0\x19\x01ps\x01k\x1b\
-\x01r\x02\x06reasons\x0eexpected-input\x1c\x04\0\x0foutcome-pending\x03\0\x1d\x01\
-r\x02\x04code\x1a\x07messages\x04\0\x0doutcome-error\x03\0\x1f\x01q\x03\x04done\x01\
-s\0\x07pending\x01\x1e\0\x05error\x01\x20\0\x04\0\x07outcome\x03\0!\x01q\x06\x04\
-http\0\0\x05https\0\0\x03tcp\0\0\x03udp\0\0\x04grpc\0\0\x06custom\x01s\0\x04\0\x08\
-protocol\x03\0#\x01p{\x01p$\x01r\x03\x07domains\x1b\x05ports%\x09protocols&\x04\0\
-\x0aallow-list\x03\0'\x01r\x02\x06egress(\x0cdeny-on-miss\x7f\x04\0\x0enetwork-p\
-olicy\x03\0)\x01q\x02\x07ed25519\0\0\x05other\x01s\0\x04\0\x13signature-algorith\
-m\x03\0+\x01p}\x01r\x03\x06key-ids\x09algorithm,\x09signature-\x04\0\x09signatur\
-e\x03\0.\x01p/\x01r\x04\x07oci-urls\x07versions\x06digests\x0asignatures0\x04\0\x08\
-pack-ref\x03\01\x01k\x0b\x01r\x07\x06tenant\x03\x0asession-id3\x07flow-ids\x07no\
-de-id\x0c\x08providers\x08start-ms\x13\x06end-ms\x13\x04\0\x0cspan-context\x03\0\
-4\x03\0%greentic:interfaces-types/types@0.1.0\x05\0\x02\x03\0\0\x0atenant-ctx\x01\
-B\x15\x02\x03\x02\x01\x01\x04\0\x0atenant-ctx\x03\0\0\x01r\x02\x04codes\x07messa\
-ges\x04\0\x0ahost-error\x03\0\x02\x01o\x02ss\x01p\x04\x01p}\x01k\x06\x01r\x04\x06\
-methods\x03urls\x07headers\x05\x04body\x07\x04\0\x07request\x03\0\x08\x01r\x03\x06\
-status{\x07headers\x05\x04body\x07\x04\0\x08response\x03\0\x0a\x01ky\x01k\x7f\x01\
-r\x03\x0atimeout-ms\x0c\x0eallow-insecure\x0d\x10follow-redirects\x0d\x04\0\x0fr\
-equest-options\x03\0\x0e\x01k\x0f\x01k\x01\x01j\x01\x0b\x01\x03\x01@\x03\x03req\x09\
-\x04opts\x10\x03ctx\x11\0\x12\x04\0\x04send\x01\x13\x03\0\x1agreentic:http/clien\
-t@1.1.0\x05\x02\x01B\x07\x01m\x04\x09not-found\x06denied\x0binvalid-key\x08inter\
-nal\x04\0\x0dsecrets-error\x03\0\0\x01p}\x01k\x02\x01j\x01\x03\x01\x01\x01@\x01\x03\
-keys\0\x04\x04\0\x03get\x01\x05\x03\0*greentic:secrets-store/secrets-store@1.0.0\
-\x05\x03\x02\x03\0\0\x09state-key\x01B\x12\x02\x03\x02\x01\x04\x04\0\x09state-ke\
-y\x03\0\0\x02\x03\x02\x01\x01\x04\0\x0atenant-ctx\x03\0\x02\x01r\x02\x04codes\x07\
-messages\x04\0\x0ahost-error\x03\0\x04\x01m\x01\x02ok\x04\0\x06op-ack\x03\0\x06\x01\
-k\x03\x01p}\x01j\x01\x09\x01\x05\x01@\x02\x03key\x01\x03ctx\x08\0\x0a\x04\0\x04r\
-ead\x01\x0b\x01j\x01\x07\x01\x05\x01@\x03\x03key\x01\x05bytes\x09\x03ctx\x08\0\x0c\
-\x04\0\x05write\x01\x0d\x01@\x02\x03key\x01\x03ctx\x08\0\x0c\x04\0\x06delete\x01\
-\x0e\x03\0\x20greentic:state/state-store@1.0.0\x05\x05\x02\x03\0\0\x0cspan-conte\
-xt\x01B\x0e\x02\x03\x02\x01\x01\x04\0\x0atenant-ctx\x03\0\0\x02\x03\x02\x01\x06\x04\
-\0\x0cspan-context\x03\0\x02\x01r\x02\x04codes\x07messages\x04\0\x0ahost-error\x03\
-\0\x04\x01m\x01\x02ok\x04\0\x06op-ack\x03\0\x06\x01o\x02ss\x01p\x08\x01k\x01\x01\
-j\x01\x07\x01\x05\x01@\x03\x04span\x03\x06fields\x09\x03ctx\x0a\0\x0b\x04\0\x03l\
-og\x01\x0c\x03\0#greentic:telemetry/logger-api@1.0.0\x05\x07\x01B\x07\x01s\x04\0\
-\x17normalized-payload-json\x03\0\0\x01s\x04\0\x0dingress-error\x03\0\x02\x01j\x01\
-\x01\x01\x03\x01@\x02\x0cheaders-jsons\x09body-jsons\0\x04\x04\0\x0ehandle-webho\
-ok\x01\x05\x04\0\x1dprovider:common/ingress@0.0.2\x05\x08\x04\0>greentic:messagi\
-ng-ingress-slack/messaging-ingress-slack@0.0.1\x04\0\x0b\x1d\x01\0\x17messaging-\
-ingress-slack\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-component\x07\
-0.227.1\x10wit-bindgen-rust\x060.41.0";
+kx\x01k\x0e\x01r\x13\x03env\x01\x06tenant\x03\x09tenant-id\x03\x04team\x0f\x07te\
+am-id\x0f\x04user\x10\x07user-id\x10\x08trace-id\x0c\x07i18n-id\x0c\x0ecorrelati\
+on-id\x0c\x0aattributes\x12\x0asession-id\x0c\x07flow-id\x0c\x07node-id\x0c\x0bp\
+rovider-id\x0c\x0bdeadline-ms\x13\x07attempty\x0fidempotency-key\x0c\x0dimperson\
+ation\x14\x04\0\x0atenant-ctx\x03\0\x15\x01r\x03\x0cnode-pointers\x0bwait-reason\
+\x0c\x0doutbox-marker\x0c\x04\0\x0esession-cursor\x03\0\x17\x01m\x0a\x07unknown\x0d\
+invalid-input\x09not-found\x08conflict\x07timeout\x0funauthenticated\x11permissi\
+on-denied\x0crate-limited\x0bunavailable\x08internal\x04\0\x0aerror-code\x03\0\x19\
+\x01r\x02\x04codes\x07messages\x04\0\x0ahost-error\x03\0\x1b\x01m\x05\x0binvalid\
+-arg\x09not-found\x06denied\x0bunavailable\x08internal\x04\0\x0biface-error\x03\0\
+\x1d\x01ps\x01k\x1f\x01r\x02\x06reasons\x0eexpected-input\x20\x04\0\x0foutcome-p\
+ending\x03\0!\x01r\x02\x04code\x1a\x07messages\x04\0\x0doutcome-error\x03\0#\x01\
+q\x03\x04done\x01s\0\x07pending\x01\"\0\x05error\x01$\0\x04\0\x07outcome\x03\0%\x01\
+q\x06\x04http\0\0\x05https\0\0\x03tcp\0\0\x03udp\0\0\x04grpc\0\0\x06custom\x01s\0\
+\x04\0\x08protocol\x03\0'\x01p{\x01p(\x01r\x03\x07domains\x1f\x05ports)\x09proto\
+cols*\x04\0\x0aallow-list\x03\0+\x01r\x02\x06egress,\x0cdeny-on-miss\x7f\x04\0\x0e\
+network-policy\x03\0-\x01q\x02\x07ed25519\0\0\x05other\x01s\0\x04\0\x13signature\
+-algorithm\x03\0/\x01p}\x01r\x03\x06key-ids\x09algorithm0\x09signature1\x04\0\x09\
+signature\x03\02\x01p3\x01r\x04\x07oci-urls\x07versions\x06digests\x0asignatures\
+4\x04\0\x08pack-ref\x03\05\x01k\x0b\x01r\x07\x06tenant\x03\x0asession-id7\x07flo\
+w-ids\x07node-id\x0c\x08providers\x08start-ms\x13\x06end-ms\x13\x04\0\x0cspan-co\
+ntext\x03\08\x03\0%greentic:interfaces-types/types@0.1.0\x05\0\x02\x03\0\0\x0ate\
+nant-ctx\x01B\x15\x02\x03\x02\x01\x01\x04\0\x0atenant-ctx\x03\0\0\x01r\x02\x04co\
+des\x07messages\x04\0\x0ahost-error\x03\0\x02\x01o\x02ss\x01p\x04\x01p}\x01k\x06\
+\x01r\x04\x06methods\x03urls\x07headers\x05\x04body\x07\x04\0\x07request\x03\0\x08\
+\x01r\x03\x06status{\x07headers\x05\x04body\x07\x04\0\x08response\x03\0\x0a\x01k\
+y\x01k\x7f\x01r\x03\x0atimeout-ms\x0c\x0eallow-insecure\x0d\x10follow-redirects\x0d\
+\x04\0\x0frequest-options\x03\0\x0e\x01k\x0f\x01k\x01\x01j\x01\x0b\x01\x03\x01@\x03\
+\x03req\x09\x04opts\x10\x03ctx\x11\0\x12\x04\0\x04send\x01\x13\x03\0\x1agreentic\
+:http/client@1.1.0\x05\x02\x01B\x07\x01m\x04\x09not-found\x06denied\x0binvalid-k\
+ey\x08internal\x04\0\x0dsecrets-error\x03\0\0\x01p}\x01k\x02\x01j\x01\x03\x01\x01\
+\x01@\x01\x03keys\0\x04\x04\0\x03get\x01\x05\x03\0*greentic:secrets-store/secret\
+s-store@1.0.0\x05\x03\x02\x03\0\0\x09state-key\x01B\x12\x02\x03\x02\x01\x04\x04\0\
+\x09state-key\x03\0\0\x02\x03\x02\x01\x01\x04\0\x0atenant-ctx\x03\0\x02\x01r\x02\
+\x04codes\x07messages\x04\0\x0ahost-error\x03\0\x04\x01m\x01\x02ok\x04\0\x06op-a\
+ck\x03\0\x06\x01k\x03\x01p}\x01j\x01\x09\x01\x05\x01@\x02\x03key\x01\x03ctx\x08\0\
+\x0a\x04\0\x04read\x01\x0b\x01j\x01\x07\x01\x05\x01@\x03\x03key\x01\x05bytes\x09\
+\x03ctx\x08\0\x0c\x04\0\x05write\x01\x0d\x01@\x02\x03key\x01\x03ctx\x08\0\x0c\x04\
+\0\x06delete\x01\x0e\x03\0\x20greentic:state/state-store@1.0.0\x05\x05\x02\x03\0\
+\0\x0cspan-context\x01B\x0e\x02\x03\x02\x01\x01\x04\0\x0atenant-ctx\x03\0\0\x02\x03\
+\x02\x01\x06\x04\0\x0cspan-context\x03\0\x02\x01r\x02\x04codes\x07messages\x04\0\
+\x0ahost-error\x03\0\x04\x01m\x01\x02ok\x04\0\x06op-ack\x03\0\x06\x01o\x02ss\x01\
+p\x08\x01k\x01\x01j\x01\x07\x01\x05\x01@\x03\x04span\x03\x06fields\x09\x03ctx\x0a\
+\0\x0b\x04\0\x03log\x01\x0c\x03\0#greentic:telemetry/logger-api@1.0.0\x05\x07\x01\
+B\x07\x01s\x04\0\x17normalized-payload-json\x03\0\0\x01s\x04\0\x0dingress-error\x03\
+\0\x02\x01j\x01\x01\x01\x03\x01@\x02\x0cheaders-jsons\x09body-jsons\0\x04\x04\0\x0e\
+handle-webhook\x01\x05\x04\0\x1dprovider:common/ingress@0.0.2\x05\x08\x04\0>gree\
+ntic:messaging-ingress-slack/messaging-ingress-slack@0.0.1\x04\0\x0b\x1d\x01\0\x17\
+messaging-ingress-slack\x03\0\0\0G\x09producers\x01\x0cprocessed-by\x02\x0dwit-c\
+omponent\x070.227.1\x10wit-bindgen-rust\x060.41.0";
 #[inline(never)]
 #[doc(hidden)]
 pub fn __link_custom_section_describing_imports() {

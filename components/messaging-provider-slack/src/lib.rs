@@ -1,14 +1,14 @@
 use base64::{Engine as _, engine::general_purpose::STANDARD};
-use greentic_types::{
-    Actor, ChannelMessageEnvelope, Destination, EnvId, MessageMetadata, TenantCtx, TenantId,
-};
-use messaging_universal_dto::{
+use greentic_types::messaging::universal_dto::{
     EncodeInV1, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
     SendPayloadInV1, SendPayloadResultV1,
 };
+use greentic_types::{
+    Actor, ChannelMessageEnvelope, Destination, EnvId, MessageMetadata, TenantCtx, TenantId,
+};
 use serde::Deserialize;
 use serde_json::{Value, json};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 mod bindings {
     wit_bindgen::generate!({
@@ -435,7 +435,7 @@ fn encode_op(input_json: &[u8]) -> Vec<u8> {
         "text": text,
     });
     let body_bytes = serde_json::to_vec(&body).unwrap_or_else(|_| b"{}".to_vec());
-    let mut metadata = HashMap::new();
+    let mut metadata = BTreeMap::new();
     metadata.insert("url".to_string(), Value::String(url));
     metadata.insert("method".to_string(), Value::String("POST".to_string()));
     metadata.insert("channel".to_string(), Value::String(channel));
@@ -497,7 +497,7 @@ fn send_payload(input_json: &[u8]) -> Vec<u8> {
     send_payload_success()
 }
 
-fn metadata_string(metadata: &HashMap<String, Value>, key: &str) -> Option<String> {
+fn metadata_string(metadata: &BTreeMap<String, Value>, key: &str) -> Option<String> {
     metadata
         .get(key)
         .and_then(|value| value.as_str().map(|s| s.to_string()))

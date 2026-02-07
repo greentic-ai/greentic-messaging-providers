@@ -1160,5 +1160,5 @@
       "description": "Refresh token used for Graph token acquisition when configured."
     }
   ],
-  "version": "0.4.31"
+  "version": "0.4.33"
 }

@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use urlencoding::decode;
 use uuid::Uuid;
 
-use messaging_universal_dto::{Header, HttpInV1, HttpOutV1};
+use greentic_types::messaging::universal_dto::{Header, HttpInV1, HttpOutV1};
 
 use super::jwt::{DirectLineContext, TTL_SECONDS, issue_token, verify_token};
 use super::state::{ConversationState, StoredActivity, conversation_key, sanitize_team};

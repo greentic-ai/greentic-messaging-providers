@@ -1,5 +1,5 @@
 use std::{
-    collections::HashMap,
+    collections::{BTreeMap, HashMap},
     fs,
     path::{Path, PathBuf},
 };
@@ -7,11 +7,12 @@ use std::{
 use anyhow::{Context, Error, Result};
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use greentic_interfaces_wasmtime::host_helpers::v1::http_client;
-use greentic_types::{Actor, EnvId, MessageMetadata, TenantCtx, TenantId};
-use messaging_universal_dto::{
-    ChannelMessageEnvelope, EncodeInV1, Header, HttpInV1, HttpOutV1, ProviderPayloadV1,
-    RenderPlanInV1, RenderPlanOutV1, SendPayloadInV1, SendPayloadResultV1,
+use greentic_types::ChannelMessageEnvelope;
+use greentic_types::messaging::universal_dto::{
+    EncodeInV1, Header, HttpInV1, HttpOutV1, ProviderPayloadV1, RenderPlanInV1, RenderPlanOutV1,
+    SendPayloadInV1, SendPayloadResultV1,
 };
+use greentic_types::{Actor, EnvId, MessageMetadata, TenantCtx, TenantId};
 use provider_tests::harness::{
     TestHostState, add_wasi_to_linker, add_wasmtime_hosts, component_path, default_secret_values,
     ensure_components_built, new_engine,
@@ -486,7 +487,7 @@ fn send_payload_in(spec: &ProviderSpec) -> Result<Vec<u8>> {
     let payload = ProviderPayloadV1 {
         content_type: "application/json".to_string(),
         body_b64: STANDARD.encode(&body_bytes),
-        metadata: HashMap::new(),
+        metadata: BTreeMap::new(),
     };
     let payload_in = SendPayloadInV1 {
         provider_type: spec.provider_type.to_string(),
@@ -552,7 +553,7 @@ fn run_provider_checks(spec: &ProviderSpec) -> Result<()> {
     let message = build_envelope(spec.id);
     let plan_in = RenderPlanInV1 {
         message: message.clone(),
-        metadata: HashMap::new(),
+        metadata: BTreeMap::new(),
     };
     let plan_bytes = serde_json::to_vec(&plan_in)?;
     let plan_out_bytes = harness.call("render_plan", plan_bytes)?;

@@ -14,7 +14,6 @@ serde_json.workspace = true
 greentic-types.workspace = true
 wit-bindgen.workspace = true
 urlencoding.workspace = true
-messaging-universal-dto.workspace = true
 base64.workspace = true
 chrono.workspace = true
 
