@@ -48,31 +48,29 @@ jobs:
         run: |
           set -euo pipefail
 
-          full_result() {
-            python3 - <<'PY'
-            import json
-            from pathlib import Path
+          full_result="$(python3 -c '
+          import json
+          from pathlib import Path
 
-            matrix = json.loads(Path("ci/provider-matrix.json").read_text())
-            manifests = sorted({
-                manifest
-                for provider in matrix["providers"].values()
-                for manifest in provider["manifests"]
-            })
-            print(json.dumps({
-                "build_all": True,
-                "reason": "manual or tag run",
-                "changed_files": [],
-                "affected_providers": sorted(matrix["providers"].keys()),
-                "affected_components": matrix["all_components"],
-                "affected_packs": matrix["all_packs"],
-                "affected_manifests": manifests,
-            }))
-            PY
-          }
+          matrix = json.loads(Path("ci/provider-matrix.json").read_text())
+          manifests = sorted({
+              manifest
+              for provider in matrix["providers"].values()
+              for manifest in provider["manifests"]
+          })
+          print(json.dumps({
+              "build_all": True,
+              "reason": "manual or tag run",
+              "changed_files": [],
+              "affected_providers": sorted(matrix["providers"].keys()),
+              "affected_components": matrix["all_components"],
+              "affected_packs": matrix["all_packs"],
+              "affected_manifests": manifests,
+          }))
+          ')"
 
           if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ] || [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            result="$(full_result)"
+            result="${full_result}"
           else
             if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
               base_sha="${PR_BASE_SHA}"
@@ -80,13 +78,13 @@ jobs:
               base_sha="${PUSH_BEFORE}"
             fi
             if [ -z "${base_sha}" ] || [ "${base_sha}" = "0000000000000000000000000000000000000000" ]; then
-              result="$(full_result)"
+              result="${full_result}"
             else
               result="$(python3 ci/provider_matrix.py detect-changes --base "${base_sha}" --head "${GITHUB_SHA}")"
             fi
           fi
 
-          RESULT_JSON="${result}" python3 - <<'PY'
+          RESULT_JSON="${result}" python3 -c '
           import json
           import os
 
@@ -103,33 +101,33 @@ jobs:
           affected_packs_csv = ",".join(result["affected_packs"])
 
           with open(output_path, "a", encoding="utf-8") as handle:
-            handle.write(f"build_all={'true' if result['build_all'] else 'false'}\n")
-            handle.write(f"reason={result['reason']}\n")
-            handle.write(f"affected_providers={affected_providers}\n")
-            handle.write(f"affected_components={affected_components}\n")
-            handle.write(f"affected_components_csv={affected_components_csv}\n")
-            handle.write(f"affected_packs={affected_packs}\n")
-            handle.write(f"affected_packs_csv={affected_packs_csv}\n")
-            handle.write(f"affected_manifests={affected_manifests}\n")
-            handle.write(f"targeted_manifests_json={targeted_manifests_json}\n")
+              handle.write(f"build_all={'true' if result['build_all'] else 'false'}\n")
+              handle.write(f"reason={result['reason']}\n")
+              handle.write(f"affected_providers={affected_providers}\n")
+              handle.write(f"affected_components={affected_components}\n")
+              handle.write(f"affected_components_csv={affected_components_csv}\n")
+              handle.write(f"affected_packs={affected_packs}\n")
+              handle.write(f"affected_packs_csv={affected_packs_csv}\n")
+              handle.write(f"affected_manifests={affected_manifests}\n")
+              handle.write(f"targeted_manifests_json={targeted_manifests_json}\n")
 
           providers = ", ".join(result["affected_providers"])
           components = ", ".join(result["affected_components"])
           packs = ", ".join(result["affected_packs"])
           changed_files = "\n".join(f"- `{path}`" for path in result.get("changed_files", []))
           if not changed_files:
-            changed_files = "- manual or tag-triggered full run"
+              changed_files = "- manual or tag-triggered full run"
 
           with open(summary_path, "a", encoding="utf-8") as handle:
-            handle.write("## Change Detection\n")
-            handle.write(f"- `build_all`: `{str(result['build_all']).lower()}`\n")
-            handle.write(f"- reason: `{result['reason']}`\n")
-            handle.write(f"- providers: {providers}\n")
-            handle.write(f"- components: {components}\n")
-            handle.write(f"- packs: {packs}\n\n")
-            handle.write("### Changed Files\n")
-            handle.write(f"{changed_files}\n")
-          PY
+              handle.write("## Change Detection\n")
+              handle.write(f"- `build_all`: `{str(result['build_all']).lower()}`\n")
+              handle.write(f"- reason: `{result['reason']}`\n")
+              handle.write(f"- providers: {providers}\n")
+              handle.write(f"- components: {components}\n")
+              handle.write(f"- packs: {packs}\n\n")
+              handle.write("### Changed Files\n")
+              handle.write(f"{changed_files}\n")
+          '
 
   fmt:
     runs-on: ubuntu-latest
