@@ -99,10 +99,13 @@ jobs:
           targeted_manifests_json = "" if result["build_all"] else affected_manifests
           affected_components_csv = ",".join(result["affected_components"])
           affected_packs_csv = ",".join(result["affected_packs"])
+          build_all_value = "true" if result["build_all"] else "false"
+          build_all_summary = str(result["build_all"]).lower()
+          reason = result["reason"]
 
           with open(output_path, "a", encoding="utf-8") as handle:
-              handle.write(f"build_all={'true' if result['build_all'] else 'false'}\n")
-              handle.write(f"reason={result['reason']}\n")
+              handle.write(f"build_all={build_all_value}\n")
+              handle.write(f"reason={reason}\n")
               handle.write(f"affected_providers={affected_providers}\n")
               handle.write(f"affected_components={affected_components}\n")
               handle.write(f"affected_components_csv={affected_components_csv}\n")
@@ -120,8 +123,8 @@ jobs:
 
           with open(summary_path, "a", encoding="utf-8") as handle:
               handle.write("## Change Detection\n")
-              handle.write(f"- `build_all`: `{str(result['build_all']).lower()}`\n")
-              handle.write(f"- reason: `{result['reason']}`\n")
+              handle.write(f"- `build_all`: `{build_all_summary}`\n")
+              handle.write(f"- reason: `{reason}`\n")
               handle.write(f"- providers: {providers}\n")
               handle.write(f"- components: {components}\n")
               handle.write(f"- packs: {packs}\n\n")
