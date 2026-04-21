@@ -23,6 +23,8 @@ if [ "${VERSION_ONLY}" = "true" ]; then
 fi
 
 run_shared_tests() {
+  # Package names as declared in each crate's Cargo.toml (NOT directory names).
+  # crates/component_questions has `name = "questions"`.
   local -a library_crates=(
     messaging-core
     provider-common
@@ -33,7 +35,7 @@ run_shared_tests() {
     greentic-messaging-renderer
     greentic-messaging-tester
     messaging-cardkit
-    component_questions
+    questions
     questions-cli
     webchat-directline-core
   )
@@ -50,13 +52,28 @@ run_shared_tests() {
     provider_ingress_components
   )
 
+  # Collect package names from crates/*/Cargo.toml as a single whitespace
+  # string (bash 3.2-compatible; no associative arrays).
+  local workspace_pkgs
+  workspace_pkgs=$(python3 - <<'PY'
+import pathlib, tomllib
+names = []
+for cargo in sorted(pathlib.Path("crates").glob("*/Cargo.toml")):
+    data = tomllib.loads(cargo.read_text())
+    name = data.get("package", {}).get("name")
+    if name:
+        names.append(name)
+print(" ".join(names))
+PY
+)
+
   local -a pkg_args=()
-  local crate
-  for crate in "${library_crates[@]}"; do
-    if [ -f "crates/${crate}/Cargo.toml" ]; then
-      pkg_args+=("-p" "${crate}")
+  local pkg_name
+  for pkg_name in "${library_crates[@]}"; do
+    if [[ " ${workspace_pkgs} " == *" ${pkg_name} "* ]]; then
+      pkg_args+=("-p" "${pkg_name}")
     else
-      echo "cargo-test: skipping missing crate ${crate}"
+      echo "cargo-test: warning - crate ${pkg_name} not found in workspace" >&2
     fi
   done
 
