@@ -1,7 +1,7 @@
 {
   "id": "messaging-provider-dummy",
   "name": "messaging-provider-dummy",
-  "version": "0.4.76",
+  "version": "0.4.84",
   "world": "greentic:component/component-v0-v6-v0@0.6.1",
   "description": "Deterministic provider-core messaging provider for CI fixtures.",
   "profiles": {

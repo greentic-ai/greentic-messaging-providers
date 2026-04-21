@@ -43,12 +43,11 @@ jobs:
             ~/.cargo/bin
           key: cargo-bin-tools-${{ runner.os }}-v1
 
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
       - name: Install cargo-component
-        run: |
-          if ! command -v cargo-binstall >/dev/null 2>&1; then
-            cargo install cargo-binstall --locked
-          fi
-          cargo binstall cargo-component --version 0.21.1 --force --no-confirm --locked || cargo install cargo-component --version 0.21.1 --force --locked
+        run: cargo binstall cargo-component --version 0.21.1 --force --no-confirm --locked
 
       - name: Install oras
         uses: oras-project/setup-oras@v1

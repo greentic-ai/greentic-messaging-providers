@@ -15,8 +15,9 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
         Err(err) => return encode_error(&err),
     };
 
-    // Extract AC card from metadata if present
-    let ac_json = encode_message.metadata.get("adaptive_card").cloned();
+    // Extract AC card from extensions (typed Value) or metadata (legacy string)
+    let ac_json = provider_common::helpers::resolve_adaptive_card(&encode_message)
+        .map(|v| serde_json::to_string(&v).unwrap_or_default());
 
     // Serialize the full envelope so send_payload -> handle_send can parse it
     let mut envelope_val =

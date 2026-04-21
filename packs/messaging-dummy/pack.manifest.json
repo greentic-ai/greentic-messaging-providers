@@ -1,13 +1,13 @@
 {
   "name": "messaging-dummy",
-  "version": "0.4.76",
+  "version": "0.4.84",
   "kind": "application",
   "publisher": "Greentic",
   "description": "Dummy messaging provider \u2014 Mock provider for testing",
   "component_sources": [
     {
       "id": "messaging-provider-dummy",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "greentic:component/component-v0-v6-v0@0.6.1",
       "supports": [
         "messaging"
@@ -41,14 +41,14 @@
   "extensions": {
     "greentic.ext.capabilities.v1": {
       "kind": "greentic.ext.capabilities.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "schema_version": 1,
         "offers": [
           {
             "offer_id": "messaging-dummy-v1",
             "cap_id": "greentic.cap.messaging.provider.v1",
-            "version": "0.4.76",
+            "version": "0.4.84",
             "provider": {
               "component_ref": "messaging-provider-dummy",
               "op": "messaging.configure"
@@ -61,7 +61,7 @@
     },
     "greentic.messaging.validators.v1": {
       "kind": "greentic.messaging.validators.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "validators": [
           {
@@ -74,7 +74,7 @@
     },
     "greentic.provider-extension.v1": {
       "kind": "greentic.provider-extension.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "providers": [
           {

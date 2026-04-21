@@ -307,6 +307,28 @@ pub struct RenderPlanConfig<'a> {
     pub default_summary: &'a str,
 }
 
+/// Resolve an Adaptive Card from a `ChannelMessageEnvelope`.
+///
+/// Checks `extensions["adaptive_card"]` first (typed `Value`), then falls
+/// back to `metadata["adaptive_card"]` (legacy JSON string). Returns the
+/// parsed `Value` if found. This dual-read approach is backward-compatible
+/// with upstream writers that haven't migrated to extensions yet.
+pub fn resolve_adaptive_card(envelope: &ChannelMessageEnvelope) -> Option<Value> {
+    if let Some(ac) = envelope.extensions.get("adaptive_card") {
+        return Some(ac.clone());
+    }
+    envelope
+        .metadata
+        .get("adaptive_card")
+        .and_then(|s| serde_json::from_str::<Value>(s).ok())
+}
+
+/// Returns true if the envelope carries an Adaptive Card (in extensions or metadata).
+pub fn has_adaptive_card(envelope: &ChannelMessageEnvelope) -> bool {
+    envelope.extensions.contains_key("adaptive_card")
+        || envelope.metadata.contains_key("adaptive_card")
+}
+
 /// Extract a downsampled text summary from an Adaptive Card JSON string.
 ///
 /// Returns `Some(summary)` if the AC was parsed and produced non-empty text;
@@ -360,11 +382,7 @@ pub fn render_plan_common(input_json: &[u8], config: &RenderPlanConfig) -> Vec<u
         Err(err) => return render_plan_error(&format!("invalid render input: {err}")),
     };
 
-    let ac_json: Option<Value> = plan_in
-        .message
-        .metadata
-        .get("adaptive_card")
-        .and_then(|raw| serde_json::from_str(raw).ok());
+    let ac_json: Option<Value> = resolve_adaptive_card(&plan_in.message);
 
     let render_plan = match &ac_json {
         Some(ac) => {
@@ -828,6 +846,7 @@ mod tests {
                 text: text.map(|t| t.to_string()),
                 attachments: Vec::new(),
                 metadata,
+                extensions: BTreeMap::new(),
             },
             metadata: BTreeMap::new(),
         };

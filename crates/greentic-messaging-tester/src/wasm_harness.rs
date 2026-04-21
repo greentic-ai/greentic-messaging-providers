@@ -1282,6 +1282,7 @@ mod tests {
             text: Some("plan input".to_string()),
             attachments: Vec::new(),
             metadata,
+            extensions: Default::default(),
         }
     }
 }

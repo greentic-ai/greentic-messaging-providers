@@ -55,9 +55,6 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         "webex encoded envelope {}",
         serde_json::to_string(&envelope).unwrap_or_default()
     );
-    if !envelope.attachments.is_empty() {
-        return json_bytes(&json!({"ok": false, "error": "attachments not supported"}));
-    }
 
     let text = envelope
         .text
@@ -67,7 +64,14 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         .map(ToOwned::to_owned);
     let text = match text {
         Some(value) => value,
-        None => return json_bytes(&json!({"ok": false, "error": "text required"})),
+        None if envelope.attachments.is_empty()
+            && provider_common::helpers::resolve_adaptive_card(&envelope).is_none() =>
+        {
+            return json_bytes(
+                &json!({"ok": false, "error": "text, adaptive_card, or attachments required"}),
+            );
+        }
+        None => String::new(),
     };
 
     let destination = envelope.to.first().cloned().or_else(|| {
@@ -94,11 +98,8 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         .as_deref()
         .unwrap_or_else(|| detect_destination_kind(&dest_id));
 
-    // Check for AC card in metadata — send as native Webex attachment.
-    let card_payload = envelope
-        .metadata
-        .get("adaptive_card")
-        .and_then(|ac_raw| serde_json::from_str::<Value>(ac_raw).ok());
+    // Check for AC card in extensions or legacy metadata.
+    let card_payload = provider_common::helpers::resolve_adaptive_card(&envelope);
     let markdown_value = card_payload
         .as_ref()
         .and_then(summarize_card_text)
@@ -118,9 +119,20 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         .clone()
         .unwrap_or_else(|| DEFAULT_API_BASE.to_string());
     let url = format!("{}/messages", api_base);
-    let mut body_map = build_webex_body(card_payload.as_ref(), Some(&text), &markdown_value);
+    let text_for_body = if text.is_empty() { None } else { Some(&text) };
+    let mut body_map = build_webex_body(card_payload.as_ref(), text_for_body, &markdown_value);
     if let Some(pid) = &parent_id {
         body_map.insert("parentId".into(), Value::String(pid.clone()));
+    }
+    // Forward envelope.attachments as Webex `files` URLs (see send_payload.rs
+    // for the same fix on the three-step pipeline path).
+    if !envelope.attachments.is_empty() {
+        let files: Vec<Value> = envelope
+            .attachments
+            .iter()
+            .map(|a| Value::String(a.url.clone()))
+            .collect();
+        body_map.insert("files".into(), Value::Array(files));
     }
     let mut body = Value::Object(body_map);
     let body_obj = body.as_object_mut().expect("body object");
@@ -312,6 +324,7 @@ mod tests {
             text: Some("hello".to_string()),
             attachments: Vec::new(),
             metadata: MessageMetadata::new(),
+            extensions: Default::default(),
         }
     }
 
@@ -330,23 +343,32 @@ mod tests {
     }
 
     #[test]
-    fn handle_send_rejects_attachments_and_missing_destination() {
+    fn handle_send_accepts_attachments_and_rejects_missing_destination() {
+        // Attachments must NOT cause a hard-reject any more — they flow
+        // through to the Webex `files` array. Clear the destination so the
+        // flow short-circuits at "destination required" before reaching the
+        // host `http_client::send` import (unlinkable in native tests).
+        // Hitting that specific error proves the attachment guard now
+        // accepts the envelope — the regression under test.
         let mut with_attachment = serde_json::to_value(envelope()).expect("value");
-        with_attachment.as_object_mut().expect("object").insert(
-            "attachments".to_string(),
-            serde_json::to_value(vec![Attachment {
-                mime_type: "image/png".to_string(),
-                url: "https://example.com/image.png".to_string(),
-                name: None,
-                size_bytes: None,
-            }])
-            .expect("attachments"),
-        );
+        {
+            let obj = with_attachment.as_object_mut().expect("object");
+            obj.insert(
+                "attachments".to_string(),
+                serde_json::to_value(vec![Attachment {
+                    mime_type: "image/png".to_string(),
+                    url: "https://example.com/image.png".to_string(),
+                    name: None,
+                    size_bytes: None,
+                }])
+                .expect("attachments"),
+            );
+            obj.insert("to".to_string(), Value::Array(Vec::new()));
+        }
         let body = parse_json(handle_send(&with_config(with_attachment)));
-        assert_eq!(
-            body.get("error").and_then(Value::as_str),
-            Some("attachments not supported")
-        );
+        let err = body.get("error").and_then(Value::as_str).unwrap_or("");
+        assert_ne!(err, "attachments not supported");
+        assert_eq!(err, "destination required");
 
         let mut no_destination = serde_json::to_value(envelope()).expect("value");
         no_destination

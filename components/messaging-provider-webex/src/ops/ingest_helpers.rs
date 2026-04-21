@@ -235,6 +235,7 @@ pub(super) fn build_webhook_envelope(
         text: Some(text),
         attachments,
         metadata,
+        extensions: Default::default(),
     }
 }
 

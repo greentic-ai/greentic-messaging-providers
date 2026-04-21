@@ -173,6 +173,6 @@
   "supports": [
     "messaging"
   ],
-  "version": "0.4.76",
+  "version": "0.4.84",
   "world": "greentic:component/component@0.5.0"
 }

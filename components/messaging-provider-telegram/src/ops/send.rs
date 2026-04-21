@@ -466,5 +466,6 @@ pub(crate) fn build_synthetic_envelope(
         text: Some(text),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     })
 }

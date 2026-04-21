@@ -29,7 +29,9 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
 
     // If the message carries an Adaptive Card, convert it to rich Telegram
     // content: HTML text, inline keyboard buttons, images for sendPhoto.
-    if let Some(ac_raw) = envelope.metadata.get("adaptive_card")
+    if let Some(ac_raw) = provider_common::helpers::resolve_adaptive_card(&envelope)
+        .map(|v| serde_json::to_string(&v).unwrap_or_default())
+        .as_deref()
         && let Some(content) = ac_to_telegram(ac_raw)
     {
         envelope.text = Some(content.html);

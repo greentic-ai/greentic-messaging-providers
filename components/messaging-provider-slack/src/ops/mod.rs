@@ -76,6 +76,7 @@ pub(super) fn build_slack_envelope(
         text: Some(text),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     }
 }
 
@@ -106,6 +107,7 @@ mod tests {
             text: Some("hello".to_string()),
             attachments: Vec::new(),
             metadata: MessageMetadata::new(),
+            extensions: Default::default(),
         })
         .expect("envelope")
     }
@@ -137,24 +139,33 @@ mod tests {
     }
 
     #[test]
-    fn handle_send_rejects_attachments_before_network() {
+    fn handle_send_accepts_attachments_before_network() {
+        // Regression: slack used to hard-reject envelope.attachments. Now it
+        // forwards them into the `attachments` array on chat.postMessage.
+        // Clear the destination so the flow short-circuits at
+        // "destination required" before touching the host `http_client::send`
+        // import (unlinkable in native tests). Reaching that error proves
+        // the guard accepts the envelope.
         let mut payload = envelope_json();
-        payload.as_object_mut().expect("object").insert(
-            "attachments".to_string(),
-            serde_json::to_value(vec![Attachment {
-                mime_type: "image/png".to_string(),
-                url: "https://example.com/image.png".to_string(),
-                name: None,
-                size_bytes: None,
-            }])
-            .expect("attachments"),
-        );
+        {
+            let obj = payload.as_object_mut().expect("object");
+            obj.insert(
+                "attachments".to_string(),
+                serde_json::to_value(vec![Attachment {
+                    mime_type: "image/png".to_string(),
+                    url: "https://example.com/image.png".to_string(),
+                    name: None,
+                    size_bytes: None,
+                }])
+                .expect("attachments"),
+            );
+            obj.insert("to".to_string(), Value::Array(Vec::new()));
+        }
 
         let body = parse_json(handle_send(&with_config(payload), false));
-        assert_eq!(
-            body.get("error").and_then(Value::as_str),
-            Some("attachments not supported")
-        );
+        let err = body.get("error").and_then(Value::as_str).unwrap_or("");
+        assert_ne!(err, "attachments not supported");
+        assert_eq!(err, "destination required");
     }
 
     #[test]

@@ -5,8 +5,19 @@ use crate::{
     plan::{RenderItem, RenderPlan, RenderTier},
     planner::{PlannerCapabilities, plan_render},
 };
-use greentic_types::{ChannelMessageEnvelope, MessageMetadata};
+use greentic_types::ChannelMessageEnvelope;
 use serde_json::{Value, json};
+
+/// Resolve an Adaptive Card from extensions (typed Value) or metadata (legacy JSON string).
+fn resolve_adaptive_card(envelope: &ChannelMessageEnvelope) -> Option<Value> {
+    if let Some(ac) = envelope.extensions.get("adaptive_card") {
+        return Some(ac.clone());
+    }
+    envelope
+        .metadata
+        .get("adaptive_card")
+        .and_then(|s| serde_json::from_str::<Value>(s).ok())
+}
 
 /// Trait describing a renderer that turns an envelope into a plan.
 pub trait CardRenderer {
@@ -39,7 +50,7 @@ impl CardRenderer for NoopCardRenderer {
         if let Some(text) = summary_text.clone() {
             items.push(RenderItem::Text(text));
         }
-        if let Some(card) = parse_adaptive_card(&envelope.metadata) {
+        if let Some(card) = resolve_adaptive_card(envelope) {
             items.push(RenderItem::AdaptiveCard(card));
         }
 
@@ -84,7 +95,7 @@ impl CardRenderer for DownsampleCardRenderer {
             return NoopCardRenderer.render_plan(envelope, context, mode);
         }
 
-        let ac = parse_adaptive_card(&envelope.metadata);
+        let ac = resolve_adaptive_card(envelope);
 
         match ac {
             Some(ac_value) => {
@@ -130,10 +141,4 @@ impl CardRenderer for DownsampleCardRenderer {
             }
         }
     }
-}
-
-fn parse_adaptive_card(metadata: &MessageMetadata) -> Option<Value> {
-    metadata
-        .get("adaptive_card")
-        .and_then(|value| serde_json::from_str::<Value>(value).ok())
 }

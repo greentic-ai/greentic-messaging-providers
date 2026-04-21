@@ -15,6 +15,7 @@ if [[ -z "${OCI_REGISTRY:-}" || -z "${OCI_NAMESPACE:-}" || -z "${VERSION:-}" ]];
   exit 1
 fi
 PUBLISH_LATEST="${PUBLISH_LATEST:-0}"
+COMPONENT_FILTER="${COMPONENT_FILTER:-}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ARTIFACT_DIR="${ROOT_DIR}/target/components"
@@ -29,9 +30,27 @@ fi
 
 components_json="[]"
 
+component_selected() {
+  local component_name="$1"
+  if [ -z "${COMPONENT_FILTER}" ]; then
+    return 0
+  fi
+  python3 - <<'PY' "${COMPONENT_FILTER}" "${component_name}"
+import sys
+
+raw = sys.argv[1]
+name = sys.argv[2]
+items = [part.strip() for chunk in raw.split(",") for part in chunk.split() if part.strip()]
+raise SystemExit(0 if name in items else 1)
+PY
+}
+
 for wasm in "${ARTIFACT_DIR}"/*.wasm; do
   [ -e "$wasm" ] || { echo "No wasm artifacts found in ${ARTIFACT_DIR}"; exit 1; }
   name="$(basename "${wasm}" .wasm)"
+  if ! component_selected "${name}"; then
+    continue
+  fi
   ref="${OCI_REGISTRY}/${OCI_NAMESPACE}/${name}:${VERSION}"
   latest_ref="${OCI_REGISTRY}/${OCI_NAMESPACE}/${name}:latest"
   manifest_path="${ROOT_DIR}/components/${name}/component.manifest.json"

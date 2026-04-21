@@ -342,6 +342,7 @@ mod tests {
             text: Some(text.to_string()),
             attachments: atts,
             metadata: meta_map,
+            extensions: Default::default(),
         };
         let plan = RenderPlanInV1 {
             message: msg.clone(),

@@ -1,11 +1,11 @@
 pack_id: messaging-slack
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 display_name: Slack
 components:
 - id: ai.greentic.component-templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -20,7 +20,7 @@ components:
     host: {}
   wasm: components/ai.greentic.component-templates.wasm
 - id: ai.greentic.component-templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -35,7 +35,7 @@ components:
     host: {}
   wasm: components/templates/templates.wasm
 - id: diagnostics___auth_test
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -50,7 +50,7 @@ components:
     host: {}
   wasm: components/diagnostics___auth_test.wasm
 - id: diagnostics___optional_send
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -65,7 +65,7 @@ components:
     host: {}
   wasm: components/diagnostics___optional_send.wasm
 - id: diagnostics___preflight
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -80,7 +80,7 @@ components:
     host: {}
   wasm: components/diagnostics___preflight.wasm
 - id: diagnostics___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -95,7 +95,7 @@ components:
     host: {}
   wasm: components/diagnostics___summary.wasm
 - id: diagnostics__auth_test
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -110,7 +110,7 @@ components:
     host: {}
   wasm: components/diagnostics__auth_test.wasm
 - id: diagnostics__optional_send
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -125,7 +125,7 @@ components:
     host: {}
   wasm: components/diagnostics__optional_send.wasm
 - id: diagnostics__preflight
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -140,7 +140,7 @@ components:
     host: {}
   wasm: components/diagnostics__preflight.wasm
 - id: diagnostics__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -155,7 +155,7 @@ components:
     host: {}
   wasm: components/diagnostics__summary.wasm
 - id: ingress_default___ingress_default__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -170,7 +170,7 @@ components:
     host: {}
   wasm: components/ingress_default___ingress_default__summary.wasm
 - id: messaging-ingress-slack
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -185,7 +185,7 @@ components:
     host: {}
   wasm: components/messaging-ingress-slack.wasm
 - id: messaging-ingress-slack
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -200,7 +200,7 @@ components:
     host: {}
   wasm: components/messaging-ingress-slack/component.wasm
 - id: messaging-provider-slack
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -215,7 +215,7 @@ components:
     host: {}
   wasm: components/messaging-provider-slack.wasm
 - id: messaging-provider-slack
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -230,7 +230,7 @@ components:
     host: {}
   wasm: components/messaging-provider-slack/component.wasm
 - id: rotate_credentials___apply
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -245,7 +245,7 @@ components:
     host: {}
   wasm: components/rotate_credentials___apply.wasm
 - id: rotate_credentials___collect
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -260,7 +260,7 @@ components:
     host: {}
   wasm: components/rotate_credentials___collect.wasm
 - id: rotate_credentials___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -275,7 +275,7 @@ components:
     host: {}
   wasm: components/rotate_credentials___summary.wasm
 - id: rotate_credentials___validate
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -290,7 +290,7 @@ components:
     host: {}
   wasm: components/rotate_credentials___validate.wasm
 - id: rotate_credentials__apply
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -305,7 +305,7 @@ components:
     host: {}
   wasm: components/rotate_credentials__apply.wasm
 - id: rotate_credentials__collect
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -320,7 +320,7 @@ components:
     host: {}
   wasm: components/rotate_credentials__collect.wasm
 - id: rotate_credentials__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -335,7 +335,7 @@ components:
     host: {}
   wasm: components/rotate_credentials__summary.wasm
 - id: rotate_credentials__validate
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -350,7 +350,7 @@ components:
     host: {}
   wasm: components/rotate_credentials__validate.wasm
 - id: sync_subscriptions___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -365,7 +365,7 @@ components:
     host: {}
   wasm: components/sync_subscriptions___summary.wasm
 - id: sync_subscriptions___sync_subscriptions__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -380,7 +380,7 @@ components:
     host: {}
   wasm: components/sync_subscriptions___sync_subscriptions__summary.wasm
 - id: templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -395,7 +395,7 @@ components:
     host: {}
   wasm: components/templates.wasm
 - id: verify_webhooks___describe
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -410,7 +410,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___describe.wasm
 - id: verify_webhooks___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -425,7 +425,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___summary.wasm
 - id: verify_webhooks__describe
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -456,7 +456,7 @@ assets:
 extensions:
   greentic.ext.capabilities.v1:
     kind: greentic.ext.capabilities.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       offers:
       - cap_id: greentic.cap.messaging.provider.v1
@@ -468,11 +468,11 @@ extensions:
         requires_setup: true
         setup:
           qa_ref: components/messaging-provider-slack
-        version: 0.4.76
+        version: 0.4.84
       schema_version: 1
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       validators:
       - component_ref: oci://ghcr.io/greenticai/validators/messaging:0.4.19
@@ -480,7 +480,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       providers:
       - provider_type: messaging.slack.api
@@ -501,7 +501,7 @@ extensions:
           world: greentic:provider/schema-core@1.0.0
   messaging.oauth.v1:
     kind: messaging.oauth.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       auth_type: oauth2
       authorize_url: https://slack.com/oauth/v2/authorize
@@ -516,7 +516,7 @@ extensions:
       token_url: https://slack.com/api/oauth.v2.access
   messaging.provider_ingress.v1:
     kind: messaging.provider_ingress.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       capabilities:
         content_types:

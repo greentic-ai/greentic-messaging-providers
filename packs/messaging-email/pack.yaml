@@ -1,12 +1,12 @@
 pack_id: messaging-email
 display_name: Email
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 description: "Email messaging provider \u2014 Microsoft Graph API with SMTP fallback"
 components:
 - id: messaging-provider-email
-  version: 0.4.76
+  version: 0.4.84
   world: greentic:component/component-v0-v6-v0@0.6.1
   supports:
   - messaging
@@ -31,13 +31,13 @@ assets:
 extensions:
   greentic.ext.capabilities.v1:
     kind: greentic.ext.capabilities.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       schema_version: 1
       offers:
       - offer_id: messaging-email-v1
         cap_id: greentic.cap.messaging.provider.v1
-        version: 0.4.76
+        version: 0.4.84
         provider:
           component_ref: messaging-provider-email
           op: messaging.configure
@@ -47,7 +47,7 @@ extensions:
           qa_ref: components/messaging-provider-email
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       validators:
       - component_ref: oci://ghcr.io/greenticai/validators/messaging:0.4.19
@@ -55,7 +55,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       providers:
       - provider_type: messaging.email.smtp

@@ -1,12 +1,12 @@
 pack_id: messaging-dummy
 display_name: Dummy
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 description: "Dummy messaging provider \u2014 Mock provider for testing"
 components:
 - id: messaging-provider-dummy
-  version: 0.4.76
+  version: 0.4.84
   world: greentic:component/component-v0-v6-v0@0.6.1
   supports:
   - messaging
@@ -29,13 +29,13 @@ assets:
 extensions:
   greentic.ext.capabilities.v1:
     kind: greentic.ext.capabilities.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       schema_version: 1
       offers:
       - offer_id: messaging-dummy-v1
         cap_id: greentic.cap.messaging.provider.v1
-        version: 0.4.76
+        version: 0.4.84
         provider:
           component_ref: messaging-provider-dummy
           op: messaging.configure
@@ -43,7 +43,7 @@ extensions:
         requires_setup: false
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       validators:
       - component_ref: oci://ghcr.io/greenticai/validators/messaging:0.4.19
@@ -51,7 +51,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       providers:
       - provider_type: messaging.dummy

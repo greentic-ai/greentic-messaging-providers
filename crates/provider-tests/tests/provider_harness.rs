@@ -180,6 +180,7 @@ fn test_message_from_plan(plan: &RenderPlan) -> ChannelMessageEnvelope {
         text: plan.summary_text.clone(),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     }
 }
 

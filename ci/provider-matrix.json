@@ -1,0 +1,257 @@
+{
+  "all_components": [
+    "questions",
+    "secrets-probe",
+    "slack",
+    "teams",
+    "telegram",
+    "telegram-webhook",
+    "webchat",
+    "webex",
+    "webex-webhook",
+    "whatsapp",
+    "messaging-ingress-slack",
+    "messaging-ingress-teams",
+    "messaging-ingress-telegram",
+    "messaging-ingress-whatsapp",
+    "messaging-provider-dummy",
+    "messaging-provider-telegram",
+    "messaging-provider-teams",
+    "messaging-provider-email",
+    "messaging-provider-slack",
+    "messaging-provider-webex",
+    "messaging-provider-whatsapp",
+    "messaging-provider-webchat",
+    "messaging-provider-webchat-gui"
+  ],
+  "all_packs": [
+    "messaging-dummy",
+    "messaging-email",
+    "messaging-slack",
+    "messaging-teams",
+    "messaging-telegram",
+    "messaging-webchat",
+    "messaging-webchat-gui",
+    "messaging-webex",
+    "messaging-whatsapp"
+  ],
+  "shared_paths": [
+    ".github/workflows/",
+    "ci/check_generated.sh",
+    "ci/check_wit_policy.sh",
+    "ci/gen_flows.sh",
+    "ci/lib/",
+    "ci/local_check.sh",
+    "ci/provider-matrix.json",
+    "ci/provider_matrix.py",
+    "ci/run_actions.sh",
+    "ci/steps/",
+    "Cargo.toml",
+    "Cargo.lock",
+    "rust-toolchain.toml",
+    "tools/build_component_env.sh",
+    "tools/build_component_one.sh",
+    "tools/build_components.sh",
+    "tools/build_components/",
+    "tools/build_packs_only.sh",
+    "tools/filter_pack_doctor_json.py",
+    "tools/generate_pack_metadata.py",
+    "tools/publish_oci.sh",
+    "tools/publish_packs_oci.sh",
+    "tools/sync_packs.sh",
+    "tools/sync_wit_deps_from_greentic_interfaces.sh",
+    "wit/",
+    "components/questions/",
+    "components/secrets-probe/",
+    "components/templates/",
+    "packs/messaging-provider-bundle/",
+    "crates/component_questions/",
+    "crates/greentic-messaging-cardkit/",
+    "crates/greentic-messaging-packgen/",
+    "crates/greentic-messaging-planned/",
+    "crates/greentic-messaging-renderer/",
+    "crates/greentic-messaging-tester/",
+    "crates/messaging-cardkit/",
+    "crates/messaging-cardkit-bin/",
+    "crates/messaging-core/",
+    "crates/provider-common/",
+    "crates/provider-runtime-config/",
+    "crates/provider-tests/",
+    "crates/questions-cli/",
+    "crates/webchat-directline-core/"
+  ],
+  "providers": {
+    "dummy": {
+      "pack": "messaging-dummy",
+      "components": [
+        "messaging-provider-dummy"
+      ],
+      "manifests": [
+        "components/messaging-provider-dummy/Cargo.toml"
+      ],
+      "paths": [
+        "components/messaging-provider-dummy/",
+        "packs/messaging-dummy/",
+        "ci/secrets/dummy.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_dummy.rs"
+      ]
+    },
+    "email": {
+      "pack": "messaging-email",
+      "components": [
+        "messaging-provider-email"
+      ],
+      "manifests": [
+        "components/messaging-provider-email/Cargo.toml"
+      ],
+      "paths": [
+        "components/messaging-provider-email/",
+        "packs/messaging-email/",
+        "ci/secrets/email.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_email.rs",
+        "crates/provider-tests/tests/universal_ops_email.rs"
+      ]
+    },
+    "slack": {
+      "pack": "messaging-slack",
+      "components": [
+        "slack",
+        "messaging-ingress-slack",
+        "messaging-provider-slack"
+      ],
+      "manifests": [
+        "components/slack/Cargo.toml",
+        "components/messaging-ingress-slack/Cargo.toml",
+        "components/messaging-provider-slack/Cargo.toml"
+      ],
+      "paths": [
+        "components/slack/",
+        "components/messaging-ingress-slack/",
+        "components/messaging-provider-slack/",
+        "packs/messaging-slack/",
+        "ci/secrets/slack.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_slack.rs"
+      ]
+    },
+    "teams": {
+      "pack": "messaging-teams",
+      "components": [
+        "teams",
+        "messaging-ingress-teams",
+        "messaging-provider-teams"
+      ],
+      "manifests": [
+        "components/teams/Cargo.toml",
+        "components/messaging-ingress-teams/Cargo.toml",
+        "components/messaging-provider-teams/Cargo.toml"
+      ],
+      "paths": [
+        "components/teams/",
+        "components/messaging-ingress-teams/",
+        "components/messaging-provider-teams/",
+        "packs/messaging-teams/",
+        "ci/secrets/teams.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_teams.rs"
+      ]
+    },
+    "telegram": {
+      "pack": "messaging-telegram",
+      "components": [
+        "telegram",
+        "telegram-webhook",
+        "messaging-ingress-telegram",
+        "messaging-provider-telegram"
+      ],
+      "manifests": [
+        "components/telegram/Cargo.toml",
+        "components/telegram-webhook/Cargo.toml",
+        "components/messaging-ingress-telegram/Cargo.toml",
+        "components/messaging-provider-telegram/Cargo.toml"
+      ],
+      "paths": [
+        "components/telegram/",
+        "components/telegram-webhook/",
+        "components/messaging-ingress-telegram/",
+        "components/messaging-provider-telegram/",
+        "packs/messaging-telegram/",
+        "ci/secrets/telegram.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_telegram.rs"
+      ]
+    },
+    "webchat": {
+      "pack": "messaging-webchat",
+      "components": [
+        "webchat",
+        "messaging-provider-webchat"
+      ],
+      "manifests": [
+        "components/webchat/Cargo.toml",
+        "components/messaging-provider-webchat/Cargo.toml"
+      ],
+      "paths": [
+        "components/webchat/",
+        "components/messaging-provider-webchat/",
+        "packs/messaging-webchat/",
+        "ci/secrets/webchat.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_webchat.rs",
+        "crates/provider-tests/tests/provider_core_webchat_interactive_mcp.rs"
+      ]
+    },
+    "webchat-gui": {
+      "pack": "messaging-webchat-gui",
+      "components": [
+        "messaging-provider-webchat-gui"
+      ],
+      "manifests": [
+        "components/messaging-provider-webchat-gui/Cargo.toml"
+      ],
+      "paths": [
+        "components/messaging-provider-webchat-gui/",
+        "packs/messaging-webchat-gui/",
+        "tools/import_webchat_gui_assets.sh"
+      ]
+    },
+    "webex": {
+      "pack": "messaging-webex",
+      "components": [
+        "webex",
+        "webex-webhook",
+        "messaging-provider-webex"
+      ],
+      "manifests": [
+        "components/webex/Cargo.toml",
+        "components/webex-webhook/Cargo.toml",
+        "components/messaging-provider-webex/Cargo.toml"
+      ],
+      "paths": [
+        "components/webex/",
+        "components/webex-webhook/",
+        "components/messaging-provider-webex/",
+        "packs/messaging-webex/",
+        "ci/secrets/webex.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_webex.rs"
+      ]
+    },
+    "whatsapp": {
+      "pack": "messaging-whatsapp",
+      "components": [
+        "whatsapp",
+        "messaging-ingress-whatsapp",
+        "messaging-provider-whatsapp"
+      ],
+      "manifests": [
+        "components/whatsapp/Cargo.toml",
+        "components/messaging-ingress-whatsapp/Cargo.toml",
+        "components/messaging-provider-whatsapp/Cargo.toml"
+      ],
+      "paths": [
+        "components/whatsapp/",
+        "components/messaging-ingress-whatsapp/",
+        "components/messaging-provider-whatsapp/",
+        "packs/messaging-whatsapp/",
+        "ci/secrets/whatsapp.secrets-pack.yaml",
+        "crates/provider-tests/tests/provider_core_whatsapp.rs"
+      ]
+    }
+  }
+}

@@ -1,11 +1,11 @@
 pack_id: messaging-teams
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 display_name: Microsoft Teams
 components:
 - id: ai.greentic.component-templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -20,7 +20,7 @@ components:
     host: {}
   wasm: components/ai.greentic.component-templates.wasm
 - id: ai.greentic.component-templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -35,7 +35,7 @@ components:
     host: {}
   wasm: components/templates/templates.wasm
 - id: diagnostics___channel_check
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -50,7 +50,7 @@ components:
     host: {}
   wasm: components/diagnostics___channel_check.wasm
 - id: diagnostics___subscription_check
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -65,7 +65,7 @@ components:
     host: {}
   wasm: components/diagnostics___subscription_check.wasm
 - id: diagnostics___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -80,7 +80,7 @@ components:
     host: {}
   wasm: components/diagnostics___summary.wasm
 - id: diagnostics___token_check
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -95,7 +95,7 @@ components:
     host: {}
   wasm: components/diagnostics___token_check.wasm
 - id: diagnostics__channel_check
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -110,7 +110,7 @@ components:
     host: {}
   wasm: components/diagnostics__channel_check.wasm
 - id: diagnostics__subscription_check
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -125,7 +125,7 @@ components:
     host: {}
   wasm: components/diagnostics__subscription_check.wasm
 - id: diagnostics__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -140,7 +140,7 @@ components:
     host: {}
   wasm: components/diagnostics__summary.wasm
 - id: diagnostics__token_check
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -155,7 +155,7 @@ components:
     host: {}
   wasm: components/diagnostics__token_check.wasm
 - id: ingress_default___ingress_default__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -170,7 +170,7 @@ components:
     host: {}
   wasm: components/ingress_default___ingress_default__summary.wasm
 - id: messaging-ingress-teams
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -185,7 +185,7 @@ components:
     host: {}
   wasm: components/messaging-ingress-teams/component.wasm
 - id: messaging-ingress-teams
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -200,7 +200,7 @@ components:
     host: {}
   wasm: components/messaging-ingress-teams.wasm
 - id: messaging-provider-teams
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -215,7 +215,7 @@ components:
     host: {}
   wasm: components/messaging-provider-teams.wasm
 - id: messaging-provider-teams
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -230,7 +230,7 @@ components:
     host: {}
   wasm: components/messaging-provider-teams/component.wasm
 - id: sync_subscriptions___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -245,7 +245,7 @@ components:
     host: {}
   wasm: components/sync_subscriptions___summary.wasm
 - id: sync_subscriptions___sync_subscriptions__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -260,7 +260,7 @@ components:
     host: {}
   wasm: components/sync_subscriptions___sync_subscriptions__summary.wasm
 - id: templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -275,7 +275,7 @@ components:
     host: {}
   wasm: components/templates.wasm
 - id: verify_webhooks___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -290,7 +290,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___summary.wasm
 - id: verify_webhooks___verify
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -305,7 +305,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___verify.wasm
 - id: verify_webhooks__verify
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -338,7 +338,7 @@ assets:
 extensions:
   greentic.ext.capabilities.v1:
     kind: greentic.ext.capabilities.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       offers:
       - cap_id: greentic.cap.messaging.provider.v1
@@ -350,11 +350,11 @@ extensions:
         requires_setup: true
         setup:
           qa_ref: components/messaging-provider-teams
-        version: 0.4.76
+        version: 0.4.84
       schema_version: 1
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       validators:
       - component_ref: oci://ghcr.io/greenticai/validators/messaging:0.4.19
@@ -362,7 +362,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       providers:
       - provider_type: messaging.teams.bot
@@ -385,7 +385,7 @@ extensions:
           world: greentic:provider/schema-core@1.0.0
   messaging.oauth.v1:
     kind: messaging.oauth.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       auth_type: oauth2
       authorize_url: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
@@ -398,7 +398,7 @@ extensions:
       token_url: https://login.microsoftonline.com/common/oauth2/v2.0/token
   messaging.provider_ingress.v1:
     kind: messaging.provider_ingress.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       capabilities:
         content_types:
@@ -409,7 +409,7 @@ extensions:
       world: greentic:messaging-ingress-teams/messaging-ingress-teams@0.0.1
   messaging.subscriptions.v1:
     kind: messaging.subscriptions.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       component_ref: messaging-ingress-teams
       export: sync-subscriptions

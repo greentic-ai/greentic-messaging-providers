@@ -30,19 +30,17 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
     }
 
     // If the message carries an Adaptive Card, convert to Slack Block Kit.
-    let ac_result = encode_message
-        .metadata
-        .get("adaptive_card")
-        .and_then(|ac_raw| ac_to_slack_blocks(ac_raw));
+    let ac_raw_str = provider_common::helpers::resolve_adaptive_card(&encode_message)
+        .map(|v| serde_json::to_string(&v).unwrap_or_default());
+    let ac_result = ac_raw_str.as_deref().and_then(ac_to_slack_blocks);
 
     let text = if ac_result.is_some() {
         // Blocks present — text is the plain-text fallback for notifications.
         // Capability matrix is centralized in greentic-messaging-renderer.
         let caps = greentic_messaging_renderer::capabilities_for("slack")
             .expect("slack capabilities must be registered");
-        encode_message
-            .metadata
-            .get("adaptive_card")
+        ac_raw_str
+            .as_deref()
             .and_then(|ac_raw| extract_ac_summary(ac_raw, &caps))
             .or_else(|| encode_message.text.clone().filter(|t| !t.trim().is_empty()))
             .unwrap_or_else(|| "slack universal payload".to_string())

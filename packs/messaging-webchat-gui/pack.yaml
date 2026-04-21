@@ -1,5 +1,5 @@
 pack_id: messaging-webchat-gui
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 display_name: WebChat GUI
@@ -50,7 +50,7 @@ components:
     host: {}
   wasm: components/templates/templates.wasm
 - id: messaging-provider-webchat-gui
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -65,7 +65,7 @@ components:
     host: {}
   wasm: components/messaging-provider-webchat-gui.wasm
 - id: messaging-provider-webchat-gui
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -79,21 +79,6 @@ components:
       clocks: false
     host: {}
   wasm: components/messaging-provider-webchat-gui/component.wasm
-- id: messaging_provider_webchat_gui
-  version: 0.4.76
-  world: root:component/root
-  supports:
-  - messaging
-  profiles:
-    default: default
-    supported:
-    - default
-  capabilities:
-    wasi:
-      random: false
-      clocks: false
-    host: {}
-  wasm: components/messaging_provider_webchat_gui.wasm
 dependencies:
 - alias: state-memory
   pack_id: state-memory
@@ -112,7 +97,7 @@ assets:
 extensions:
   greentic.ext.capabilities.v1:
     kind: greentic.ext.capabilities.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       offers:
       - cap_id: greentic.cap.messaging.provider.v1
@@ -124,11 +109,11 @@ extensions:
         requires_setup: true
         setup:
           qa_ref: components/messaging-provider-webchat-gui
-        version: 0.4.76
+        version: 0.4.84
       schema_version: 1
   greentic.http-routes.v1:
     kind: greentic.http-routes.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       routes:
       - domain: messaging
@@ -152,7 +137,7 @@ extensions:
       schema_version: 1
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       validators:
       - component_ref: oci://ghcr.io/greenticai/validators/messaging:0.4.19
@@ -160,7 +145,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       providers:
       - provider_type: messaging.webchat-gui
@@ -180,7 +165,7 @@ extensions:
           world: greentic:provider/schema-core@1.0.0
   greentic.static-routes.v1:
     kind: greentic.static-routes.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       routes:
       - id: webchat-gui
@@ -194,7 +179,7 @@ extensions:
       version: 1
   messaging.provider_ingress.v1:
     kind: messaging.provider_ingress.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       capabilities:
         content_types:

@@ -244,6 +244,7 @@ mod tests {
             text: text.map(|value| value.to_string()),
             attachments: Vec::new(),
             metadata,
+            extensions: Default::default(),
         }
     }
 

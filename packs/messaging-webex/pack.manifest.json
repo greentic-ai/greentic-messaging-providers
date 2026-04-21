@@ -1,13 +1,13 @@
 {
   "name": "messaging-webex",
-  "version": "0.4.76",
+  "version": "0.4.84",
   "kind": "application",
   "publisher": "Greentic",
   "description": "Webex messaging provider \u2014 Bot API with Adaptive Cards",
   "component_sources": [
     {
       "id": "ai.greentic.component-templates",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -29,7 +29,7 @@
     },
     {
       "id": "ai.greentic.component-templates",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -51,7 +51,7 @@
     },
     {
       "id": "diagnostics___room_check",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -73,7 +73,7 @@
     },
     {
       "id": "diagnostics___summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -95,7 +95,7 @@
     },
     {
       "id": "diagnostics___token_check",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -117,7 +117,7 @@
     },
     {
       "id": "diagnostics___webhook_check",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -139,7 +139,7 @@
     },
     {
       "id": "diagnostics__room_check",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -161,7 +161,7 @@
     },
     {
       "id": "diagnostics__summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -183,7 +183,7 @@
     },
     {
       "id": "diagnostics__token_check",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -205,7 +205,7 @@
     },
     {
       "id": "diagnostics__webhook_check",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -227,7 +227,7 @@
     },
     {
       "id": "messaging-provider-webex",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -249,7 +249,7 @@
     },
     {
       "id": "messaging-provider-webex",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -271,7 +271,7 @@
     },
     {
       "id": "sync_subscriptions___summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -293,7 +293,7 @@
     },
     {
       "id": "sync_subscriptions___sync_subscriptions__summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -315,7 +315,7 @@
     },
     {
       "id": "templates",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -337,7 +337,7 @@
     },
     {
       "id": "verify_webhooks___steps",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -359,7 +359,7 @@
     },
     {
       "id": "verify_webhooks___summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -381,7 +381,7 @@
     },
     {
       "id": "verify_webhooks__steps",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -418,7 +418,7 @@
   "extensions": {
     "greentic.ext.capabilities.v1": {
       "kind": "greentic.ext.capabilities.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "offers": [
           {
@@ -433,7 +433,7 @@
             "setup": {
               "qa_ref": "components/messaging-provider-webex"
             },
-            "version": "0.4.76"
+            "version": "0.4.84"
           }
         ],
         "schema_version": 1
@@ -441,7 +441,7 @@
     },
     "greentic.messaging.validators.v1": {
       "kind": "greentic.messaging.validators.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "validators": [
           {
@@ -454,7 +454,7 @@
     },
     "greentic.provider-extension.v1": {
       "kind": "greentic.provider-extension.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "providers": [
           {

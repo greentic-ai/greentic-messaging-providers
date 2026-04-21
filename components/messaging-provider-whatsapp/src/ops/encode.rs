@@ -12,20 +12,21 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
         Err(err) => return encode_error(&err),
     };
 
-    // If the message carries an Adaptive Card, extract rich content for WhatsApp.
-    let wa_content = encode_message
-        .metadata
-        .get("adaptive_card")
-        .and_then(|ac_raw| crate::ac_converter::ac_to_whatsapp(ac_raw));
+    // If the message carries an Adaptive Card (extensions or legacy metadata),
+    // extract rich content for WhatsApp.
+    let ac_raw_str = provider_common::helpers::resolve_adaptive_card(&encode_message)
+        .map(|v| serde_json::to_string(&v).unwrap_or_default());
+    let wa_content = ac_raw_str
+        .as_deref()
+        .and_then(crate::ac_converter::ac_to_whatsapp);
 
     let text = if let Some(ref content) = wa_content {
         content.body.clone()
     } else {
         let caps = greentic_messaging_renderer::capabilities_for("whatsapp")
             .expect("whatsapp capabilities must be registered");
-        encode_message
-            .metadata
-            .get("adaptive_card")
+        ac_raw_str
+            .as_deref()
             .and_then(|ac_raw| extract_ac_summary(ac_raw, &caps))
             .or_else(|| encode_message.text.clone().filter(|t| !t.trim().is_empty()))
             .unwrap_or_else(|| "universal whatsapp payload".to_string())

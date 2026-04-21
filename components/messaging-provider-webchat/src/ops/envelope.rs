@@ -7,6 +7,8 @@
 //!   defaults env/tenant to "default".
 
 use greentic_types::{Actor, ChannelMessageEnvelope, EnvId, MessageMetadata, TenantCtx, TenantId};
+use serde_json::Value;
+use std::collections::BTreeMap;
 
 /// Build envelope with explicit env/tenant context (used by Direct Line ingest).
 pub(super) fn build_webchat_envelope_with_ctx(
@@ -16,6 +18,7 @@ pub(super) fn build_webchat_envelope_with_ctx(
     tenant_channel_id: Option<String>,
     env_id: &str,
     tenant_id: &str,
+    extensions: BTreeMap<String, Value>,
 ) -> ChannelMessageEnvelope {
     let env =
         EnvId::try_from(env_id).unwrap_or_else(|_| EnvId::try_from("default").expect("env id"));
@@ -50,6 +53,7 @@ pub(super) fn build_webchat_envelope_with_ctx(
         text: Some(text),
         attachments: Vec::new(),
         metadata,
+        extensions,
     }
 }
 
@@ -88,5 +92,6 @@ pub(super) fn build_webchat_envelope(
         text: Some(text),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     }
 }

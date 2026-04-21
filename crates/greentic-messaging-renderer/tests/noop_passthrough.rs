@@ -24,6 +24,7 @@ fn build_envelope_with_card(card: Value, text: &str) -> ChannelMessageEnvelope {
         text: Some(text.to_string()),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     }
 }
 

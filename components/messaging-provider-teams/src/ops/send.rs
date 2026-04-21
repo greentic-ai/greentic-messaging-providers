@@ -46,12 +46,10 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         },
     };
 
-    if !envelope.attachments.is_empty() {
-        return json_bytes(&json!({"ok": false, "error": "attachments not supported"}));
-    }
-
     // Adaptive Card payloads may have no text — allow empty text when _ac_json is present.
+    // Envelope attachments alone are also valid (media-only message).
     let has_ac = parsed.get("_ac_json").is_some();
+    let has_attachments = !envelope.attachments.is_empty();
     let text = envelope
         .text
         .as_ref()
@@ -59,8 +57,10 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         .filter(|value| !value.is_empty())
         .map(ToOwned::to_owned)
         .unwrap_or_default();
-    if text.is_empty() && !has_ac {
-        return json_bytes(&json!({"ok": false, "error": "text required"}));
+    if text.is_empty() && !has_ac && !has_attachments {
+        return json_bytes(
+            &json!({"ok": false, "error": "text, adaptive_card, or attachments required"}),
+        );
     }
 
     // Get service URL from metadata or config
@@ -127,26 +127,46 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         Err(err) => return json_bytes(&json!({"ok": false, "error": err})),
     };
 
-    // Build Bot Framework Activity payload
+    // Build Bot Framework Activity payload.
+    //
+    // Two attachment sources can contribute to the outbound activity's
+    // `attachments` array: the Adaptive Card (if any) and envelope
+    // attachments (media URLs). They coexist — Teams renders cards alongside
+    // file previews.
     let ac_json_str = parsed
         .get("_ac_json")
         .and_then(Value::as_str)
         .and_then(|s| serde_json::from_str::<Value>(s).ok());
 
-    let body = if let Some(ac_card) = ac_json_str {
-        // Send as native Adaptive Card attachment
-        json!({
-            "type": "message",
-            "text": "",
-            "attachments": [{
-                "contentType": "application/vnd.microsoft.card.adaptive",
-                "content": ac_card
-            }]
-        })
+    let mut bot_attachments: Vec<Value> = Vec::new();
+    if let Some(ac_card) = ac_json_str {
+        bot_attachments.push(json!({
+            "contentType": "application/vnd.microsoft.card.adaptive",
+            "content": ac_card
+        }));
+    }
+    for a in &envelope.attachments {
+        let mut att = serde_json::Map::new();
+        att.insert(
+            "contentType".to_string(),
+            Value::String(a.mime_type.clone()),
+        );
+        att.insert("contentUrl".to_string(), Value::String(a.url.clone()));
+        if let Some(name) = &a.name {
+            att.insert("name".to_string(), Value::String(name.clone()));
+        }
+        bot_attachments.push(Value::Object(att));
+    }
+
+    let body = if bot_attachments.is_empty() {
+        json!({"type": "message", "text": text})
     } else {
+        // Bot Framework requires `text` alongside attachments — use empty
+        // fallback when the sender provided only media/card.
         json!({
             "type": "message",
-            "text": text
+            "text": text,
+            "attachments": bot_attachments
         })
     };
 

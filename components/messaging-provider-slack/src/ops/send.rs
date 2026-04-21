@@ -43,10 +43,6 @@ pub(crate) fn handle_send(input_json: &[u8], is_reply: bool) -> Vec<u8> {
         },
     };
 
-    if !envelope.attachments.is_empty() {
-        return json_bytes(&json!({"ok": false, "error": "attachments not supported"}));
-    }
-
     let text = envelope
         .text
         .as_ref()
@@ -55,7 +51,10 @@ pub(crate) fn handle_send(input_json: &[u8], is_reply: bool) -> Vec<u8> {
         .map(ToOwned::to_owned);
     let text = match text {
         Some(value) => value,
-        None => return json_bytes(&json!({"ok": false, "error": "text required"})),
+        None if envelope.attachments.is_empty() => {
+            return json_bytes(&json!({"ok": false, "error": "text or attachments required"}));
+        }
+        None => String::new(),
     };
 
     let destination = envelope.to.first().cloned().or_else(|| {
@@ -117,6 +116,37 @@ pub(crate) fn handle_send(input_json: &[u8], is_reply: bool) -> Vec<u8> {
             .as_object_mut()
             .expect("payload object")
             .insert("blocks".into(), b);
+    }
+    // Forward envelope attachments as Slack legacy attachments array. Images
+    // render inline via `image_url`; non-image URLs go into `text` with a
+    // title for unfurl.
+    if !envelope.attachments.is_empty() {
+        let slack_attachments: Vec<Value> = envelope
+            .attachments
+            .iter()
+            .map(|a| {
+                let mime = a.mime_type.to_lowercase();
+                let title = a.name.clone().unwrap_or_else(|| "attachment".to_string());
+                if mime.starts_with("image/") {
+                    json!({
+                        "fallback": title.clone(),
+                        "image_url": a.url,
+                        "title": title,
+                    })
+                } else {
+                    json!({
+                        "fallback": title.clone(),
+                        "title": title,
+                        "title_link": a.url,
+                        "text": a.url,
+                    })
+                }
+            })
+            .collect();
+        payload
+            .as_object_mut()
+            .expect("payload object")
+            .insert("attachments".into(), Value::Array(slack_attachments));
     }
 
     let request = client::Request {
@@ -275,5 +305,6 @@ fn build_synthetic_envelope(
         text,
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     })
 }

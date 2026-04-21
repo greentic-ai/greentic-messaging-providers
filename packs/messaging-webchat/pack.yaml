@@ -1,11 +1,11 @@
 pack_id: messaging-webchat
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 display_name: WebChat
 components:
 - id: ai.greentic.component-templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -20,7 +20,7 @@ components:
     host: {}
   wasm: components/ai.greentic.component-templates.wasm
 - id: ai.greentic.component-templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -35,7 +35,7 @@ components:
     host: {}
   wasm: components/templates/templates.wasm
 - id: diagnostics___check_secret
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -50,7 +50,7 @@ components:
     host: {}
   wasm: components/diagnostics___check_secret.wasm
 - id: diagnostics___optional_loopback
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -65,7 +65,7 @@ components:
     host: {}
   wasm: components/diagnostics___optional_loopback.wasm
 - id: diagnostics___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -80,7 +80,7 @@ components:
     host: {}
   wasm: components/diagnostics___summary.wasm
 - id: diagnostics__check_secret
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -95,7 +95,7 @@ components:
     host: {}
   wasm: components/diagnostics__check_secret.wasm
 - id: diagnostics__optional_loopback
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -110,7 +110,7 @@ components:
     host: {}
   wasm: components/diagnostics__optional_loopback.wasm
 - id: diagnostics__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -125,7 +125,7 @@ components:
     host: {}
   wasm: components/diagnostics__summary.wasm
 - id: ingress_default___ingress_default__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -140,7 +140,7 @@ components:
     host: {}
   wasm: components/ingress_default___ingress_default__summary.wasm
 - id: messaging-provider-webchat
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -155,7 +155,7 @@ components:
     host: {}
   wasm: components/messaging-provider-webchat/component.wasm
 - id: messaging-provider-webchat
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -170,7 +170,7 @@ components:
     host: {}
   wasm: components/messaging-provider-webchat.wasm
 - id: sync_subscriptions___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -185,7 +185,7 @@ components:
     host: {}
   wasm: components/sync_subscriptions___summary.wasm
 - id: sync_subscriptions___sync_subscriptions__summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -200,7 +200,7 @@ components:
     host: {}
   wasm: components/sync_subscriptions___sync_subscriptions__summary.wasm
 - id: templates
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -215,7 +215,7 @@ components:
     host: {}
   wasm: components/templates.wasm
 - id: verify_webhooks___steps
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -230,7 +230,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___steps.wasm
 - id: verify_webhooks___summary
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -245,7 +245,7 @@ components:
     host: {}
   wasm: components/verify_webhooks___summary.wasm
 - id: verify_webhooks__steps
-  version: 0.4.76
+  version: 0.4.84
   world: root:component/root
   supports:
   - messaging
@@ -276,7 +276,7 @@ assets:
 extensions:
   greentic.ext.capabilities.v1:
     kind: greentic.ext.capabilities.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       offers:
       - cap_id: greentic.cap.messaging.provider.v1
@@ -288,11 +288,11 @@ extensions:
         requires_setup: true
         setup:
           qa_ref: components/messaging-provider-webchat
-        version: 0.4.76
+        version: 0.4.84
       schema_version: 1
   greentic.http-routes.v1:
     kind: greentic.http-routes.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       routes:
       - domain: messaging
@@ -316,7 +316,7 @@ extensions:
       schema_version: 1
   greentic.messaging.validators.v1:
     kind: greentic.messaging.validators.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       validators:
       - component_ref: oci://ghcr.io/greenticai/validators/messaging:0.4.19
@@ -324,7 +324,7 @@ extensions:
         world: greentic:pack-validate/pack-validator@0.1.0
   greentic.provider-extension.v1:
     kind: greentic.provider-extension.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       providers:
       - provider_type: messaging.webchat
@@ -347,7 +347,7 @@ extensions:
           world: greentic:provider/schema-core@1.0.0
   messaging.provider_ingress.v1:
     kind: messaging.provider_ingress.v1
-    version: 0.4.76
+    version: 0.4.84
     inline:
       capabilities:
         content_types:

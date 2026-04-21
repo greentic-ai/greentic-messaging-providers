@@ -52,30 +52,20 @@ pub(crate) fn send_payload(input_json: &[u8]) -> Vec<u8> {
             return send_payload_error(&format!("invalid envelope: {err}"), false);
         }
     };
-    if !envelope.attachments.is_empty() {
-        eprintln!(
-            "webex send_payload rejected attachments {:?}",
-            envelope.attachments
-        );
-        return send_payload_error("attachments not supported", false);
-    }
     let text = envelope
         .text
         .as_ref()
         .map(|value| value.trim())
         .filter(|value| !value.is_empty())
         .map(ToOwned::to_owned);
-    let card_payload = envelope
-        .metadata
-        .get("adaptive_card")
-        .and_then(|value| serde_json::from_str::<Value>(value).ok());
+    let card_payload = provider_common::helpers::resolve_adaptive_card(&envelope);
     let card_summary = card_payload.as_ref().and_then(summarize_card_text);
-    if card_payload.is_none() && text.is_none() {
+    if card_payload.is_none() && text.is_none() && envelope.attachments.is_empty() {
         eprintln!(
-            "webex send_payload missing text envelope metadata={:?}",
+            "webex send_payload missing text/card/attachments envelope metadata={:?}",
             envelope.metadata
         );
-        return send_payload_error("text required", false);
+        return send_payload_error("text, adaptive_card, or attachments required", false);
     }
     let destination = envelope.to.first().cloned().or_else(|| {
         metadata
@@ -113,6 +103,18 @@ pub(crate) fn send_payload(input_json: &[u8]) -> Vec<u8> {
     let mut body_map = build_webex_body(card_payload.as_ref(), text.as_ref(), &markdown_value);
     if let Some(pid) = &parent_id {
         body_map.insert("parentId".into(), Value::String(pid.clone()));
+    }
+    // Forward envelope.attachments as Webex `files` URLs. Webex API accepts an
+    // array under `files`; each entry is the attachment URL. The AC attachment
+    // path stays on `attachments` (Adaptive Card contentType) and is handled by
+    // build_webex_body above.
+    if !envelope.attachments.is_empty() {
+        let files: Vec<Value> = envelope
+            .attachments
+            .iter()
+            .map(|a| Value::String(a.url.clone()))
+            .collect();
+        body_map.insert("files".into(), Value::Array(files));
     }
     let kind = destination
         .kind
@@ -202,6 +204,7 @@ mod tests {
             text: Some("hello".to_string()),
             attachments: Vec::new(),
             metadata: MessageMetadata::new(),
+            extensions: Default::default(),
         }
     }
 
@@ -217,7 +220,7 @@ mod tests {
     }
 
     #[test]
-    fn send_payload_rejects_provider_mismatch_and_attachments() {
+    fn send_payload_rejects_provider_mismatch() {
         let mismatch = SendPayloadInV1 {
             provider_type: "other".to_string(),
             tenant_id: None,
@@ -232,15 +235,14 @@ mod tests {
             &serde_json::to_vec(&mismatch).expect("payload bytes"),
         ));
         assert_eq!(result_message(&body), Some("provider type mismatch"));
+    }
 
+    #[test]
+    fn send_payload_requires_text_or_card_or_attachments() {
+        // Envelope with no text, no AC, no attachments → 400-equivalent.
         let mut envelope = envelope();
-        envelope.attachments.push(Attachment {
-            mime_type: "image/png".to_string(),
-            url: "https://example.com/image.png".to_string(),
-            name: None,
-            size_bytes: None,
-        });
-        let attachments = SendPayloadInV1 {
+        envelope.text = None;
+        let empty = SendPayloadInV1 {
             provider_type: PROVIDER_TYPE.to_string(),
             tenant_id: None,
             auth_user: None,
@@ -251,8 +253,52 @@ mod tests {
             },
         };
         let body = parse_json(send_payload(
-            &serde_json::to_vec(&attachments).expect("payload bytes"),
+            &serde_json::to_vec(&empty).expect("payload bytes"),
         ));
-        assert_eq!(result_message(&body), Some("attachments not supported"));
+        assert_eq!(
+            result_message(&body),
+            Some("text, adaptive_card, or attachments required")
+        );
+    }
+
+    #[test]
+    fn send_payload_accepts_envelope_with_attachments_only() {
+        // No text, no card, but attachments present → should pass the content
+        // guard and proceed to the destination check. We remove the
+        // destination so the flow short-circuits at "destination required"
+        // before touching the host `get_secret_string` import (which isn't
+        // linkable in native-target tests). Reaching that specific error is
+        // proof the attachment guard accepts the envelope — which is the
+        // regression we care about.
+        let mut envelope = envelope();
+        envelope.text = None;
+        envelope.to.clear();
+        envelope.attachments.push(Attachment {
+            mime_type: "image/png".to_string(),
+            url: "https://example.com/image.png".to_string(),
+            name: Some("diagram.png".to_string()),
+            size_bytes: None,
+        });
+        let with_att = SendPayloadInV1 {
+            provider_type: PROVIDER_TYPE.to_string(),
+            tenant_id: None,
+            auth_user: None,
+            payload: ProviderPayloadV1 {
+                content_type: "application/json".to_string(),
+                body_b64: STANDARD.encode(serde_json::to_vec(&envelope).expect("envelope bytes")),
+                metadata: BTreeMap::new(),
+            },
+        };
+        let body = parse_json(send_payload(
+            &serde_json::to_vec(&with_att).expect("payload bytes"),
+        ));
+        let err = result_message(&body).unwrap_or("");
+        assert!(
+            err.starts_with("destination required"),
+            "expected destination error, got: {err:?}"
+        );
+        // And crucially NOT the old hard-reject nor the content guard:
+        assert_ne!(err, "attachments not supported");
+        assert_ne!(err, "text, adaptive_card, or attachments required");
     }
 }

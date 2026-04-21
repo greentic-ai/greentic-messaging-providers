@@ -1,0 +1,252 @@
+name: Publish Provider Fast Path
+
+on:
+  workflow_dispatch:
+    inputs:
+      provider:
+        description: Provider name from ci/provider-matrix.json, for example telegram
+        required: true
+        type: string
+      dry_run:
+        description: Build and validate only without publishing components or packs
+        required: false
+        default: true
+        type: boolean
+      publish_latest:
+        description: Also re-tag the published pack as `:latest` (not just the version tag)
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: publish-provider-${{ github.ref }}-${{ inputs.provider }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  OCI_REGISTRY: ghcr.io
+  OCI_NAMESPACE: ${{ github.repository_owner }}/greentic-messaging-providers
+
+jobs:
+  resolve-provider:
+    runs-on: ubuntu-latest
+    outputs:
+      provider: ${{ steps.resolve.outputs.provider }}
+      pack: ${{ steps.resolve.outputs.pack }}
+      components: ${{ steps.resolve.outputs.components }}
+      components_csv: ${{ steps.resolve.outputs.components_csv }}
+      manifests: ${{ steps.resolve.outputs.manifests }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve provider mapping
+        id: resolve
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          result="$(python3 ci/provider_matrix.py resolve-provider "${{ inputs.provider }}")"
+          RESULT_JSON="${result}" python3 - <<'PY'
+          import json
+          import os
+
+          result = json.loads(os.environ["RESULT_JSON"])
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+            handle.write(f"provider={result['provider']}\n")
+            handle.write(f"pack={result['pack']}\n")
+            handle.write(f"components={json.dumps(result['components'])}\n")
+            handle.write(f"components_csv={','.join(result['components'])}\n")
+            handle.write(f"manifests={json.dumps(result['manifests'])}\n")
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
+            handle.write("## Provider Fast Path\n")
+            handle.write(f"- provider: `{result['provider']}`\n")
+            handle.write(f"- components: {', '.join(result['components'])}\n")
+            handle.write(f"- pack: `{result['pack']}`\n")
+            handle.write(f"- dry_run: `{os.environ['DRY_RUN']}`\n")
+          PY
+
+  lint:
+    runs-on: ubuntu-latest
+    needs: resolve-provider
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.91.0
+          components: rustfmt, clippy
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: publish-provider-fast-path
+
+      - name: Cache cargo bin tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+          key: cargo-bin-tools-${{ runner.os }}-v1
+
+      - name: Targeted cargo fmt
+        env:
+          COMPONENT_MANIFESTS_JSON: ${{ needs.resolve-provider.outputs.manifests }}
+        run: ./ci/steps/01_fmt.sh
+
+      - name: Targeted cargo clippy
+        env:
+          COMPONENT_MANIFESTS_JSON: ${{ needs.resolve-provider.outputs.manifests }}
+        run: ./ci/steps/02_clippy.sh
+
+  build-components:
+    runs-on: ubuntu-latest
+    needs: resolve-provider
+    strategy:
+      fail-fast: false
+      matrix:
+        component: ${{ fromJson(needs.resolve-provider.outputs.components) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.91.0
+          targets: wasm32-wasip2
+          components: rustfmt, clippy
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: publish-provider-fast-path
+
+      - name: Cache cargo bin tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+          key: cargo-bin-tools-${{ runner.os }}-v1
+
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
+      - name: Install cargo-component
+        run: cargo binstall cargo-component --version 0.21.1 --force --no-confirm --locked
+
+      - name: Build selected component
+        run: bash "./tools/build_components/${{ matrix.component }}.sh"
+
+      - name: Upload component artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: components-wasm-${{ matrix.component }}
+          path: target/components/${{ matrix.component }}.wasm
+          if-no-files-found: error
+
+  publish-provider:
+    runs-on: ubuntu-latest
+    needs: [resolve-provider, lint, build-components]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache cargo bin tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+          key: cargo-bin-tools-${{ runner.os }}-v1
+
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
+      - name: Install greentic-pack
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+        run: |
+          cargo binstall greentic-pack --force --no-confirm --locked
+          echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
+          greentic-pack --version
+
+      - name: Install oras
+        uses: oras-project/setup-oras@v1
+        with:
+          version: 1.2.0
+
+      - name: Download component artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: components-wasm-*
+          path: target/components
+          merge-multiple: true
+
+      - name: Set publish version
+        run: |
+          python3 - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          data = tomllib.loads(Path("Cargo.toml").read_text())
+          version = data["workspace"]["package"]["version"]
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
+            handle.write(f"PUBLISH_VERSION={version}\n")
+          print(f"Using Cargo workspace version: {version}")
+          PY
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publish selected components
+        if: ${{ !inputs.dry_run }}
+        env:
+          VERSION: ${{ env.PUBLISH_VERSION }}
+          COMPONENT_FILTER: ${{ needs.resolve-provider.outputs.components_csv }}
+        run: ./tools/publish_oci.sh
+
+      - name: Sync selected pack with OCI templates
+        env:
+          PACK_FILTER: ${{ needs.resolve-provider.outputs.pack }}
+        run: ./ci/steps/07_sync_packs.sh
+
+      - name: Validate selected pack
+        env:
+          PACK_FILTER: ${{ needs.resolve-provider.outputs.pack }}
+          RUN_PUBLISH_PACKS: "1"
+        run: ./ci/steps/11_build_packs.sh
+
+      - name: Publish selected pack
+        if: ${{ !inputs.dry_run }}
+        env:
+          PACK_FILTER: ${{ needs.resolve-provider.outputs.pack }}
+          PACK_VERSION: ${{ env.PUBLISH_VERSION }}
+          PUBLISH_LATEST: ${{ inputs.publish_latest && '1' || '0' }}
+          TEMPLATES_IMAGE: ghcr.io/greenticai/components/templates:latest
+        run: ./tools/publish_packs_oci.sh
+
+      - name: Upload selected pack artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gtpack-${{ needs.resolve-provider.outputs.pack }}
+          path: dist/packs/${{ needs.resolve-provider.outputs.pack }}.gtpack
+          if-no-files-found: ignore
+
+      - name: Workflow summary
+        run: |
+          {
+            echo "## Fast Path Summary"
+            echo "- provider: \`${{ needs.resolve-provider.outputs.provider }}\`"
+            echo "- components: ${{ needs.resolve-provider.outputs.components_csv }}"
+            echo "- pack: \`${{ needs.resolve-provider.outputs.pack }}\`"
+            echo "- dry_run: \`${{ inputs.dry_run }}\`"
+            echo "- publish_latest: \`${{ inputs.publish_latest }}\`"
+            echo "- templates source: \`ghcr.io/greenticai/components/templates:latest\`"
+          } >> "${GITHUB_STEP_SUMMARY}"

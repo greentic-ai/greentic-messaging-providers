@@ -383,6 +383,7 @@ fn build_send_envelope_from_input(parsed: &Value) -> Result<ChannelMessageEnvelo
         text: Some(text),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     })
 }
 

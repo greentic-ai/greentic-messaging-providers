@@ -1,13 +1,13 @@
 {
   "name": "messaging-webchat",
-  "version": "0.4.76",
+  "version": "0.4.84",
   "kind": "application",
   "publisher": "Greentic",
   "description": "WebChat messaging provider \u2014 Direct Line protocol with inline ingress",
   "component_sources": [
     {
       "id": "ai.greentic.component-templates",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -29,7 +29,7 @@
     },
     {
       "id": "ai.greentic.component-templates",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -51,7 +51,7 @@
     },
     {
       "id": "diagnostics___check_secret",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -73,7 +73,7 @@
     },
     {
       "id": "diagnostics___optional_loopback",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -95,7 +95,7 @@
     },
     {
       "id": "diagnostics___summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -117,7 +117,7 @@
     },
     {
       "id": "diagnostics__check_secret",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -139,7 +139,7 @@
     },
     {
       "id": "diagnostics__optional_loopback",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -161,7 +161,7 @@
     },
     {
       "id": "diagnostics__summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -183,7 +183,7 @@
     },
     {
       "id": "ingress_default___ingress_default__summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -205,7 +205,7 @@
     },
     {
       "id": "messaging-provider-webchat",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -227,7 +227,7 @@
     },
     {
       "id": "messaging-provider-webchat",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -249,7 +249,7 @@
     },
     {
       "id": "sync_subscriptions___summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -271,7 +271,7 @@
     },
     {
       "id": "sync_subscriptions___sync_subscriptions__summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -293,7 +293,7 @@
     },
     {
       "id": "templates",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -315,7 +315,7 @@
     },
     {
       "id": "verify_webhooks___steps",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -337,7 +337,7 @@
     },
     {
       "id": "verify_webhooks___summary",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -359,7 +359,7 @@
     },
     {
       "id": "verify_webhooks__steps",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "world": "root:component/root",
       "supports": [
         "messaging"
@@ -396,7 +396,7 @@
   "extensions": {
     "greentic.ext.capabilities.v1": {
       "kind": "greentic.ext.capabilities.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "offers": [
           {
@@ -411,7 +411,7 @@
             "setup": {
               "qa_ref": "components/messaging-provider-webchat"
             },
-            "version": "0.4.76"
+            "version": "0.4.84"
           }
         ],
         "schema_version": 1
@@ -419,7 +419,7 @@
     },
     "greentic.http-routes.v1": {
       "kind": "greentic.http-routes.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "routes": [
           {
@@ -454,7 +454,7 @@
     },
     "greentic.messaging.validators.v1": {
       "kind": "greentic.messaging.validators.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "validators": [
           {
@@ -467,7 +467,7 @@
     },
     "greentic.provider-extension.v1": {
       "kind": "greentic.provider-extension.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "providers": [
           {
@@ -498,7 +498,7 @@
     },
     "messaging.provider_ingress.v1": {
       "kind": "messaging.provider_ingress.v1",
-      "version": "0.4.76",
+      "version": "0.4.84",
       "inline": {
         "capabilities": {
           "content_types": [

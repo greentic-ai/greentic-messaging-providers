@@ -6,6 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Rust workspace producing WASM-based messaging provider components (WASI Preview 2) for the Greentic platform. Each provider integrates with an external messaging service (Slack, Teams, Telegram, Webex, WhatsApp, WebChat, Email) through self-contained WebAssembly components.
 
+## One-time setup (new clones)
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Enables the pre-commit hook that runs `rustfmt` on staged Rust files and `cargo clippy --workspace -- -D warnings`. See `.githooks/README.md`.
+
 - **Edition:** Rust 2024 | **Target:** `wasm32-wasip2` (components) + native (crates)
 - **Workspace version** is defined once in root `Cargo.toml` `[workspace.package]`
 
@@ -38,6 +46,12 @@ cargo clippy --workspace --all-targets
 
 # Regenerate registry test fixtures after schema changes
 ./tools/regenerate_registry_fixtures.sh
+
+# Fast-path publish a single provider (targeted fmt + clippy + test
+# locally, then dispatch publish-provider.yml and wait for it)
+./scripts/publish_provider.sh webchat-gui
+./scripts/publish_provider.sh webex --skip-local-check
+./scripts/publish_provider.sh telegram --dry-run
 
 # Build .gtpack bundles (dry-run)
 ./tools/build_packs.sh
@@ -154,7 +168,7 @@ Before adding new core types or interfaces, check if they exist in shared Greent
 
 ## CI/CD
 
-- Rust toolchain: **1.94.0**
+- Rust toolchain: **1.95.0**
 - GitHub Actions: `.github/workflows/build-and-publish.yml` (fmt, clippy, schema check, build+test, packs)
 - Required env vars for OCI publishing: `GHCR_USERNAME`, `GHCR_TOKEN` (see `.env.example`)
 

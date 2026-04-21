@@ -1,5 +1,5 @@
 pack_id: messaging-provider-bundle
-version: 0.4.76
+version: 0.4.84
 kind: application
 publisher: Greentic
 components:
@@ -19,7 +19,7 @@ components:
     host: {}
   wasm: components/templates/component.wasm
 - id: messaging-provider-dummy
-  version: 0.4.76
+  version: 0.4.84
   world: greentic:provider/schema-core@1.0.0
   supports:
   - messaging

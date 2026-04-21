@@ -44,10 +44,6 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         }
     };
 
-    if !envelope.attachments.is_empty() {
-        return json_bytes(&json!({"ok": false, "error": "attachments not supported"}));
-    }
-
     let body = envelope
         .text
         .as_ref()
@@ -56,7 +52,10 @@ pub(crate) fn handle_send(input_json: &[u8]) -> Vec<u8> {
         .map(ToOwned::to_owned);
     let body = match body {
         Some(value) => value,
-        None => return json_bytes(&json!({"ok": false, "error": "text required"})),
+        None if envelope.attachments.is_empty() => {
+            return json_bytes(&json!({"ok": false, "error": "text or attachments required"}));
+        }
+        None => String::new(),
     };
 
     let destination = envelope.to.first().cloned().or_else(|| {
@@ -198,18 +197,19 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
         Err(err) => return encode_error(&err),
     };
 
-    // If the message carries an Adaptive Card, convert to styled HTML email.
-    let ac_html = encode_message
-        .metadata
-        .get("adaptive_card")
-        .and_then(|ac_raw| crate::ac_converter::ac_to_email_html(ac_raw));
+    // If the message carries an Adaptive Card (extensions or legacy metadata),
+    // convert to styled HTML email.
+    let ac_raw_str = provider_common::helpers::resolve_adaptive_card(&encode_message)
+        .map(|v| serde_json::to_string(&v).unwrap_or_default());
+    let ac_html = ac_raw_str
+        .as_deref()
+        .and_then(crate::ac_converter::ac_to_email_html);
 
     let (text, is_html) = if let Some(html) = ac_html {
         (html, true)
     } else {
-        let fallback = encode_message
-            .metadata
-            .get("adaptive_card")
+        let fallback = ac_raw_str
+            .as_deref()
             .and_then(|ac_raw| {
                 let caps = greentic_messaging_renderer::capabilities_for("email")
                     .expect("email capabilities must be registered");
@@ -221,28 +221,25 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
     };
 
     // Extract AC title for subject line if available.
-    let ac_title = encode_message
-        .metadata
-        .get("adaptive_card")
-        .and_then(|ac_raw| {
-            let ac: Value = serde_json::from_str(ac_raw).ok()?;
-            ac.get("body")
-                .and_then(Value::as_array)?
-                .iter()
-                .find(|el| {
-                    el.get("type").and_then(Value::as_str) == Some("TextBlock")
-                        && (el
-                            .get("weight")
+    let ac_title = ac_raw_str.as_deref().and_then(|ac_raw| {
+        let ac: Value = serde_json::from_str(ac_raw).ok()?;
+        ac.get("body")
+            .and_then(Value::as_array)?
+            .iter()
+            .find(|el| {
+                el.get("type").and_then(Value::as_str) == Some("TextBlock")
+                    && (el
+                        .get("weight")
+                        .and_then(Value::as_str)
+                        .is_some_and(|w| w.eq_ignore_ascii_case("bolder"))
+                        || el
+                            .get("style")
                             .and_then(Value::as_str)
-                            .is_some_and(|w| w.eq_ignore_ascii_case("bolder"))
-                            || el
-                                .get("style")
-                                .and_then(Value::as_str)
-                                .is_some_and(|s| s.eq_ignore_ascii_case("heading")))
-                })
-                .and_then(|el| el.get("text").and_then(Value::as_str))
-                .map(|s| s.to_string())
-        });
+                            .is_some_and(|s| s.eq_ignore_ascii_case("heading")))
+            })
+            .and_then(|el| el.get("text").and_then(Value::as_str))
+            .map(|s| s.to_string())
+    });
 
     // Extract destination email from envelope.to[0].id (preferred) or metadata
     let to = encode_message
@@ -270,6 +267,29 @@ pub(crate) fn encode_op(input_json: &[u8]) -> Vec<u8> {
             .as_object_mut()
             .unwrap()
             .insert("body_type".into(), json!("HTML"));
+    }
+    // Forward envelope.attachments as reference attachments for Graph
+    // /sendMail. URL-based because the generic greentic Attachment carries a
+    // URL; inlining bytes would require fetching in a WASI context which the
+    // provider doesn't currently do.
+    if !encode_message.attachments.is_empty() {
+        let atts: Vec<Value> = encode_message
+            .attachments
+            .iter()
+            .map(|a| {
+                let mut entry = serde_json::Map::new();
+                entry.insert("mime_type".to_string(), Value::String(a.mime_type.clone()));
+                entry.insert("url".to_string(), Value::String(a.url.clone()));
+                if let Some(name) = &a.name {
+                    entry.insert("name".to_string(), Value::String(name.clone()));
+                }
+                Value::Object(entry)
+            })
+            .collect();
+        payload_body
+            .as_object_mut()
+            .unwrap()
+            .insert("attachments".into(), Value::Array(atts));
     }
     let body_bytes = serde_json::to_vec(&payload_body).unwrap_or_else(|_| b"{}".to_vec());
     let mut metadata = BTreeMap::new();
@@ -345,14 +365,47 @@ pub(crate) fn send_payload(input_json: &[u8]) -> Vec<u8> {
         .get("body_type")
         .and_then(Value::as_str)
         .unwrap_or("Text");
+    let mut message_obj = serde_json::Map::new();
+    message_obj.insert("subject".to_string(), Value::String(subject.clone()));
+    message_obj.insert(
+        "body".to_string(),
+        json!({"contentType": content_type, "content": body}),
+    );
+    message_obj.insert(
+        "toRecipients".to_string(),
+        json!([{"emailAddress": {"address": to}}]),
+    );
+    // Convert envelope attachments to Graph referenceAttachment. URL-based
+    // because the generic greentic `Attachment` shape only carries a URL;
+    // fileAttachment (contentBytes) would need the provider to fetch and
+    // encode, which it doesn't do today.
+    if let Some(atts_array) = payload.get("attachments").and_then(Value::as_array)
+        && !atts_array.is_empty()
+    {
+        let graph_atts: Vec<Value> = atts_array
+            .iter()
+            .filter_map(|a| {
+                let url = a.get("url").and_then(Value::as_str)?;
+                let name = a
+                    .get("name")
+                    .and_then(Value::as_str)
+                    .unwrap_or("attachment")
+                    .to_string();
+                Some(json!({
+                    "@odata.type": "#microsoft.graph.referenceAttachment",
+                    "name": name,
+                    "sourceUrl": url,
+                    "providerType": "other",
+                    "permission": "view"
+                }))
+            })
+            .collect();
+        if !graph_atts.is_empty() {
+            message_obj.insert("attachments".to_string(), Value::Array(graph_atts));
+        }
+    }
     let mail_body = json!({
-        "message": {
-            "subject": subject,
-            "body": { "contentType": content_type, "content": body },
-            "toRecipients": [
-                { "emailAddress": { "address": to } }
-            ]
-        },
+        "message": Value::Object(message_obj),
         "saveToSentItems": false
     });
     // Use /me/sendMail for delegated tokens (refresh_token grant),
@@ -413,6 +466,7 @@ fn build_channel_envelope(parsed: &Value, cfg: &ProviderConfig) -> ChannelMessag
         text: body_text,
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     }
 }
 

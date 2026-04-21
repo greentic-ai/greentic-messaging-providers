@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Pre-commit hook: enforce formatting and clippy cleanliness on Rust changes.
+#
+# Skip with `git commit --no-verify` in a genuine emergency. CI will still
+# run these checks on the PR either way.
+
+set -euo pipefail
+
+RED=$'\033[0;31m'
+YELLOW=$'\033[0;33m'
+GREEN=$'\033[0;32m'
+DIM=$'\033[2m'
+RESET=$'\033[0m'
+
+# Only run when .rs or Cargo.toml is staged — no point churning the cache
+# on a docs-only or workflow-only commit.
+staged_rust="$(git diff --cached --name-only --diff-filter=ACMR -- '*.rs' 'Cargo.toml' 'Cargo.lock' 'rust-toolchain.toml')"
+if [ -z "${staged_rust}" ]; then
+  exit 0
+fi
+
+echo "${DIM}pre-commit: checking fmt + clippy on staged Rust changes${RESET}"
+
+# cargo fmt --check is fast and covers the whole workspace. Run on staged
+# changes only by invoking rustfmt on each staged path (avoids reformatting
+# the entire workspace on large repos).
+fmt_failures=0
+while IFS= read -r path; do
+  if [ -n "${path}" ] && [ -f "${path}" ]; then
+    if ! rustfmt --edition 2024 --check "${path}" >/dev/null 2>&1; then
+      echo "${RED}fmt fail${RESET}: ${path}"
+      fmt_failures=$((fmt_failures + 1))
+    fi
+  fi
+done <<< "$(git diff --cached --name-only --diff-filter=ACMR -- '*.rs')"
+
+if [ "${fmt_failures}" -gt 0 ]; then
+  echo "${RED}✗${RESET} ${fmt_failures} staged file(s) fail rustfmt."
+  echo "  Run ${YELLOW}cargo fmt --all${RESET} and re-stage before committing."
+  exit 1
+fi
+echo "${GREEN}✓${RESET} fmt clean"
+
+# Clippy runs on the workspace. Cached builds make this fast for follow-up
+# commits. A cold cache is slow — acknowledged trade-off; skip with
+# `--no-verify` if iterating locally.
+if ! cargo clippy --workspace --all-targets --quiet -- -D warnings 2>&1; then
+  echo "${RED}✗${RESET} clippy failed."
+  echo "  Fix warnings, or run ${YELLOW}git commit --no-verify${RESET} if intentional."
+  exit 1
+fi
+echo "${GREEN}✓${RESET} clippy clean"

@@ -1,7 +1,7 @@
 {
   "id": "messaging-provider-email",
   "name": "messaging-provider-email",
-  "version": "0.4.76",
+  "version": "0.4.84",
   "world": "greentic:component/component-v0-v6-v0@0.6.1",
   "description": "Provider-core SMTP email sender (simulated).",
   "profiles": {

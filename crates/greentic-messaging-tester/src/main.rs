@@ -948,6 +948,7 @@ fn build_echo_envelope(
         text: Some(text),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     })
 }
 
@@ -1327,6 +1328,7 @@ fn build_message_envelope(
         text,
         attachments: Vec::new(),
         metadata: message_metadata,
+        extensions: Default::default(),
     }
 }
 

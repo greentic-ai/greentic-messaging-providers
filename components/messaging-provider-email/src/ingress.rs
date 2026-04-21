@@ -237,6 +237,7 @@ fn channel_message_envelope(
         text: Some(subject),
         attachments: Vec::new(),
         metadata,
+        extensions: Default::default(),
     }
 }
 
