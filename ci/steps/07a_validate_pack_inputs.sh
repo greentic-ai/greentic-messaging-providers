@@ -133,15 +133,25 @@ trap on_exit EXIT
 echo "== Sync packs from checked-in specs and downloaded component artifacts =="
 ALLOW_REMOTE_COMPONENT_FETCH=0 ./ci/steps/07_sync_packs.sh 2>&1 | tee "${LOG_PATH}"
 
-echo "== Early deterministic pack validation =="
-PACK_VERSION="${PACK_VERSION:-$(python3 - <<'PY'
-from pathlib import Path
-import tomllib
-data = tomllib.loads(Path("Cargo.toml").read_text())
-print(data.get("workspace", {}).get("package", {}).get("version", "0.0.0"))
-PY
-)}"
+echo "== Hermetic pack-spec lint =="
+# Schema + wasm-reference existence check. Replaces the expensive DRY_RUN
+# build previously used here; the full build (pack doctor, manifest checks,
+# .gtpack zip) still runs in build-packs on the synced state.
+mapfile -t pack_list < <(python3 -c "
+import json
+import sys
+print('\n'.join(json.loads(sys.argv[1])))
+" "${PACK_LIST_JSON}")
 
-ALLOW_REMOTE_COMPONENT_FETCH=0 DRY_RUN=1 PACK_VERSION="${PACK_VERSION}" ./tools/build_packs_only.sh 2>&1 | tee -a "${LOG_PATH}"
+if [ "${#pack_list[@]}" -eq 0 ]; then
+  echo "No packs in filter; nothing to lint"
+else
+  python3 "${ROOT_DIR}/ci/lib/hermetic_pack_lint.py" \
+    --packs "${pack_list[@]}" \
+    --packs-dir "${ROOT_DIR}/packs" \
+    --components-dir "${ROOT_DIR}/target/components" \
+    --report "${ROOT_DIR}/dist/hermetic_lint_report.json" \
+    2>&1 | tee -a "${LOG_PATH}"
+fi
 
 echo "Early pack validation passed"
