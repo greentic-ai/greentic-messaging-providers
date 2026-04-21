@@ -4,7 +4,21 @@ on:
   push:
     branches: ["**"]
     tags: ["v*"]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'specs/**'
+      - '.githooks/**'
+      - 'LICENSE'
+      - 'SECURITY.md'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'specs/**'
+      - '.githooks/**'
+      - 'LICENSE'
+      - 'SECURITY.md'
   workflow_dispatch:
 
 concurrency:
@@ -23,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       build_all: ${{ steps.detect.outputs.build_all }}
+      version_only: ${{ steps.detect.outputs.version_only }}
       reason: ${{ steps.detect.outputs.reason }}
       affected_providers: ${{ steps.detect.outputs.affected_providers }}
       affected_components: ${{ steps.detect.outputs.affected_components }}
@@ -70,6 +85,7 @@ jobs:
           })
           print(json.dumps({
               "build_all": True,
+              "version_only": False,
               "reason": "manual or tag run",
               "changed_files": [],
               "affected_providers": sorted(matrix["providers"].keys()),
@@ -113,6 +129,7 @@ jobs:
 
           with open(output_path, "a", encoding="utf-8") as handle:
             handle.write(f"build_all={'true' if result['build_all'] else 'false'}\n")
+            handle.write(f"version_only={'true' if result.get('version_only') else 'false'}\n")
             handle.write(f"reason={result['reason']}\n")
             handle.write(f"affected_providers={affected_providers}\n")
             handle.write(f"affected_components={affected_components}\n")
@@ -132,6 +149,7 @@ jobs:
           with open(summary_path, "a", encoding="utf-8") as handle:
             handle.write("## Change Detection\n")
             handle.write(f"- `build_all`: `{str(result['build_all']).lower()}`\n")
+            handle.write(f"- `version_only`: `{str(bool(result.get('version_only'))).lower()}`\n")
             handle.write(f"- reason: `{result['reason']}`\n")
             handle.write(f"- providers: {providers}\n")
             handle.write(f"- components: {components}\n")
@@ -140,7 +158,80 @@ jobs:
             handle.write(f"{changed_files}\n")
           PY
 
-  fmt:
+  prepare-tools:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.91.0
+
+      - name: Cache cargo bin tools
+        id: cache-tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/cargo-component
+            ~/.cargo/bin/greentic-pack
+            ~/.cargo/bin/greentic-flow
+            ~/.cargo/bin/greentic-runner
+            ~/.cargo/bin/greentic-component
+          key: greentic-cli-tools-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}-v1
+          restore-keys: |
+            greentic-cli-tools-${{ runner.os }}-
+
+      - name: Install cargo-binstall
+        if: steps.cache-tools.outputs.cache-hit != 'true'
+        uses: cargo-bins/cargo-binstall@main
+
+      - name: Install Greentic CLI tools
+        if: steps.cache-tools.outputs.cache-hit != 'true'
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+        run: |
+          set -euo pipefail
+          install_tool() {
+            local name="$1"
+            shift
+            if ! cargo binstall "${name}" --no-confirm --locked "$@"; then
+              cargo install "${name}" --locked "$@"
+            fi
+          }
+          install_tool cargo-component --version 0.21.1
+          install_tool greentic-pack
+          install_tool greentic-flow
+          install_tool greentic-runner
+          install_tool greentic-component
+
+      - name: Verify tools
+        run: |
+          set -euo pipefail
+          for bin in cargo-component greentic-pack greentic-flow greentic-runner greentic-component; do
+            if [ ! -x "${HOME}/.cargo/bin/${bin}" ]; then
+              echo "missing binary: ${bin}" >&2
+              exit 1
+            fi
+            echo "${bin}: $("${HOME}/.cargo/bin/${bin}" --version 2>&1 | head -1)"
+          done
+
+      - name: Upload tools artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: greentic-cli-tools
+          path: |
+            ~/.cargo/bin/cargo-component
+            ~/.cargo/bin/greentic-pack
+            ~/.cargo/bin/greentic-flow
+            ~/.cargo/bin/greentic-runner
+            ~/.cargo/bin/greentic-component
+          if-no-files-found: error
+          retention-days: 1
+
+  lint:
     runs-on: ubuntu-latest
     needs: detect-changes
     steps:
@@ -157,79 +248,25 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           key: build-test-publish
-
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
 
       - name: Step 01 - Cargo fmt
         env:
           COMPONENT_MANIFESTS_JSON: ${{ needs.detect-changes.outputs.targeted_manifests_json }}
         run: ./ci/steps/01_fmt.sh
 
-  clippy:
-    runs-on: ubuntu-latest
-    needs: detect-changes
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: 1.91.0
-          components: rustfmt, clippy
-
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: build-test-publish
-
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
-
       - name: Step 02 - Cargo clippy
+        if: success() || failure()
         env:
           COMPONENT_MANIFESTS_JSON: ${{ needs.detect-changes.outputs.targeted_manifests_json }}
         run: ./ci/steps/02_clippy.sh
 
-  check-op-schemas:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: 1.91.0
-          components: rustfmt, clippy
-
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: build-test-publish
-
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
-
       - name: Step 05 - Check component operation schemas
+        if: success() || failure()
         run: ./ci/steps/05_check_op_schemas.sh
 
   build-components:
     runs-on: ubuntu-latest
-    needs: detect-changes
+    needs: [detect-changes, prepare-tools]
     strategy:
       fail-fast: false
       matrix:
@@ -250,19 +287,16 @@ jobs:
         with:
           key: build-test-publish
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install cargo-component
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall cargo-component --version 0.21.1 --force --no-confirm --locked || cargo install cargo-component --version 0.21.1 --force --locked
+          set -euo pipefail
+          install -m 0755 "${RUNNER_TEMP}/greentic-tools/cargo-component" "${HOME}/.cargo/bin/cargo-component"
 
       - name: Cache component wasm
         id: cache-component
@@ -315,37 +349,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: 1.91.0
-          components: rustfmt, clippy
-
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: build-test-publish
-
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
-
-      - name: Download component artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: components-wasm-*
-          path: target/components
-          merge-multiple: true
-
-      - name: Download templates artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: component-templates-local
-          path: target/components
-
       - name: Step 06 - Generate flows
         run: ./ci/steps/06_gen_flows.sh
 
@@ -358,21 +361,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: build-test-publish
-
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
-
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
 
       - name: Install oras
         uses: oras-project/setup-oras@v1
@@ -400,7 +388,7 @@ jobs:
 
   validate-pack-inputs:
     runs-on: ubuntu-latest
-    needs: [detect-changes, build-components, ensure-templates, gen-flows]
+    needs: [detect-changes, prepare-tools, build-components, ensure-templates, gen-flows]
     strategy:
       fail-fast: false
       matrix:
@@ -409,28 +397,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          key: build-test-publish
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
-
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install greentic-pack
-        env:
-          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall greentic-pack --force --no-confirm --locked || cargo install greentic-pack --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          install -m 0755 "${RUNNER_TEMP}/greentic-tools/greentic-pack" "${HOME}/.cargo/bin/greentic-pack"
           echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
-          greentic-pack --version
+          "${HOME}/.cargo/bin/greentic-pack" --version
 
       - name: Install oras
         uses: oras-project/setup-oras@v1
@@ -472,79 +451,76 @@ jobs:
 
   flow-doctor:
     runs-on: ubuntu-latest
-    needs: sync-packs
+    needs: [prepare-tools, sync-packs]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install greentic-flow
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall greentic-flow --force --no-confirm --locked || cargo install greentic-flow --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          install -m 0755 "${RUNNER_TEMP}/greentic-tools/greentic-flow" "${HOME}/.cargo/bin/greentic-flow"
+          echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
 
       - name: Step 08 - Flow doctor
         run: ./ci/steps/08_flow_doctor.sh
 
   component-doctor:
     runs-on: ubuntu-latest
-    needs: sync-packs
+    needs: [prepare-tools, sync-packs]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install greentic-component
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall greentic-component --force --no-confirm --locked || cargo install greentic-component --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          install -m 0755 "${RUNNER_TEMP}/greentic-tools/greentic-component" "${HOME}/.cargo/bin/greentic-component"
+          echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
 
       - name: Step 09 - Component doctor
         run: ./ci/steps/09_component_doctor.sh
 
   questions-component-test:
     runs-on: ubuntu-latest
-    needs: sync-packs
+    needs: [prepare-tools, sync-packs]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install greentic-component
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall greentic-component --force --no-confirm --locked || cargo install greentic-component --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          install -m 0755 "${RUNNER_TEMP}/greentic-tools/greentic-component" "${HOME}/.cargo/bin/greentic-component"
+          echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
 
       - name: Step 10 - Questions component tests
         run: ./ci/steps/10_questions_component_test.sh
 
   build-packs:
     runs-on: ubuntu-latest
-    needs: [detect-changes, sync-packs, flow-doctor, component-doctor, questions-component-test]
+    needs: [detect-changes, prepare-tools, sync-packs, flow-doctor, component-doctor, questions-component-test]
     strategy:
       fail-fast: false
       matrix:
@@ -553,35 +529,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install greentic-pack
-        env:
-          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall greentic-pack --force --no-confirm --locked || cargo install greentic-pack --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          for bin in greentic-pack greentic-flow greentic-runner greentic-component; do
+            install -m 0755 "${RUNNER_TEMP}/greentic-tools/${bin}" "${HOME}/.cargo/bin/${bin}"
+          done
           echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
-          greentic-pack --version
-
-      - name: Install greentic-flow
-        run: |
-          cargo binstall greentic-flow --force --no-confirm --locked || cargo install greentic-flow --force --locked
-
-      - name: Install greentic-runner
-        run: |
-          cargo binstall greentic-runner --force --no-confirm --locked || cargo install greentic-runner --force --locked
-
-      - name: Install greentic-component
-        run: |
-          cargo binstall greentic-component --force --no-confirm --locked || cargo install greentic-component --force --locked
+          "${HOME}/.cargo/bin/greentic-pack" --version
 
       - name: Install oras
         uses: oras-project/setup-oras@v1
@@ -625,7 +587,7 @@ jobs:
 
   cargo-test:
     runs-on: ubuntu-latest
-    needs: build-components
+    needs: [detect-changes, prepare-tools, build-components]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -642,31 +604,21 @@ jobs:
         with:
           key: build-test-publish
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install cargo-component
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall cargo-component --version 0.21.1 --force --no-confirm --locked || cargo install cargo-component --version 0.21.1 --force --locked
-
-      - name: Install greentic-flow
-        run: |
-          cargo binstall greentic-flow --force --no-confirm --locked || cargo install greentic-flow --force --locked
-
-      - name: Install greentic-pack
-        env:
-          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
-        run: |
-          cargo binstall greentic-pack --force --no-confirm --locked || cargo install greentic-pack --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          for bin in cargo-component greentic-flow greentic-pack; do
+            install -m 0755 "${RUNNER_TEMP}/greentic-tools/${bin}" "${HOME}/.cargo/bin/${bin}"
+          done
           echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
-          greentic-pack --version
+          "${HOME}/.cargo/bin/greentic-pack" --version
 
       - name: Download component artifacts
         uses: actions/download-artifact@v4
@@ -677,9 +629,11 @@ jobs:
 
       - name: Step 12 - Cargo tests
         env:
-          CARGO_BUILD_JOBS: "1"
           RUSTFLAGS: "-C debuginfo=0"
           RUST_BACKTRACE: "1"
+          BUILD_ALL: ${{ needs.detect-changes.outputs.build_all }}
+          VERSION_ONLY: ${{ needs.detect-changes.outputs.version_only }}
+          AFFECTED_PROVIDERS: ${{ needs.detect-changes.outputs.affected_providers }}
         run: ./ci/steps/12_cargo_test.sh
 
       - name: Upload CI-generated registry fixtures on failure
@@ -696,7 +650,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: [detect-changes, fmt, clippy, check-op-schemas, build-packs, cargo-test]
+    needs: [detect-changes, prepare-tools, lint, build-packs, cargo-test]
     permissions:
       contents: read
       packages: write
@@ -717,23 +671,19 @@ jobs:
         with:
           key: build-test-publish
 
-      - name: Cache cargo bin tools
-        uses: actions/cache@v4
+      - name: Download Greentic CLI tools
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.cargo/bin
-          key: cargo-bin-tools-${{ runner.os }}-v1
+          name: greentic-cli-tools
+          path: ${{ runner.temp }}/greentic-tools
 
-      - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@main
-
-      - name: Install greentic-pack
-        env:
-          CARGO_NET_GIT_FETCH_WITH_CLI: "true"
+      - name: Install Greentic CLI tools
         run: |
-          cargo binstall greentic-pack --force --no-confirm --locked || cargo install greentic-pack --force --locked
+          set -euo pipefail
+          install -d "${HOME}/.cargo/bin"
+          install -m 0755 "${RUNNER_TEMP}/greentic-tools/greentic-pack" "${HOME}/.cargo/bin/greentic-pack"
           echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
-          greentic-pack --version
+          "${HOME}/.cargo/bin/greentic-pack" --version
 
       - name: Install oras
         uses: oras-project/setup-oras@v1
