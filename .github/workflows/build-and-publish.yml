@@ -187,7 +187,6 @@ jobs:
           key: greentic-cli-tools-${{ runner.os }}-pack${{ env.GREENTIC_PACK_VERSION }}-cc${{ env.CARGO_COMPONENT_VERSION }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}-v2
           restore-keys: |
             greentic-cli-tools-${{ runner.os }}-pack${{ env.GREENTIC_PACK_VERSION }}-cc${{ env.CARGO_COMPONENT_VERSION }}-
-            greentic-cli-tools-${{ runner.os }}-
 
       - name: Install cargo-binstall
         if: steps.cache-tools.outputs.cache-hit != 'true'
@@ -199,11 +198,14 @@ jobs:
           CARGO_NET_GIT_FETCH_WITH_CLI: "true"
         run: |
           set -euo pipefail
+          # --force on both paths handles the restore-keys case: an older cache
+          # may have partially restored an outdated binary; we want the install
+          # to overwrite it rather than refuse.
           install_tool() {
             local name="$1"
             shift
-            if ! cargo binstall "${name}" --no-confirm --locked "$@"; then
-              cargo install "${name}" --locked "$@"
+            if ! cargo binstall "${name}" --force --no-confirm --locked "$@"; then
+              cargo install "${name}" --force --locked "$@"
             fi
           }
           install_tool cargo-component --version "${CARGO_COMPONENT_VERSION}"
