@@ -6,7 +6,10 @@ set -euo pipefail
 #   OCI_REGISTRY   - e.g. ghcr.io
 #   OCI_NAMESPACE  - e.g. my-org/greentic-messaging-providers
 #   VERSION        - tag used for the artifact (e.g. v0.1.0)
-#   PUBLISH_LATEST - when set to 1/true, also push the :latest tag
+#   PUBLISH_LATEST     - when set to 1/true, also push the "floating" tag
+#                        (defaults to :latest; override via PUBLISH_LATEST_TAG)
+#   PUBLISH_LATEST_TAG - name of the floating tag to publish (default "latest").
+#                        Used to produce `:develop` on develop branch etc.
 #
 # Expects artifacts at target/components/<name>.wasm (built beforehand).
 
@@ -15,6 +18,7 @@ if [[ -z "${OCI_REGISTRY:-}" || -z "${OCI_NAMESPACE:-}" || -z "${VERSION:-}" ]];
   exit 1
 fi
 PUBLISH_LATEST="${PUBLISH_LATEST:-0}"
+PUBLISH_LATEST_TAG="${PUBLISH_LATEST_TAG:-latest}"
 COMPONENT_FILTER="${COMPONENT_FILTER:-}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -52,7 +56,7 @@ for wasm in "${ARTIFACT_DIR}"/*.wasm; do
     continue
   fi
   ref="${OCI_REGISTRY}/${OCI_NAMESPACE}/${name}:${VERSION}"
-  latest_ref="${OCI_REGISTRY}/${OCI_NAMESPACE}/${name}:latest"
+  latest_ref="${OCI_REGISTRY}/${OCI_NAMESPACE}/${name}:${PUBLISH_LATEST_TAG}"
   manifest_path="${ROOT_DIR}/components/${name}/component.manifest.json"
   readme_src="${ROOT_DIR}/components/${name}/README.md"
   readme_name="README.md"

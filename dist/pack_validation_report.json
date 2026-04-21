@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "status": "ok",
-  "exit_code": 0,
-  "generated_at_utc": "2026-03-15T14:19:18.047126+00:00",
+  "status": "error",
+  "exit_code": 1,
+  "generated_at_utc": "2026-04-21T12:55:32.909981+00:00",
   "log_path": "dist/pack_validation.log",
-  "failed_pack": null,
-  "failure": null,
-  "detail": null,
+  "failed_pack": "messaging-slack",
+  "failure": "remote_fetch_disabled",
+  "detail": "Remote component fetch disabled",
   "packs": [
     {
-      "pack": "messaging-dummy",
-      "status": "validated",
+      "pack": "messaging-slack",
+      "status": "failed",
       "stage": "build_packs_only",
-      "failure": null,
-      "detail": null,
-      "artifact": "dist/packs/messaging-dummy.gtpack"
+      "failure": "remote_fetch_disabled",
+      "detail": "Remote component fetch disabled",
+      "artifact": "dist/packs/messaging-slack.gtpack"
     }
   ]
 }

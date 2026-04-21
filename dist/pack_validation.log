@@ -1,49 +1,325 @@
-staged /projects/ai/greentic-ng/greentic-messaging-providers/.tmp/quick-target/components/provision.wasm -> /projects/ai/greentic-ng/greentic-messaging-providers/components/provision/provision.wasm
-staged /projects/ai/greentic-ng/greentic-messaging-providers/.tmp/quick-target/components/questions.wasm -> /projects/ai/greentic-ng/greentic-messaging-providers/components/questions/questions.wasm
-staged /projects/ai/greentic-ng/greentic-messaging-providers/.tmp/quick-target/components/templates.wasm -> /projects/ai/greentic-ng/greentic-messaging-providers/components/templates/templates.wasm
-Using version: 0.4.38
+Using version: 0.4.84
+Skipping WebChat GUI asset import; source not found: /projects/ai/greentic-ng/greentic-webchat/site/app
 Using templates image: ghcr.io/greenticai/components/templates:latest
-Syncing messaging-dummy...
+Building components...
+WIT dependency sync complete (0 updated, 67 checked, 23 skipped local-only package(s))
+ Downloading crates ...
+  Downloaded fancy-regex v0.17.0
+  Downloaded wit-bindgen-rust-macro v0.51.0
+  Downloaded unicode-general-category v1.1.0
+  Downloaded data-encoding v2.10.0
+  Downloaded wasm-metadata v0.244.0
+  Downloaded wit-bindgen-core v0.51.0
+  Downloaded wit-bindgen-rust v0.51.0
+  Downloaded wit-bindgen v0.51.0
+  Downloaded wasm-encoder v0.244.0
+  Downloaded fluent-uri v0.4.1
+  Downloaded wasip2 v1.0.2+wasi-0.2.9
+  Downloaded wit-parser v0.244.0
+  Downloaded referencing v0.45.1
+  Downloaded wit-component v0.244.0
+  Downloaded wasmparser v0.244.0
+  Downloaded jsonschema v0.45.1
+  Downloaded greentic-interfaces-guest v0.4.112
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling serde_core v1.0.228
+   Compiling zmij v1.0.21
+   Compiling stable_deref_trait v1.2.1
+   Compiling anyhow v1.0.102
+   Compiling foldhash v0.2.0
+   Compiling equivalent v1.0.2
+   Compiling autocfg v1.5.0
+   Compiling version_check v0.9.5
+   Compiling bitflags v2.11.0
+   Compiling semver v1.0.28
+   Compiling hashbrown v0.16.1
+   Compiling serde v1.0.228
+   Compiling cfg-if v1.0.4
+   Compiling serde_json v1.0.149
+   Compiling memchr v2.8.0
+   Compiling itoa v1.0.18
+   Compiling num-traits v0.2.19
+   Compiling prettyplease v0.2.37
+   Compiling unicode-xid v0.2.6
+   Compiling leb128fmt v0.1.0
+   Compiling log v0.4.29
+   Compiling id-arena v2.3.0
+   Compiling zerocopy v0.8.48
+   Compiling heck v0.5.0
+   Compiling wit-bindgen-rust v0.54.0
+   Compiling typenum v1.19.0
+   Compiling generic-array v0.14.7
+   Compiling allocator-api2 v0.2.21
+   Compiling syn v2.0.117
+   Compiling indexmap v2.13.1
+   Compiling strsim v0.11.1
+   Compiling ident_case v1.0.1
+   Compiling wasmparser v0.245.1
+   Compiling litemap v0.8.2
+   Compiling wit-bindgen v0.51.0
+   Compiling shlex v1.3.0
+   Compiling writeable v0.6.3
+   Compiling find-msvc-tools v0.1.9
+   Compiling smallvec v1.15.1
+   Compiling cc v1.2.60
+   Compiling num-integer v0.1.46
+   Compiling utf8_iter v1.0.4
+   Compiling icu_properties_data v2.2.0
+   Compiling icu_normalizer_data v2.2.0
+   Compiling aho-corasick v1.1.4
+   Compiling blake3 v1.8.4
+   Compiling synstructure v0.13.2
+   Compiling darling_core v0.23.0
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+   Compiling regex-syntax v0.8.10
+   Compiling ciborium-io v0.2.2
+   Compiling num-conv v0.2.1
+   Compiling base64 v0.22.1
+   Compiling wit-bindgen-rust-macro v0.54.0
+   Compiling parking_lot_core v0.9.12
+   Compiling thiserror v2.0.18
+   Compiling powerfmt v0.2.0
+   Compiling getrandom v0.3.4
+   Compiling time-core v0.1.8
+   Compiling ref-cast v1.0.25
+   Compiling time-macros v0.2.27
+   Compiling serde_derive v1.0.228
+   Compiling zerofrom-derive v0.1.7
+   Compiling yoke-derive v0.8.2
+   Compiling zerovec-derive v0.11.3
+   Compiling displaydoc v0.2.5
+   Compiling zerocopy-derive v0.8.48
+   Compiling zerofrom v0.1.7
+   Compiling regex-automata v0.4.14
+   Compiling wasm-encoder v0.245.1
+   Compiling darling_macro v0.23.0
+   Compiling darling v0.23.0
+   Compiling yoke v0.8.2
+   Compiling thiserror-impl v2.0.18
+   Compiling ref-cast-impl v1.0.25
+   Compiling wasm-metadata v0.245.1
+   Compiling deranged v0.5.8
+   Compiling wit-parser v0.245.1
+   Compiling serde_with_macros v3.18.0
+   Compiling zerovec v0.11.6
+   Compiling zerotrie v0.2.4
+   Compiling wasip2 v1.0.2+wasi-0.2.9
+   Compiling digest v0.10.7
+   Compiling num-bigint v0.4.6
+   Compiling ahash v0.8.12
+   Compiling scopeguard v1.2.0
+   Compiling wit-bindgen v0.54.0
+   Compiling arrayvec v0.7.6
+   Compiling foldhash v0.1.5
+   Compiling arrayref v0.3.9
+   Compiling constant_time_eq v0.4.2
+   Compiling time v0.3.47
+   Compiling hashbrown v0.15.5
+   Compiling wit-bindgen-core v0.54.0
+   Compiling tinystr v0.8.3
+   Compiling wit-component v0.245.1
+   Compiling icu_locale_core v2.2.0
+   Compiling potential_utf v0.1.5
+   Compiling icu_collections v2.2.0
+   Compiling half v2.7.1
+   Compiling ciborium-ll v0.2.2
+   Compiling unic-langid-impl v0.9.6
+   Compiling unic-langid v0.9.6
+   Compiling ciborium v0.2.2
+   Compiling num-rational v0.4.2
+   Compiling lock_api v0.4.14
+   Compiling icu_provider v2.2.0
+   Compiling icu_properties v2.2.0
+   Compiling icu_normalizer v2.2.0
+   Compiling sha2 v0.10.9
+   Compiling chrono v0.4.44
+   Compiling serde_with v3.18.0
+   Compiling num-iter v0.1.45
+   Compiling serde_bytes v0.11.19
+   Compiling num-complex v0.4.6
+   Compiling borrow-or-share v0.2.4
+   Compiling once_cell v1.21.4
+   Compiling fnv v1.0.7
+   Compiling unicode-general-category v1.1.0
+   Compiling bit-vec v0.8.0
+   Compiling num v0.4.3
+   Compiling bit-set v0.8.0
+   Compiling fluent-uri v0.4.1
+   Compiling idna_adapter v1.2.1
+   Compiling parking_lot v0.12.5
+   Compiling hashlink v0.10.0
+   Compiling regex v1.12.3
+   Compiling outref v0.5.2
+   Compiling arraydeque v0.5.1
+   Compiling lazy_static v1.5.0
+   Compiling percent-encoding v2.3.2
+   Compiling greentic-interfaces v0.4.112
+   Compiling greentic-interfaces-guest v0.4.112
+   Compiling greentic-types v0.4.60
+   Compiling vsimd v0.8.0
+   Compiling referencing v0.45.1
+   Compiling uuid-simd v0.8.0
+   Compiling saphyr-parser v0.0.6
+   Compiling fraction v0.15.3
+   Compiling fancy-regex v0.17.0
+   Compiling idna v1.1.0
+   Compiling email_address v0.2.9
+   Compiling num-cmp v0.1.0
+   Compiling data-encoding v2.10.0
+   Compiling bytecount v0.6.9
+   Compiling unsafe-libyaml-norway v0.2.15
+   Compiling jsonschema v0.45.1
+   Compiling serde_yaml_gtc v2.5.2
+   Compiling questions v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/component_questions)
+    Finished `release` profile [optimized] target(s) in 26.07s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/questions.wasm
+   Compiling wit-bindgen-rust-macro v0.54.0
+   Compiling wit-bindgen v0.54.0
+   Compiling bitflags v2.11.0
+   Compiling syn v2.0.117
+   Compiling prettyplease v0.2.37
+   Compiling serde_derive v1.0.228
+   Compiling wit-parser v0.245.1
+   Compiling wit-component v0.245.1
+   Compiling wit-bindgen-core v0.54.0
+   Compiling wit-bindgen-rust v0.54.0
+   Compiling secrets-probe v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/secrets-probe)
+    Finished `release` profile [optimized] target(s) in 5.25s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/secrets-probe.wasm
+   Compiling syn v2.0.117
+   Compiling crypto-common v0.1.7
+   Compiling num-traits v0.2.19
+   Compiling subtle v2.6.1
+   Compiling hashbrown v0.16.1
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling hmac v0.12.1
+   Compiling indexmap v2.13.1
+   Compiling darling_core v0.23.0
+   Compiling prettyplease v0.2.37
+   Compiling serde_derive v1.0.228
+   Compiling zerocopy-derive v0.8.48
+   Compiling displaydoc v0.2.5
+   Compiling thiserror-impl v2.0.18
+   Compiling tinystr v0.8.3
+   Compiling thiserror v2.0.18
+   Compiling zerocopy v0.8.48
+   Compiling darling_macro v0.23.0
+   Compiling unic-langid-impl v0.9.6
+   Compiling unic-langid v0.9.6
+   Compiling darling v0.23.0
+   Compiling serde v1.0.228
+   Compiling wit-parser v0.245.1
+   Compiling serde_with_macros v3.18.0
+   Compiling serde_with v3.18.0
+   Compiling chrono v0.4.44
+   Compiling provider-runtime-config v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/provider-runtime-config)
+   Compiling half v2.7.1
+   Compiling ciborium-ll v0.2.2
+   Compiling wit-component v0.245.1
+   Compiling wit-bindgen-core v0.54.0
+   Compiling ciborium v0.2.2
+   Compiling greentic-types v0.4.60
+   Compiling wit-bindgen-rust v0.54.0
+   Compiling wit-bindgen-rust-macro v0.54.0
+   Compiling wit-bindgen v0.54.0
+   Compiling greentic-messaging-renderer v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/greentic-messaging-renderer)
+   Compiling provider-common v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/provider-common)
+   Compiling slack v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/slack)
+    Finished `release` profile [optimized] target(s) in 13.61s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/slack.wasm
+   Compiling digest v0.10.7
+   Compiling urlencoding v2.1.3
+   Compiling sha2 v0.10.9
+   Compiling greentic-types v0.4.60
+   Compiling greentic-messaging-renderer v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/greentic-messaging-renderer)
+   Compiling provider-common v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/provider-common)
+   Compiling teams v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/teams)
+    Finished `release` profile [optimized] target(s) in 9.17s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/teams.wasm
+ Downloading crates ...
+  Downloaded htmlescape v0.3.1
+   Compiling htmlescape v0.3.1
+   Compiling telegram v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/telegram)
+    Finished `release` profile [optimized] target(s) in 1.03s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/telegram.wasm
+   Compiling base64 v0.22.1
+   Compiling greentic-interfaces v0.4.112
+   Compiling greentic-interfaces-guest v0.4.112
+   Compiling serde_with v3.18.0
+   Compiling greentic-types v0.4.60
+   Compiling telegram-webhook v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/telegram-webhook)
+    Finished `release` profile [optimized] target(s) in 9.01s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/telegram-webhook.wasm
+   Compiling webchat v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/webchat)
+    Finished `release` profile [optimized] target(s) in 0.62s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/webchat.wasm
+   Compiling webex v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/webex)
+    Finished `release` profile [optimized] target(s) in 0.63s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/webex.wasm
+   Compiling webex-webhook v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/webex-webhook)
+    Finished `release` profile [optimized] target(s) in 0.56s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/webex-webhook.wasm
+   Compiling whatsapp v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/whatsapp)
+    Finished `release` profile [optimized] target(s) in 0.68s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/whatsapp.wasm
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+   Compiling serde_json v1.0.149
+   Compiling messaging-ingress-slack v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-ingress-slack)
+    Finished `release` profile [optimized] target(s) in 2.18s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-ingress-slack.wasm
+   Compiling messaging-ingress-teams v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-ingress-teams)
+    Finished `release` profile [optimized] target(s) in 0.57s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-ingress-teams.wasm
+   Compiling messaging-ingress-telegram v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-ingress-telegram)
+    Finished `release` profile [optimized] target(s) in 0.34s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-ingress-telegram.wasm
+   Compiling messaging-ingress-whatsapp v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-ingress-whatsapp)
+    Finished `release` profile [optimized] target(s) in 0.31s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-ingress-whatsapp.wasm
+   Compiling messaging-provider-dummy v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-dummy)
+    Finished `release` profile [optimized] target(s) in 0.60s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-dummy.wasm
+   Compiling messaging-provider-telegram v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-telegram)
+    Finished `release` profile [optimized] target(s) in 1.59s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-telegram.wasm
+   Compiling chrono v0.4.44
+   Compiling greentic-types v0.4.60
+   Compiling greentic-messaging-renderer v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/greentic-messaging-renderer)
+   Compiling provider-common v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/provider-common)
+   Compiling messaging-provider-teams v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-teams)
+    Finished `release` profile [optimized] target(s) in 9.89s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-teams.wasm
+   Compiling messaging-provider-email v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-email)
+    Finished `release` profile [optimized] target(s) in 1.48s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-email.wasm
+   Compiling messaging-provider-slack v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-slack)
+    Finished `release` profile [optimized] target(s) in 1.49s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-slack.wasm
+   Compiling messaging-provider-webex v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-webex)
+    Finished `release` profile [optimized] target(s) in 1.35s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-webex.wasm
+   Compiling messaging-provider-whatsapp v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-whatsapp)
+    Finished `release` profile [optimized] target(s) in 1.43s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-whatsapp.wasm
+   Compiling getrandom v0.4.2
+   Compiling greentic-types v0.4.60
+   Compiling uuid v1.23.0
+   Compiling greentic-messaging-renderer v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/greentic-messaging-renderer)
+   Compiling provider-common v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/provider-common)
+   Compiling webchat-directline-core v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/crates/webchat-directline-core)
+   Compiling messaging-provider-webchat v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-webchat)
+    Finished `release` profile [optimized] target(s) in 9.44s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-webchat.wasm
+   Compiling messaging-provider-webchat-gui v0.4.84 (/Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/components/messaging-provider-webchat-gui)
+    Finished `release` profile [optimized] target(s) in 1.24s
+Built /Users/bimapangestu/Desktop/Works/personal/greentic/greentic-messaging-providers/target/components/messaging-provider-webchat-gui.wasm
+Skipping filtered-out pack messaging-dummy
 Skipping filtered-out pack messaging-email
 Skipping filtered-out pack messaging-provider-bundle
-Skipping filtered-out pack messaging-slack
-Skipping filtered-out pack messaging-teams
-Skipping filtered-out pack messaging-telegram
-Skipping filtered-out pack messaging-webchat
-Skipping filtered-out pack messaging-webchat-gui
-Skipping filtered-out pack messaging-webex
-Skipping filtered-out pack messaging-whatsapp
-Skipping filtered-out pack state-memory
-Skipping filtered-out pack state-redis
-Pack sync complete.
-Using templates image: ghcr.io/greenticai/components/templates:latest
-Using greentic-pack: greentic-pack 0.4.111
-Configuration:
-- schema_version: 1
-- environment.env_id: EnvId("dev") (default)
-- paths.state_dir: /projects/ai/greentic-ng/greentic-messaging-providers/.tmp/quick-packs/messaging-dummy/.greentic (default)
-- telemetry.exporter: None (default)
-- network.tls_mode: System (default)
-- deployer.base_domain: deploy.greentic.ai (default)
-- events.backoff.initial_ms: Some(250) (default)
-- events.reconnect.enabled: Some(true) (default)
-Warnings:
-  - telemetry.enabled=true but exporter=none; telemetry will be disabled
-wrote /projects/ai/greentic-ng/greentic-messaging-providers/.tmp/quick-packs/messaging-dummy/pack.lock.cbor
-wrote /projects/ai/greentic-ng/greentic-messaging-providers/.tmp/packs/messaging-dummy.gtpack
-warning: ignored legacy helper doctor diagnostics for /projects/ai/greentic-ng/greentic-messaging-providers/dist/packs/messaging-dummy.gtpack
-warning: greentic-pack produced pack-v1 manifest for messaging-dummy; proceed anyway (upgrade greentic-pack for newer schema) 
-[DRY RUN] Would push /projects/ai/greentic-ng/greentic-messaging-providers/dist/packs/messaging-dummy.gtpack to ghcr.io/greenticai/greentic-packs/messaging-dummy:0.4.38
-Skipping filtered-out pack messaging-email
-Skipping deprecated pack messaging-provider-bundle
-Skipping filtered-out pack messaging-slack
-Skipping filtered-out pack messaging-teams
-Skipping filtered-out pack messaging-telegram
-Skipping filtered-out pack messaging-webchat
-Skipping filtered-out pack messaging-webchat-gui
-Skipping filtered-out pack messaging-webex
-Skipping filtered-out pack messaging-whatsapp
-Skipping filtered-out pack state-memory
-Skipping filtered-out pack state-redis
-warning: ignored legacy helper doctor diagnostics for /projects/ai/greentic-ng/greentic-messaging-providers/dist/packs/messaging-dummy.gtpack
-Wrote packs.lock.json
+Syncing messaging-slack...
+Remote component fetch disabled (ALLOW_REMOTE_COMPONENT_FETCH=0) for ghcr.io/greenticai/components/templates:latest

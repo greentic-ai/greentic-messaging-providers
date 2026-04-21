@@ -32,6 +32,7 @@ PACKS_DIR="${PACKS_DIR:-packs}"
 OUT_DIR="${OUT_DIR:-dist/packs}"
 DRY_RUN="${DRY_RUN:-0}"
 PUBLISH_LATEST="${PUBLISH_LATEST:-0}"
+PUBLISH_LATEST_TAG="${PUBLISH_LATEST_TAG:-latest}"
 PACKC_BIN="${PACKC_BIN:-greentic-pack}"
 PACKC_BUILD_FLAGS="${PACKC_BUILD_FLAGS:-}"
 PACK_FILTER="${PACK_FILTER:-}"
@@ -676,7 +677,7 @@ PY
   python3 "${ROOT_DIR}/tools/validate_pack_fixtures.py"
 
   oci_ref="${OCI_REGISTRY}/${OCI_ORG}/${OCI_REPO}/messaging/${pack_name}:${PACK_VERSION}"
-  latest_ref="${OCI_REGISTRY}/${OCI_ORG}/${OCI_REPO}/messaging/${pack_name}:latest"
+  latest_ref="${OCI_REGISTRY}/${OCI_ORG}/${OCI_REPO}/messaging/${pack_name}:${PUBLISH_LATEST_TAG}"
   # Compute local content digest (used for dry-run and lockfile regardless of push).
   digest="$(python3 - <<'PY' "${pack_out}"
 import hashlib, sys

@@ -254,7 +254,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          key: build-test-publish
+          key: native
 
       - name: Step 01 - Cargo fmt
         env:
@@ -292,7 +292,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          key: build-test-publish
+          key: wasm
 
       - name: Download Greentic CLI tools
         uses: actions/download-artifact@v4
@@ -610,7 +610,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          key: build-test-publish
+          key: native
 
       - name: Download Greentic CLI tools
         uses: actions/download-artifact@v4
@@ -673,7 +673,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          key: build-test-publish
+          key: native
 
       - name: Download Greentic CLI tools
         uses: actions/download-artifact@v4
@@ -724,7 +724,7 @@ jobs:
     if: |
       always()
       && github.event_name == 'push'
-      && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+      && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/'))
       && needs.prepare-tools.result == 'success'
       && needs.lint.result == 'success'
       && needs.build-packs.result == 'success'
@@ -732,6 +732,7 @@ jobs:
       && (needs.cargo-test-provider.result == 'success' || needs.cargo-test-provider.result == 'skipped')
     outputs:
       publish_version: ${{ steps.version.outputs.publish_version }}
+      publish_latest_tag: ${{ steps.version.outputs.publish_latest_tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -756,6 +757,9 @@ jobs:
 
       - name: Set publish version
         id: version
+        env:
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_REF: ${{ github.ref }}
         run: |
           python3 - <<'PY'
           import os
@@ -763,12 +767,30 @@ jobs:
           from pathlib import Path
 
           data = tomllib.loads(Path("Cargo.toml").read_text())
-          version = data["workspace"]["package"]["version"]
+          base_version = data["workspace"]["package"]["version"]
+          ref = os.environ.get("GITHUB_REF", "")
+
+          # Tag name used for floating "latest" pointer; avoids clobbering
+          # main's :latest with develop artifacts.
+          if ref == "refs/heads/develop":
+              version = f"{base_version}-develop"
+              latest_tag = "develop"
+          elif ref.startswith("refs/tags/"):
+              # Honor the release tag verbatim (strip leading 'v' like publish scripts do)
+              tag_name = ref.removeprefix("refs/tags/").removeprefix("v")
+              version = tag_name or base_version
+              latest_tag = "latest"
+          else:  # refs/heads/main or anything else that passes the gate
+              version = base_version
+              latest_tag = "latest"
+
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
-            handle.write(f"PUBLISH_VERSION={version}\n")
+              handle.write(f"PUBLISH_VERSION={version}\n")
+              handle.write(f"PUBLISH_LATEST_TAG={latest_tag}\n")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-            handle.write(f"publish_version={version}\n")
-          print(f"Using Cargo workspace version: {version}")
+              handle.write(f"publish_version={version}\n")
+              handle.write(f"publish_latest_tag={latest_tag}\n")
+          print(f"Publishing as :{version} and :{latest_tag}")
           PY
 
       - name: Login to GHCR
@@ -778,6 +800,7 @@ jobs:
         env:
           VERSION: ${{ env.PUBLISH_VERSION }}
           PUBLISH_LATEST: "1"
+          PUBLISH_LATEST_TAG: ${{ env.PUBLISH_LATEST_TAG }}
           COMPONENT_FILTER: ${{ needs.detect-changes.outputs.affected_components_csv }}
         run: bash ./tools/publish_oci.sh
 
@@ -874,6 +897,7 @@ jobs:
         env:
           PACK_VERSION: ${{ needs.publish-components.outputs.publish_version }}
           PUBLISH_LATEST: "1"
+          PUBLISH_LATEST_TAG: ${{ needs.publish-components.outputs.publish_latest_tag }}
           PACK_FILTER: ${{ matrix.pack }}
           TEMPLATES_IMAGE: ${{ env.TEMPLATES_IMAGE }}
           TEMPLATES_DIGEST: ${{ env.TEMPLATES_DIGEST }}
