@@ -31,6 +31,10 @@ permissions:
 env:
   OCI_REGISTRY: ghcr.io
   OCI_NAMESPACE: ${{ github.repository_owner }}/greentic-messaging-providers
+  # Pinned tool versions. GREENTIC_PACK_VERSION must match the default in
+  # ci/steps/11_build_packs.sh so build-packs doesn't reinstall per matrix entry.
+  GREENTIC_PACK_VERSION: "0.4.123"
+  CARGO_COMPONENT_VERSION: "0.21.1"
 
 jobs:
   detect-changes:
@@ -180,8 +184,9 @@ jobs:
             ~/.cargo/bin/greentic-flow
             ~/.cargo/bin/greentic-runner
             ~/.cargo/bin/greentic-component
-          key: greentic-cli-tools-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}-v1
+          key: greentic-cli-tools-${{ runner.os }}-pack${{ env.GREENTIC_PACK_VERSION }}-cc${{ env.CARGO_COMPONENT_VERSION }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}-v2
           restore-keys: |
+            greentic-cli-tools-${{ runner.os }}-pack${{ env.GREENTIC_PACK_VERSION }}-cc${{ env.CARGO_COMPONENT_VERSION }}-
             greentic-cli-tools-${{ runner.os }}-
 
       - name: Install cargo-binstall
@@ -201,8 +206,8 @@ jobs:
               cargo install "${name}" --locked "$@"
             fi
           }
-          install_tool cargo-component --version 0.21.1
-          install_tool greentic-pack
+          install_tool cargo-component --version "${CARGO_COMPONENT_VERSION}"
+          install_tool greentic-pack --version "${GREENTIC_PACK_VERSION}"
           install_tool greentic-flow
           install_tool greentic-runner
           install_tool greentic-component
@@ -708,7 +713,7 @@ jobs:
           path: tests/fixtures/registry/**/*.cbor.ci-generated
           if-no-files-found: ignore
 
-  publish:
+  publish-components:
     runs-on: ubuntu-latest
     needs: [detect-changes, prepare-tools, lint, build-packs, cargo-test-shared, cargo-test-provider]
     permissions:
@@ -723,21 +728,77 @@ jobs:
       && needs.build-packs.result == 'success'
       && (needs.cargo-test-shared.result == 'success' || needs.cargo-test-shared.result == 'skipped')
       && (needs.cargo-test-provider.result == 'success' || needs.cargo-test-provider.result == 'skipped')
+    outputs:
+      publish_version: ${{ steps.version.outputs.publish_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@master
+      - name: Install oras
+        uses: oras-project/setup-oras@v1
         with:
-          toolchain: 1.91.0
-          targets: wasm32-wasip2
-          components: rustfmt, clippy
+          version: 1.2.0
 
-      - name: Cache Rust
-        uses: Swatinem/rust-cache@v2
+      - name: Download component artifacts
+        uses: actions/download-artifact@v4
         with:
-          key: build-test-publish
+          pattern: components-wasm-*
+          path: target/components
+          merge-multiple: true
+
+      - name: Download templates artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: component-templates-local
+          path: target/components
+
+      - name: Set publish version
+        id: version
+        run: |
+          python3 - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          data = tomllib.loads(Path("Cargo.toml").read_text())
+          version = data["workspace"]["package"]["version"]
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
+            handle.write(f"PUBLISH_VERSION={version}\n")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+            handle.write(f"publish_version={version}\n")
+          print(f"Using Cargo workspace version: {version}")
+          PY
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publish components
+        env:
+          VERSION: ${{ env.PUBLISH_VERSION }}
+          PUBLISH_LATEST: "1"
+          COMPONENT_FILTER: ${{ needs.detect-changes.outputs.affected_components_csv }}
+        run: bash ./tools/publish_oci.sh
+
+      - name: Upload components lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: components-lockfile
+          path: components.lock.json
+          if-no-files-found: error
+
+  publish-packs:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, prepare-tools, publish-components]
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        pack: ${{ fromJson(needs.detect-changes.outputs.affected_packs) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Download Greentic CLI tools
         uses: actions/download-artifact@v4
@@ -771,36 +832,11 @@ jobs:
           name: component-templates-local
           path: target/components
 
-      - name: Set publish version
-        run: |
-          python3 - <<'PY'
-          import os
-          import tomllib
-          from pathlib import Path
-
-          data = tomllib.loads(Path("Cargo.toml").read_text())
-          version = data["workspace"]["package"]["version"]
-          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as handle:
-            handle.write(f"PUBLISH_VERSION={version}\n")
-          print(f"Using Cargo workspace version: {version}")
-          PY
-
-      - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
-
-      - name: Publish components
-        env:
-          VERSION: ${{ env.PUBLISH_VERSION }}
-          PUBLISH_LATEST: "1"
-          COMPONENT_FILTER: ${{ needs.detect-changes.outputs.affected_components_csv }}
-        run: bash ./tools/publish_oci.sh
-
-      - name: Upload components lockfile
-        uses: actions/upload-artifact@v4
+      - name: Download components lockfile
+        uses: actions/download-artifact@v4
         with:
           name: components-lockfile
-          path: components.lock.json
-          if-no-files-found: error
+          path: .
 
       - name: Resolve templates OCI digest
         run: |
@@ -829,18 +865,21 @@ jobs:
           print(f"Using templates reference: {templates_ref}@{templates_digest or 'latest'}")
           PY
 
-      - name: Publish packs
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Publish pack
         env:
-          PACK_VERSION: ${{ env.PUBLISH_VERSION }}
+          PACK_VERSION: ${{ needs.publish-components.outputs.publish_version }}
           PUBLISH_LATEST: "1"
-          PACK_FILTER: ${{ needs.detect-changes.outputs.affected_packs_csv }}
+          PACK_FILTER: ${{ matrix.pack }}
           TEMPLATES_IMAGE: ${{ env.TEMPLATES_IMAGE }}
           TEMPLATES_DIGEST: ${{ env.TEMPLATES_DIGEST }}
         run: ./tools/publish_packs_oci.sh
 
-      - name: Upload built packs
+      - name: Upload built pack
         uses: actions/upload-artifact@v4
         with:
-          name: gtpack-artifacts
-          path: dist/packs/*.gtpack
+          name: gtpack-artifact-${{ matrix.pack }}
+          path: dist/packs/${{ matrix.pack }}.gtpack
           if-no-files-found: error
