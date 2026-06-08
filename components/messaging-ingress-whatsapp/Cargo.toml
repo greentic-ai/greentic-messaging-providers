@@ -5,15 +5,6 @@ version = "0.5.3"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde.workspace = true
-serde_json.workspace = true
-wit-bindgen.workspace = true
-
 [package.metadata.component]
 package = "greentic:messaging-ingress-whatsapp"
 
@@ -28,3 +19,12 @@ world = "messaging-ingress-whatsapp"
 "greentic:telemetry" = { path = "wit/messaging-ingress-whatsapp/deps/telemetry" }
 "greentic:interfaces-types" = { path = "wit/messaging-ingress-whatsapp/deps/interfaces-types" }
 "provider:common" = { path = "wit/messaging-ingress-whatsapp/deps/provider-common" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+greentic-telemetry = { workspace = true }
+serde.workspace = true
+serde_json.workspace = true
+wit-bindgen.workspace = true

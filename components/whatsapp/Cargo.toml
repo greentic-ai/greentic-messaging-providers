@@ -5,17 +5,6 @@ version = "0.5.3"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde.workspace = true
-serde_json.workspace = true
-provider-common = { package = "greentic-messaging-provider-common", path = "../../crates/provider-common" }
-provider-runtime-config = { path = "../../crates/provider-runtime-config" }
-wit-bindgen.workspace = true
-
 [package.metadata.component]
 package = "provider:whatsapp"
 
@@ -28,3 +17,14 @@ world = "component-v0-v6-v0"
 "greentic:secrets-store" = { path = "wit/whatsapp/deps/secrets-store" }
 "greentic:http" = { path = "wit/whatsapp/deps/http" }
 "greentic:telemetry" = { path = "wit/whatsapp/deps/telemetry" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+greentic-telemetry = { workspace = true }
+provider-common = { package = "greentic-messaging-provider-common", path = "../../crates/provider-common" }
+provider-runtime-config = { path = "../../crates/provider-runtime-config" }
+serde.workspace = true
+serde_json.workspace = true
+wit-bindgen.workspace = true

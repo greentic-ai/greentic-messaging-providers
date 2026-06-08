@@ -9,10 +9,10 @@ name = "greentic-messaging-packgen"
 path = "src/main.rs"
 
 [dependencies]
-greentic-telemetry = { workspace = true }
 anyhow = { workspace = true }
 clap = { workspace = true, features = ["derive"] }
 greentic-interfaces = { workspace = true }
+greentic-telemetry = { workspace = true }
 greentic-types = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

@@ -5,19 +5,6 @@ version = "0.5.15"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde.workspace = true
-serde_json.workspace = true
-sha2.workspace = true
-provider-common = { package = "greentic-messaging-provider-common", path = "../../crates/provider-common" }
-provider-runtime-config = { path = "../../crates/provider-runtime-config" }
-wit-bindgen.workspace = true
-urlencoding.workspace = true
-
 [package.metadata.component]
 package = "provider:teams"
 
@@ -30,3 +17,16 @@ world = "component-v0-v6-v0"
 "greentic:secrets-store" = { path = "wit/teams/deps/secrets-store" }
 "greentic:http" = { path = "wit/teams/deps/http" }
 "greentic:telemetry" = { path = "wit/teams/deps/telemetry" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+greentic-telemetry = { workspace = true }
+provider-common = { package = "greentic-messaging-provider-common", path = "../../crates/provider-common" }
+provider-runtime-config = { path = "../../crates/provider-runtime-config" }
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+urlencoding.workspace = true
+wit-bindgen.workspace = true

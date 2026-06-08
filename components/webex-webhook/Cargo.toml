@@ -5,15 +5,6 @@ version = "0.5.11"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
-serde_json.workspace = true
-wit-bindgen.workspace = true
-
 [package.metadata.component]
 package = "greentic:webex-webhook"
 
@@ -25,3 +16,12 @@ world = "node"
 "greentic:http" = { path = "wit/webex-webhook/deps/http" }
 "greentic:secrets-store" = { path = "wit/webex-webhook/deps/secrets-store" }
 "greentic:interfaces-types" = { path = "wit/webex-webhook/deps/interfaces-types" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+greentic-telemetry = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+wit-bindgen.workspace = true

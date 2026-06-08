@@ -5,18 +5,6 @@ version = "0.5.11"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
-serde_json.workspace = true
-greentic-types.workspace = true
-wit-bindgen.workspace = true
-base64.workspace = true
-provider-common.workspace = true
-
 [package.metadata.component]
 package = "greentic:messaging-provider-slack-core"
 
@@ -29,3 +17,15 @@ world = "component-v0-v6-v0"
 "greentic:secrets-store" = { path = "wit/messaging-provider-slack/deps/secrets-store" }
 "greentic:interfaces-types" = { path = "wit/messaging-provider-slack/deps/interfaces-types" }
 "greentic:provider-schema-core" = { path = "wit/messaging-provider-slack/deps/provider-schema-core" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+base64.workspace = true
+greentic-telemetry = { workspace = true }
+greentic-types.workspace = true
+provider-common.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+wit-bindgen.workspace = true

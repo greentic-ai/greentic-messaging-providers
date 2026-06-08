@@ -7,13 +7,13 @@ license = "MIT"
 description = "Standalone MessageCard rendering + downgrade kit for operator/runner consumers."
 readme = "README.md"
 
-[dependencies]
-greentic-telemetry = { workspace = true }
-anyhow = { workspace = true }
-serde_json = { workspace = true }
-serde = { workspace = true }
-greentic-types = { workspace = true }
-
 [features]
 default = ["render"]
 render = []
+
+[dependencies]
+anyhow = { workspace = true }
+greentic-telemetry = { workspace = true }
+greentic-types = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

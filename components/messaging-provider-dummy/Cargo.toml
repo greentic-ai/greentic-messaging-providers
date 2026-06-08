@@ -5,22 +5,22 @@ version = "0.5.1"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde = { workspace = true, features = ["derive"] }
-serde_json.workspace = true
-sha2.workspace = true
-greentic-types.workspace = true
-wit-bindgen.workspace = true
-base64.workspace = true
-provider-common.workspace = true
-
 [package.metadata.component.target]
 path = "wit/messaging-provider-dummy"
 world = "component-v0-v6-v0"
 
 [package.metadata.component.target.dependencies]
 "greentic:provider-schema-core" = { path = "wit/messaging-provider-dummy/deps/provider-schema-core" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+base64.workspace = true
+greentic-telemetry = { workspace = true }
+greentic-types.workspace = true
+provider-common.workspace = true
+serde = { workspace = true, features = ["derive"] }
+serde_json.workspace = true
+sha2.workspace = true
+wit-bindgen.workspace = true

@@ -5,19 +5,6 @@ version = "0.5.15"
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-serde.workspace = true
-serde_json.workspace = true
-urlencoding.workspace = true
-wit-bindgen.workspace = true
-
-[dev-dependencies]
-greentic-types.workspace = true
-
 [package.metadata.component]
 package = "greentic:messaging-ingress-teams"
 
@@ -32,3 +19,16 @@ world = "messaging-ingress-teams"
 "greentic:telemetry" = { path = "wit/messaging-ingress-teams/deps/telemetry" }
 "greentic:interfaces-types" = { path = "wit/messaging-ingress-teams/deps/interfaces-types" }
 "provider:common" = { path = "wit/messaging-ingress-teams/deps/provider-common" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+greentic-telemetry = { workspace = true }
+serde.workspace = true
+serde_json.workspace = true
+urlencoding.workspace = true
+wit-bindgen.workspace = true
+
+[dev-dependencies]
+greentic-types.workspace = true

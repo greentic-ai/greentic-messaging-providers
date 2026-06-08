@@ -6,8 +6,8 @@ license.workspace = true
 publish = false
 
 [dependencies]
-greentic-telemetry = { workspace = true }
 anyhow.workspace = true
-tokio.workspace = true
-messaging-cardkit-bin = { path = "../messaging-cardkit-bin" }
 clap = { workspace = true, features = ["derive"] }
+greentic-telemetry = { workspace = true }
+messaging-cardkit-bin = { path = "../messaging-cardkit-bin" }
+tokio.workspace = true

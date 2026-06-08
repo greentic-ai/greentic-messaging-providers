@@ -5,26 +5,26 @@ version.workspace = true
 license.workspace = true
 publish = false
 
+[package.metadata.component.target]
+path = "../../wit/component-v0-6"
+world = "component"
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-greentic-telemetry = { workspace = true }
 anyhow.workspace = true
+base64.workspace = true
+ciborium.workspace = true
+greentic-interfaces.workspace = true
+greentic-interfaces-guest = { workspace = true, features = ["component-v0-6"] }
+greentic-telemetry = { workspace = true }
+jsonschema.workspace = true
 regex.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde_yaml_bw.workspace = true
-greentic-interfaces.workspace = true
-greentic-interfaces-guest = { workspace = true, features = ["component-v0-6"] }
-jsonschema.workspace = true
-ciborium.workspace = true
-base64.workspace = true
 
 [dev-dependencies]
 insta.workspace = true
 tempfile.workspace = true
-
-[package.metadata.component.target]
-path = "../../wit/component-v0-6"
-world = "component"

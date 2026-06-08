@@ -5,13 +5,6 @@ version.workspace = true
 license.workspace = true
 publish = false
 
-[lib]
-crate-type = ["cdylib"]
-
-[dependencies]
-greentic-telemetry = { workspace = true }
-wit-bindgen.workspace = true
-
 [package.metadata.component]
 package = "probe:secrets-probe"
 
@@ -21,3 +14,10 @@ world = "secrets-probe"
 
 [package.metadata.component.target.dependencies]
 "greentic:secrets-store" = { path = "wit/secrets-probe/deps/secrets-store" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+greentic-telemetry = { workspace = true }
+wit-bindgen.workspace = true
