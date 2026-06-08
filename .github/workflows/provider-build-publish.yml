@@ -157,6 +157,9 @@ jobs:
           COMPONENT_MANIFESTS_JSON: ${{ needs.resolve-provider.outputs.manifests }}
         run: ./ci/steps/01_fmt.sh
 
+      - name: Cargo sort check
+        run: ./ci/steps/01a_cargo_sort.sh
+
       - name: Targeted cargo clippy
         env:
           COMPONENT_MANIFESTS_JSON: ${{ needs.resolve-provider.outputs.manifests }}

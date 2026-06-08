@@ -220,6 +220,9 @@ if [ "${LOCAL_CHECK_MODE}" = "provider" ]; then
   echo "==> cargo fmt --check (affected components)"
   COMPONENT_MANIFESTS_JSON="${AFFECTED_MANIFESTS_JSON}" ./ci/steps/01_fmt.sh
 
+  echo "==> cargo sort --workspace --check"
+  ./ci/steps/01a_cargo_sort.sh
+
   echo "==> cargo clippy --all-targets (affected components)"
   COMPONENT_MANIFESTS_JSON="${AFFECTED_MANIFESTS_JSON}" ./ci/steps/02_clippy.sh
 
@@ -296,6 +299,11 @@ echo "==> cargo fmt --check"
 # If this fails, re-run only:
 #   ./ci/steps/01_fmt.sh
 ./ci/steps/01_fmt.sh
+
+echo "==> cargo sort --workspace --check"
+# If this fails, re-run only:
+#   ./ci/steps/01a_cargo_sort.sh
+./ci/steps/01a_cargo_sort.sh
 
 echo "==> cargo clippy --workspace --all-targets"
 # If this fails, re-run only:

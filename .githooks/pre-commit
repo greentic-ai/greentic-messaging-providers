@@ -41,6 +41,27 @@ if [ "${fmt_failures}" -gt 0 ]; then
 fi
 echo "${GREEN}✓${RESET} fmt clean"
 
+# cargo sort keeps [dependencies] tables alphabetized across the workspace.
+# Only gate when a Cargo.toml is staged. Auto-install on first use so the hook
+# works on a fresh clone without manual setup.
+staged_toml="$(git diff --cached --name-only --diff-filter=ACMR -- 'Cargo.toml' '*/Cargo.toml')"
+if [ -n "${staged_toml}" ]; then
+  if ! command -v cargo-sort >/dev/null 2>&1; then
+    echo "${DIM}pre-commit: installing cargo-sort${RESET}"
+    if command -v cargo-binstall >/dev/null 2>&1; then
+      cargo binstall cargo-sort --no-confirm --locked >/dev/null 2>&1 || cargo install cargo-sort --locked
+    else
+      cargo install cargo-sort --locked
+    fi
+  fi
+  if ! cargo sort --workspace --check >/dev/null 2>&1; then
+    echo "${RED}✗${RESET} Cargo.toml dependencies are not sorted."
+    echo "  Run ${YELLOW}cargo sort --workspace${RESET} and re-stage before committing."
+    exit 1
+  fi
+  echo "${GREEN}✓${RESET} cargo sort clean"
+fi
+
 # Clippy runs on the workspace. Cached builds make this fast for follow-up
 # commits. A cold cache is slow — acknowledged trade-off; skip with
 # `--no-verify` if iterating locally.

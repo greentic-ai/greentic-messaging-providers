@@ -23,7 +23,10 @@ Runs only when the commit stages Rust sources (`*.rs`, `Cargo.toml`,
 
 1. `rustfmt --check` on each staged `.rs` file (fast, no full workspace
    build).
-2. `cargo clippy --workspace --all-targets -- -D warnings` (uses the
+2. `cargo sort --workspace --check` when a `Cargo.toml` is staged (keeps
+   dependency tables alphabetized; auto-installs `cargo-sort` on first
+   use). Matches the `ci/steps/01a_cargo_sort.sh` CI gate.
+3. `cargo clippy --workspace --all-targets -- -D warnings` (uses the
    shared build cache — slow on a cold clone, fast on subsequent
    commits).
 
