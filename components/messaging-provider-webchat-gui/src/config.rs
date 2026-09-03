@@ -183,6 +183,13 @@ pub(crate) fn validate_provider_config(mut cfg: ProviderConfig) -> Result<Provid
     if mode != "local_queue" && mode != "websocket" && mode != "pubsub" {
         return Err("invalid config: mode must be local_queue|websocket|pubsub".to_string());
     }
+    // A blank answer is no answer: the emitted setup template fills an
+    // unanswered question with "", which would otherwise route under an
+    // empty key instead of being refused here.
+    cfg.route = cfg.route.filter(|value| !value.trim().is_empty());
+    cfg.tenant_channel_id = cfg
+        .tenant_channel_id
+        .filter(|value| !value.trim().is_empty());
     if cfg.route.is_none() && cfg.tenant_channel_id.is_none() {
         return Err("invalid config: route or tenant_channel_id required".to_string());
     }

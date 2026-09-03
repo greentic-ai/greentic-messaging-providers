@@ -23,10 +23,13 @@ questions:
     title: Route
     kind: string
     required: false
+    default: "webchat"
+    help: "Routing key for outbound messages. Either this or Tenant channel ID must be set."
   - name: tenant_channel_id
     title: Tenant channel ID
     kind: string
     required: false
+    help: "Tenant-scoped channel identifier. An alternative to Route."
   - name: base_url
     title: Base URL
     kind: string
