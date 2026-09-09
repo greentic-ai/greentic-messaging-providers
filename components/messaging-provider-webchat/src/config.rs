@@ -92,7 +92,7 @@ pub(crate) fn validate_config_out(config: &ProviderConfigOut) -> Result<(), Stri
     Ok(())
 }
 
-pub(crate) fn validate_provider_config(cfg: ProviderConfig) -> Result<ProviderConfig, String> {
+pub(crate) fn validate_provider_config(mut cfg: ProviderConfig) -> Result<ProviderConfig, String> {
     if cfg.public_base_url.trim().is_empty() {
         return Err("invalid config: public_base_url cannot be empty".to_string());
     }
@@ -100,6 +100,13 @@ pub(crate) fn validate_provider_config(cfg: ProviderConfig) -> Result<ProviderCo
     if mode != "local_queue" && mode != "websocket" && mode != "pubsub" {
         return Err("invalid config: mode must be local_queue|websocket|pubsub".to_string());
     }
+    // A blank answer is no answer: the emitted setup template fills an
+    // unanswered question with "", which would otherwise route under an
+    // empty key instead of being refused here.
+    cfg.route = cfg.route.filter(|value| !value.trim().is_empty());
+    cfg.tenant_channel_id = cfg
+        .tenant_channel_id
+        .filter(|value| !value.trim().is_empty());
     if cfg.route.is_none() && cfg.tenant_channel_id.is_none() {
         return Err("invalid config: route or tenant_channel_id required".to_string());
     }
@@ -282,6 +289,39 @@ mod tests {
             err,
             "invalid config: route or tenant_channel_id required".to_string()
         );
+    }
+
+    #[test]
+    fn a_blank_route_and_tenant_channel_id_are_refused_not_routed_under_an_empty_key() {
+        let base = |route: Option<&str>, tenant: Option<&str>| ProviderConfig {
+            enabled: true,
+            public_base_url: "https://example.com".to_string(),
+            mode: "websocket".to_string(),
+            route: route.map(str::to_string),
+            tenant_channel_id: tenant.map(str::to_string),
+            base_url: None,
+            oauth_enabled: None,
+            oauth_providers: None,
+            oidc_issuer: None,
+            oidc_audience: None,
+            oidc_required_scope: None,
+        };
+
+        // What an unanswered setup question emits.
+        assert_eq!(
+            validate_provider_config(base(Some(""), Some(""))).unwrap_err(),
+            "invalid config: route or tenant_channel_id required".to_string()
+        );
+        assert_eq!(
+            validate_provider_config(base(Some("   "), None)).unwrap_err(),
+            "invalid config: route or tenant_channel_id required".to_string()
+        );
+
+        // Either one alone still satisfies it, and a blank sibling is dropped
+        // rather than beating the answered one in `route.or(tenant_channel_id)`.
+        let cfg = validate_provider_config(base(Some(""), Some("tenant:channel"))).unwrap();
+        assert_eq!(cfg.route, None);
+        assert_eq!(cfg.tenant_channel_id.as_deref(), Some("tenant:channel"));
     }
 
     #[test]
