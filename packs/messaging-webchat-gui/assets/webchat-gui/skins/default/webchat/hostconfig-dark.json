@@ -1,0 +1,68 @@
+{
+  "fontFamily": "'Segoe UI', 'Helvetica Neue', Arial, sans-serif",
+  "spacing": {
+    "small": 6,
+    "default": 12,
+    "medium": 16,
+    "large": 20
+  },
+  "actions": {
+    "maxActions": 10
+  },
+  "containerStyles": {
+    "default": {
+      "foregroundColors": {
+        "default": { "default": "#f3f4f6", "subtle": "#9ca3af" },
+        "accent": { "default": "#0F62FE", "subtle": "#0F62FE" },
+        "good": { "default": "#028a02", "subtle": "#3fae3f" },
+        "warning": { "default": "#e69500", "subtle": "#f0b64d" },
+        "attention": { "default": "#cc3300", "subtle": "#e06a47" }
+      }
+    },
+    "emphasis": {
+      "foregroundColors": {
+        "default": { "default": "#f3f4f6", "subtle": "#9ca3af" },
+        "accent": { "default": "#0F62FE", "subtle": "#0F62FE" },
+        "good": { "default": "#028a02", "subtle": "#3fae3f" },
+        "warning": { "default": "#e69500", "subtle": "#f0b64d" },
+        "attention": { "default": "#cc3300", "subtle": "#e06a47" }
+      }
+    },
+    "accent": {
+      "foregroundColors": {
+        "default": { "default": "#f3f4f6", "subtle": "#9ca3af" },
+        "accent": { "default": "#0F62FE", "subtle": "#0F62FE" },
+        "good": { "default": "#028a02", "subtle": "#3fae3f" },
+        "warning": { "default": "#e69500", "subtle": "#f0b64d" },
+        "attention": { "default": "#cc3300", "subtle": "#e06a47" }
+      }
+    },
+    "good": {
+      "foregroundColors": {
+        "default": { "default": "#f3f4f6", "subtle": "#9ca3af" },
+        "accent": { "default": "#0F62FE", "subtle": "#0F62FE" },
+        "good": { "default": "#028a02", "subtle": "#3fae3f" },
+        "warning": { "default": "#e69500", "subtle": "#f0b64d" },
+        "attention": { "default": "#cc3300", "subtle": "#e06a47" }
+      }
+    },
+    "warning": {
+      "foregroundColors": {
+        "default": { "default": "#f3f4f6", "subtle": "#9ca3af" },
+        "accent": { "default": "#0F62FE", "subtle": "#0F62FE" },
+        "good": { "default": "#028a02", "subtle": "#3fae3f" },
+        "warning": { "default": "#e69500", "subtle": "#f0b64d" },
+        "attention": { "default": "#cc3300", "subtle": "#e06a47" }
+      }
+    },
+    "attention": {
+      "foregroundColors": {
+        "default": { "default": "#f3f4f6", "subtle": "#9ca3af" },
+        "accent": { "default": "#0F62FE", "subtle": "#0F62FE" },
+        "good": { "default": "#028a02", "subtle": "#3fae3f" },
+        "warning": { "default": "#e69500", "subtle": "#f0b64d" },
+        "attention": { "default": "#cc3300", "subtle": "#e06a47" }
+      }
+    }
+  }
+}

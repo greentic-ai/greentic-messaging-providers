@@ -11,6 +11,7 @@
   "webchat": {
     "styleOptions": "/skins/3aigent/webchat/styleOptions.json",
     "styleOptionsThemed": true,
+    "defaultTheme": "dark",
     "adaptiveCardsHostConfig": "/skins/3aigent/webchat/hostconfig.json",
     "locale": "en-US",
     "localePickerLocales": [

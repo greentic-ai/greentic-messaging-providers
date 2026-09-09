@@ -1489,7 +1489,14 @@ console.log('[runtime-bootstrap] loaded');
         // palette without flicker. Skins that don't set the flag are
         // unaffected.
         if (skinData.webchat && skinData.webchat.styleOptionsThemed === true) {
-          var theme = 'dark';
+          // Base default theme: a skin may pin one via webchat.defaultTheme
+          // ('light' | 'dark'); otherwise follow the viewer's OS preference.
+          // (Previously this hard-defaulted to 'dark', forcing every themed
+          // skin dark on first load regardless of the viewer's setting.)
+          var dt = skinData.webchat.defaultTheme;
+          var theme = (dt === 'light' || dt === 'dark')
+            ? dt
+            : ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
           try {
             var saved = sessionStorage.getItem('greentic-theme');
             if (saved === 'light' || saved === 'dark') {

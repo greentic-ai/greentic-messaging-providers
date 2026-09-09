@@ -11,6 +11,7 @@
   "webchat": {
     "styleOptions": "/skins/default/webchat/styleOptions.json",
     "adaptiveCardsHostConfig": "/skins/default/webchat/hostconfig.json",
+    "styleOptionsThemed": true,
     "locale": "en-US"
   },
   "statusBar": {
